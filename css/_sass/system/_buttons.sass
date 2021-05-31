@@ -1,0 +1,43 @@
+div.buttons
+  text-align: right
+  &:not(.up)
+    margin-top: 2em
+    margin-bottom: 1em
+  &.up
+    margin-bottom: 1em
+
+button, a, input[type="button"], input[type="submit"]
+  &.main
+    background-color: green
+    color: white
+    font-family: Futura,Geneva,Helvetica,Arial
+    font-size: 1.2em
+    padding: 0.2em 1.4em
+    font-variant: all-small-caps
+    border: none
+    border-radius: 5px
+
+span.close-btn
+  float: right
+  width: 32px
+  height: 32px
+  text-align: center
+  font-family: trellicons
+  font-size: 14pt
+  -webkit-font-smoothing: antialiased
+  opacity: 0.4
+  border-radius: 50%
+  background-color: transparent
+  transition: opacity 0.15s, background-color 0.15s
+  cursor: pointer
+  &:before
+    // content: "\e91a"
+    content: "✖️"
+    margin-top: 4px
+    vertical-align: -webkit-baseline-middle
+    line-height: 36px
+  &:hover
+    opacity: 1
+    color: white
+    transition: opacity 0.15s, background-color 0.15s
+    background-color: #BBB

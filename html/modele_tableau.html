@@ -1,0 +1,31 @@
+<!-- 
+	Modèle pour créer les tableaux
+-->
+<tableau id="modele-tableau">
+	<header>
+		<!-- Peut-être, plus tard, des boutons pour gérer le tableau,
+		le détruire, définir son image ou couleur de fond, etc. 
+	-->
+		<button data-strict-class="Tableau" data-method="destroyCurrent" class="btn-sup">Détruire</button>
+		<button data-strict-class="Tableau" data-method="editPrefsCurrent" class="common">⚙️</button>
+	</header>
+	<content>
+
+		<!-- 
+			SECTION CONTENANT LES LISTES
+		-->
+		<items class="listes">
+
+		</items>
+
+		<!-- 
+			LES BOUTONS
+		-->
+		<buttons>
+			<button class="btn-add bigger" data-strict-class="Liste" data-method="create">Ajouter une liste</button>
+		</buttons>
+
+
+	</content>
+	<footer></footer>
+</tableau>

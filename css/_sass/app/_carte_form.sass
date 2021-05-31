@@ -1,0 +1,49 @@
+carte_form, carte_form *
+	z-index: 1000
+carte_form
+	position: fixed
+	display: block
+	width: 860px
+	height: auto
+	max-height: 1200px
+	top: 300px
+	// border: 1px dashed green
+	margin-left: calc(50% - 300px)
+	background-color: #EEEEEE
+	padding: 1em
+	font-size: 12pt
+	box-shadow: 5px 5px 29px 8px #CCC
+	> content
+		display: grid
+		grid-template-rows: 100%
+		grid-template-columns: auto 160px
+		div.colonne-contenu
+			// border: 1px dashed red
+			grid-row: 1
+			grid-column: 1
+			margin-bottom: 28px
+			padding-right: 2em
+			> div 
+				margin-bottom: 1em
+				div
+					margin: 1em 0
+					&.description
+						margin-left: 3em
+			content[data-type-objet="ma"]
+				padding: 1em
+		div.colonne-boutons
+			grid-row: 1
+			grid-column: 2
+			text-align: center
+			// border: 1px dashed blue
+			title
+				display: block
+				color: #AAAAAA
+				margin-top: 1em
+			liste_actions
+				display: block
+				content
+					display: block
+					button
+						clear: both
+						margin-top: 10px

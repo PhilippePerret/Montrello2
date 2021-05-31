@@ -1,0 +1,32 @@
+body
+  position: relative
+
+button
+  cursor: pointer
+
+input[type="checkbox"] + label
+  margin-left: 4px
+  vertical-align: unset!important
+
+.hidden
+  display: none!important
+
+div#messages-container
+  position: fixed
+  bottom: 0px
+  left: 0
+  height: auto
+  z-index: 5000
+  -webkit-user-select: none
+  user-select: none
+
+div.message
+  color: white
+  padding: 0.2em 1em
+  z-index: 2000
+
+  &:not(.error)
+    background-color: rgb(59, 59, 158)
+
+  &.error
+    background-color: rgb(214, 40, 40)

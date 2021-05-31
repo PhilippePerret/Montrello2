@@ -1,0 +1,51 @@
+pickertags
+  display: block
+  position: absolute
+  width: 140px
+  z-index: 3000
+  padding: 1em
+  border: 1px solid #CCC
+  box-shadow: 5px 5px 30px 5px #DDD
+  background-color: #EEEEEE
+  content
+    pickertag
+      display: inline-block
+      width: 100%
+      span.color-block
+        display: inline-block
+        position: relative
+        width: calc(100% - 30px)
+        height: 20px
+        line-height: 20px
+        cursor: pointer
+        opacity: 0.3
+        span.check-mark
+          position: absolute
+          right: 8px
+          &:after
+            content: '✓'
+      &:not(.checked)
+        span.color-block
+          span.check-mark
+            visibility: hidden
+      &.checked
+        span.color-block
+          opacity: 1
+          span.check-mack
+            visibility: visible
+
+// Pour les tags dans l'affichage
+tags
+  tag
+    display: inline-block
+    + tag
+      margin-left: 8px
+  &.normal
+    tag
+      width: 60px
+      height: 10px
+      border-radius: 4px
+  &.large
+    tag
+      width:  60px
+      height: 30px

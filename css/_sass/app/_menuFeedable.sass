@@ -1,0 +1,24 @@
+menu.feedable
+	position: relative
+	z-index: 2000
+	&.closed
+		&:before
+			content: "◀︎"
+		content
+			display: none
+	&.opened
+		&:before
+			content: "▼"
+		content
+			display: block
+	// Content (hérite de la propriété dans _Menu.sass)
+	content
+		background-color: white
+		top: 20px
+		left: -200px
+		width: 200px
+		padding: 0.8em
+		ul.feeded-menu
+			li
+				cursor: pointer
+				margin-top: 8px

@@ -1,0 +1,55 @@
+// Pour tous les menus déroulants qui s'ouvrent 
+// lorsque l'on glisse la souris dessus.
+menu
+	all: unset
+	position: relative
+	margin: 0 0.3em
+	font-size: 12pt
+	color: grey
+	font-family: "Arial Narrow"
+	// Le contenu (caché)
+	content
+		display: none
+		position: absolute
+		top: 24px
+		left: 0
+		background-color: antiquewhite
+		padding: 0.5em 1em
+		z-index: -1
+		list-style: none
+		// border: 1px dashed
+		box-shadow: 10px 10px 20px -15px grey
+		// transition: 1s
+		li
+			margin-top: 8px
+			cursor: pointer
+	&:hover
+		// Le contenu visible
+		content
+			display: inline-block
+			width: 200px
+			z-index: 2000
+			// transition: 1s
+
+
+title
+	font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Droid Sans,Helvetica Neue,sans-serif
+	font-size: 13.4pt
+
+liste_actions
+	content
+		button
+			all: unset
+			box-sizing: border-box
+			font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Droid Sans,Helvetica Neue,sans-serif
+			font-size: 10.8pt
+			width: 160px
+			background-color: #DDDDDD
+			color: #454545
+			text-align: center
+			padding: 5px 12px
+			text-align: left
+			cursor: pointer
+			&:hover
+				background-color: #CCEEFF
+				color: #0055BB

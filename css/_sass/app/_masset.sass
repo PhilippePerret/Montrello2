@@ -1,0 +1,39 @@
+masset
+	display: block
+	width: 100%
+	clear: both
+	> label.masset-content
+		width: 60%
+		overflow: hidden
+		text-overflow: ellipsis
+	> buttons
+		float: right
+		text-align: right
+		button
+			&.btn-sup
+				float: left
+			&.btn-exec
+				display: inline-block
+				width: 48px
+				text-align: center
+				padding: 1px 8px 2px
+
+masset + masset
+	margin-top: 12px
+
+massetedit
+	display: block
+	position: absolute
+	width: 500px
+	background-color: white
+	box-shadow: 5px 5px 25px 5px #CCC
+	z-index: 3000
+	padding: 1em
+	> input[type="text"]
+		display: block
+		width: calc(100% - 2em)
+		margin-top: 0.6em
+	buttons
+		display: block
+		text-align: right
+		margin-top: 1em

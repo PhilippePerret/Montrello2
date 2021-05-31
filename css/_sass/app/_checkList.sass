@@ -1,0 +1,45 @@
+checklist
+	display: block
+	> buttons
+		display: block
+		margin-top: 1em
+
+	// La liste propremente dite
+	ul
+		task
+			display: block
+			position: relative
+			margin-top: 0.7em
+			&:not(:hover)
+				buttons
+					visibility: hidden
+			&:hover
+				buttons
+					visibility: visible	
+			&.checked
+				label.task
+					text-decoration: line-through
+			label.task
+				font-size: 14.8pt
+				cursor: pointer
+			span.checkmark
+				cursor: pointer
+				display: inline-block
+				width: 20px
+				height: 20px
+				border: 1px solid #ccc
+				border-radius: 2px
+				position: relative
+				vertical-align: bottom
+				margin-right: 1em
+				&:not(.checked)
+					background-color: rgb(255, 142, 142)
+				&.checked
+					background-color: #8ff591
+					&:after
+						content: "✔︎"
+						position: absolute
+						left: 4px
+
+
+

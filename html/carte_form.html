@@ -1,0 +1,79 @@
+<carte_form class="hidden">
+
+	<header>
+		<span class="close-btn"></span>
+		<span class="pictoed">
+			<span class="picto">🔘</span>
+			<span class="titre editable bigger" data-prop="ti">titre de la carte</span>
+		</span>
+	</header>
+
+	<content style="margin-top: 20px;">
+		
+		<div class="colonne-contenu">
+					
+				<tags class="large"><!-- les tags seront placés ici --></tags>
+
+				<div id="carte-description-div">
+					<span class="pictoed">
+						<span class="picto">🔘</span>
+						<span class="titre">Description</span>
+					</span>
+					<div class="description editable" data-prop="dsc" style="height: 60px">Description de la carte.</div>
+				</div>
+
+				<div id="carte-taches-div">
+					<span class="pictoed">
+						<span class="picto">🔘</span>
+						<span class="titre">Tâches</span>
+					</span>
+					<content data-type-objet="cl">
+						<!-- Les check list -->
+					</content>
+					<content data-type-objet="ma">
+						<!-- Les Massets -->
+					</content>
+					
+				</div>
+
+				<div id="carte-details-div">
+					<span class="pictoed">
+						<span class="picto">🔘</span>
+						<span class="titre">Historique</span>
+					</span>					
+				</div>
+
+		</div>
+
+		<div class="colonne-boutons">
+			
+			<title>Ajouter à la carte</title>
+			<liste_actions>
+				<content data-strict-class="CarteForm.current">
+					<!-- 🎯🧩☎️⏱🧹🔎 -->
+					<button data-method="editMembers">👨‍🦰 Membres</button>	
+					<button data-method="editTags">🏷 Étiquettes</button>
+					<button data-method="addChecklist">✔ Check liste</button>
+					<button data-method="editDates">⌚️ Dates</button>
+					<button data-method="addLien">🌎 Lien</button>
+					<button data-method="addFileJoint">📎  Pièce jointe</button>
+					<button data-method="addCommande">🖥 Commande</button>
+					<button data-method="addFolder">📦 Dossier</button>
+				</content>
+			</liste_actions>
+
+			<title>Actions sur la carte</title>
+			<liste_actions data-class="ProcOnCard">
+				<content>
+					<button data-method="copy">Copier</button>
+					<button data-method="createModel">🗜 Créer un modèle</button>
+					<button data-method="follow">⛑ Suivre</button>
+					<button data-method="archive">🗄 Archiver</button>
+					<button data-method="destroy">🧨 Détruire</button>
+				</content>
+			</liste_actions>
+		</div>
+
+	</content>
+
+</carte_form>

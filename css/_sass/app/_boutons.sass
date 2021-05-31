@@ -1,0 +1,70 @@
+button
+  &.btn, &.btn-close
+    all: unset
+    // cursor: pointer // sera détruit par all:unset
+  &.text, &.link, &.btn-close
+    all: unset
+    font-size: 11pt
+    font-family: Arial
+    cursor: pointer
+
+  // Bouton comme des liens
+  &.link
+    text-decoration: underline
+
+  // Bouton pour ajouter ou supprimer
+  &.btn-add, &.btn-sup, &.common, &.btn-to-modele, &.btn-save, &.btn-btn
+    all: unset
+    cursor: pointer
+    background-color: #c8bfbf
+    color: white
+    padding: 0.2em 0.8em
+    transition: 0.2s
+    cursor: pointer
+    &:hover, &.opac
+      background-color: #392c2c
+      transition: 0.5s
+  &.btn-close
+    float: right
+    &:after
+      content: "✕"
+      cursor: pointer
+  &.btn-add
+    &:before
+      content: "+ "
+  &.btn-sup
+    &:before
+      content: "✕ "
+      color: red
+      margin-right: 4px
+  &.btn-edit
+    display: inline-block
+    width: 20px
+    position: relative
+    &:before
+      content: '✏️'
+      margin-left: 8px
+      position: absolute
+      top: -18px
+      left: -3px
+      font-size: 9pt  
+  &.btn-to-modele
+    &:after
+      content: "☞"
+      margin-left: 10px
+      color: green
+button.main
+  background-color: #22ac22
+  &:not(:hover)
+    opacity: 1!important
+  &:hover
+    background-color: #22ac22
+    opacity: 1!important
+
+button:not(.fright) + button:not(.fright)
+  margin-left: 8px
+button.fright + button.fright
+  margin-right: 8px
+
+button.nobackground
+  background-color: transparent !important

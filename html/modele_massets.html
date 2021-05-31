@@ -1,0 +1,28 @@
+<!-- 
+Pour l'édition du masset
+ -->
+<massetedit>
+	<button class="btn-close" data-owner-method="hideEdit"></button>
+	<picto class="masset-picto"></picto>
+	<label class="masset-label"></label>
+	<input class="masset-content" type="text" />
+	<tags></tags>
+	<member class="hidden"></member>
+	<state></state>
+	<buttons class="edition">
+		<button class="btn-save" data-owner-method="save">sauver</button>
+	</buttons>
+</massetedit>
+
+<!-- 
+	Pour l'affichage du masset (dans l'éditeur de carte)
+ -->
+<masset>
+	<buttons>
+		<button class="btn-edit btn" data-owner-method="edit"></button>
+		<button class="btn-sup nobackground" data-owner-method="destroy"></button>
+		<button class="btn-btn btn-exec main" data-owner-method="exec"><!-- Exécute --></button>
+	</buttons>
+	<picto class="masset-picto"></picto>
+	<label class="masset-content"></label>
+</masset>
