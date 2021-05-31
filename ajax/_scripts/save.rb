@@ -28,7 +28,7 @@ def folder
 end
 end
 
-if data[:type] == 'config'
+if data[:ty] == 'config'
 	path = File.join(APP_FOLDER,'data','montrello','config.yaml')
 	if File.exist?(path)
 		File.delete(path) 

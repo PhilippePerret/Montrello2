@@ -61,7 +61,6 @@ static unlisten(button, evType, method){
   button.removeEventListener(evType,method)
 }
 
-
 /**
   Méthode qui insert la brique html de chemin relatif +fname+ (dans ./html)
   dans le container +container+.
@@ -70,9 +69,7 @@ static insert(fname, container = document.body){
   return new Promise((ok,ko)=>{
     Ajax.send('system/get-brique.rb', {rpath: fname})
     .then(ret => {
-      console.log("Retour de get-brique :", ret)
       if ( 'string' == typeof container ) { container = document.querySelector(container) }
-        console.log("Container: ", container)
       container.insertAdjacentHTML('beforeend', ret.brique)
       ok(ret)
     })
