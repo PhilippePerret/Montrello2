@@ -14,6 +14,7 @@ Object.assign(UI,{
 		*	en éléments dont on peut éditer le texte directement
 		*/
 	setEditableIn(container){
+		console.log("-> UI#setEditableIn, dans container :", container)
 		container.querySelectorAll('.editable').forEach(element => {
 			// On recherche le premier parent qui définit la classe
 			// Note : la classe est "collée" à l'élément à la création de
@@ -45,6 +46,7 @@ Object.assign(UI,{
 			classe = eval(element.getAttribute('data-strict-class'))
 			method = element.getAttribute('data-method')
 			element.owner = container.owner
+			console.log("Observeur pour element ... classe ... méthode '%s'", method, element, classe)
 			element.addEventListener('click', classe[method].bind(classe, element))
 		})
 

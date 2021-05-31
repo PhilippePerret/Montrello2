@@ -79,7 +79,7 @@ class << self
   end
 
   def param key
-    return nil if params[key.to_s].empty?
+    return nil if params[key.to_s].nil?
     # log("params[#{key.inspect}.to_s] = #{params[key.to_s].inspect}")
     v, typeV = JSON.parse(params[key.to_s])
     # log("v, typeV de #{key.inspect} = #{v.inspect}, #{typeV.inspect}")

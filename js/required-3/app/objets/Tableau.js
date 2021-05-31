@@ -106,12 +106,21 @@ build(){
 	* Observe
 	*/
 observe(){
+
+	/**
+	 * Les objets doivent être éditable
+	 */
+	UI.setEditableIn(this.obj)
+
+	/**	
+	 	* La liste des listes doit être sortable
+	 	*/
 	$(this.obj.querySelector('items')).sortable({
-		axis:'x'
-	, items: '> liste'
-	, activate: function(ev,ui){ui.helper.addClass('moved')}
-	, deactivate: function(ev,ui){ui.item.removeClass('moved')}
-})
+			axis:'x'
+		, items: '> liste'
+		, activate: function(ev,ui){ui.helper.addClass('moved')}
+		, deactivate: function(ev,ui){ui.item.removeClass('moved')}
+	})
 }
 
 /**

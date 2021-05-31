@@ -71,7 +71,7 @@ resetProps(){
 },
 
 dispatch(type, ret){
-	console.log("dispatch(type = %s, ret = )", type, ret)
+	// console.log("dispatch(type = %s, ret = )", type, ret)
 	return new Promise((ok,ko) => {
 		if ( type == 'config' ) {
 			this.dispatch_config(ret.data)
@@ -97,7 +97,7 @@ setConfig(hdata){
 
 
 dispatch_data(data, type){
-	console.log("dispatch_data(type = %s) with data", type, data)
+	// console.log("dispatch_data(type = %s) with data", type, data)
 	const my = this
 	Object.assign(my.lastIds, {[type]: 0})
 	const Classe = this.type2class(data[0].ty)
