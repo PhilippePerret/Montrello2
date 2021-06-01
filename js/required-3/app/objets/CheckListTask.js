@@ -3,7 +3,7 @@
 class CheckListTask {
 
 static get(item_id){
-	console.log("-> CheckListTask.get", item_id, this.items)
+	// console.log("-> CheckListTask.get", item_id, this.items)
 	if ( this.items ) {
 		return this.items[item_id]
 	}

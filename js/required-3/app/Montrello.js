@@ -47,22 +47,22 @@ init:function(){
 	.then(this.buildItemsOf.bind(this, Tableau))
 	.then(this.ensureCurrentTableau.bind(this))
 	.then(Ajax.send.bind(Ajax,'load.rb',{type:'ma' /* masset */}))	
-	// .then(this.dispatch.bind(this, 'ma'))
-	// .then(Ajax.send.bind(Ajax,'load.rb',{type:'tk' /* task de checklist */}))	
-	// .then(this.dispatch.bind(this, 'tk'))
-	// .then(Ajax.send.bind(Ajax,'load.rb',{type:'cl' /* checklist */}))	
-	// .then(this.dispatch.bind(this, 'cl'))
-	// .then(Ajax.send.bind(Ajax,'load.rb',{type:'li' /* liste */ }))
-	// .then(this.dispatch.bind(this, 'li'))
-	// .then(this.buildItemsOf.bind(this, Liste))
-	// .then(Ajax.send.bind(Ajax,'load.rb',{type:'ca' /* carte */}))	
-	// .then(this.dispatch.bind(this, 'ca'))
-	// .then(this.buildItemsOf.bind(this, Carte))
-	// .then(ret => {
-	// 	App._isUpAndRunning = true
-	// 	console.log("Application prête")
-	// 	console.log("This.lastIds", this.lastIds)
-	// })
+	.then(this.dispatch.bind(this, 'ma'))
+	.then(Ajax.send.bind(Ajax,'load.rb',{type:'tk' /* task de checklist */}))	
+	.then(this.dispatch.bind(this, 'tk'))
+	.then(Ajax.send.bind(Ajax,'load.rb',{type:'cl' /* checklist */}))	
+	.then(this.dispatch.bind(this, 'cl'))
+	.then(Ajax.send.bind(Ajax,'load.rb',{type:'li' /* liste */ }))
+	.then(this.dispatch.bind(this, 'li'))
+	.then(this.buildItemsOf.bind(this, Liste))
+	.then(Ajax.send.bind(Ajax,'load.rb',{type:'ca' /* carte */}))	
+	.then(this.dispatch.bind(this, 'ca'))
+	.then(this.buildItemsOf.bind(this, Carte))
+	.then(ret => {
+		App._isUpAndRunning = true
+		console.log("Application prête")
+		console.log("This.lastIds", this.lastIds)
+	})
 	.catch(console.error)
 },
 

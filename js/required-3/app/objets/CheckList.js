@@ -57,6 +57,7 @@ get data(){
 	*
 	*/
 get tasks(){ return this._data.tasks }
+set tasks(v){this._data.tasks = v}
 
 // Retourne la liste des identifiants de tâche
 getTaskListIds(){
@@ -207,7 +208,30 @@ updateDevJauge(){
 	*/
 ownerise(){
 	const my = this
-	this.tasks.forEach(tkid => CheckListTask.get(tkid).checklist = my)
+	var newListTaskIds = [] // pour mettre la nouvelle liste, si elle a changé
+	this.tasks.forEach(tkid => {
+		const task = CheckListTask.get(tkid)
+		if ( task ) {
+
+			task.checklist = my
+			newListTaskIds.push(tkid)
+
+		} else {
+
+			// La tâche n'existe plus
+			console.log("[Erreur composition] La tâche %s n'existe plus. On retire son ID de la liste.", tkid)
+
+		}
+	})
+
+	//
+	// Si la liste a changé (suite à la destruction manuelle d'une
+	// tâche par exemple), on doit la modifier.
+	// 
+	if ( this.tasks.length > newListTaskIds.length ) {
+		this.tasks = newListTaskIds
+	}
+
 }
 
 }
