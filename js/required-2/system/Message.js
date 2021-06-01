@@ -15,6 +15,10 @@ function suivi(msg, debugLevel){
   console.log('%c'+msg, 'font-family:courier;font-size:8pt;color:grey;margin-left:2em;')
 }
 
+function systemError(msg){
+  console.error("SYSTEM ERROR : ", msg)
+}
+
 window.error = window.erreur.bind(window)
 
 class Message {

@@ -5,7 +5,21 @@
 =end
 require 'yaml'
 
-data = Ajax.param(:data).to_sym
+
+data = Ajax.param(:data)
+
+if data.nil?
+	raise "+data+ est nil. Je ne peux pas procéder à la sauvegarde."
+end
+
+if not data.respond_to?(:to_sym)
+	raise "+data+ (#{data.inspect}::#{data.class}) devrait répondre à ma méthode :to_sym. Ça n'est pas le cas. Impossible de procéder à la sauvegarde."
+end
+
+# 
+# Tout est bon, on peut transformer en table avec clés symboliques
+# 
+data = data.to_sym
 
 class Objet
 attr_reader :data

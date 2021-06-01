@@ -56,6 +56,7 @@ class Ajax {
         , success: ok
         , error: this.onError.bind(this,ko)
       }
+      // console.log("[Ajax] Données envoyées par ajax :", data)
       $.ajax(data)
     })
   }
@@ -63,7 +64,8 @@ class Ajax {
   static traiteErrorInRetour(retour){
     return new Promise((ok,ko) => {
       if ( retour.error ) {
-        erreur(retour.error)
+        // erreur(retour.error)
+        ko(retour)
       } else {
         ok(retour)
       }

@@ -11,10 +11,22 @@ static get(item_id) {
 
 static get current(){ return this._current }
 
+/**
+ * Mettre le tableau +t+ en tableau courant
+ * 
+ * Note : cette procédure, contrairement à #setCurrent, enregistre
+ * la configuration avec le nouveau tableau courant. Il ne faut donc
+ * pas l'utiliser au chargement.
+ * 
+ */
 static set current(t){
 	if ( this._current ) this._current.hide()
-	this._current = t
 	Montrello.setConfig({current_pannel_id: t.id})
+	this.setCurrent(t)
+}
+
+static setCurrent(t){
+	this._current = t
 	t.prepare()
 }
 

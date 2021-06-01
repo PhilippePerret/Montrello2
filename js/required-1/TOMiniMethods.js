@@ -39,7 +39,7 @@ let TOMiniMethods = {
 		delete data4save.owner
 		delete data4save.cr // régression
 
-		// console.log("Data à sauvegarder : ", data4save)
+		console.log("Data à sauvegarder : ", data4save)
 
 		Ajax.send('save.rb', {data: data4save}).then(ret => {
 			// console.log("Retour d'ajax : ", ret)

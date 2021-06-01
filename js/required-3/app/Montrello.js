@@ -47,22 +47,22 @@ init:function(){
 	.then(this.buildItemsOf.bind(this, Tableau))
 	.then(this.ensureCurrentTableau.bind(this))
 	.then(Ajax.send.bind(Ajax,'load.rb',{type:'ma' /* masset */}))	
-	.then(this.dispatch.bind(this, 'ma'))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'tk' /* task de checklist */}))	
-	.then(this.dispatch.bind(this, 'tk'))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'cl' /* checklist */}))	
-	.then(this.dispatch.bind(this, 'cl'))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'li' /* liste */ }))
-	.then(this.dispatch.bind(this, 'li'))
-	.then(this.buildItemsOf.bind(this, Liste))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'ca' /* carte */}))	
-	.then(this.dispatch.bind(this, 'ca'))
-	.then(this.buildItemsOf.bind(this, Carte))
-	.then(ret => {
-		App._isUpAndRunning = true
-		console.log("Application prête")
-		console.log("This.lastIds", this.lastIds)
-	})
+	// .then(this.dispatch.bind(this, 'ma'))
+	// .then(Ajax.send.bind(Ajax,'load.rb',{type:'tk' /* task de checklist */}))	
+	// .then(this.dispatch.bind(this, 'tk'))
+	// .then(Ajax.send.bind(Ajax,'load.rb',{type:'cl' /* checklist */}))	
+	// .then(this.dispatch.bind(this, 'cl'))
+	// .then(Ajax.send.bind(Ajax,'load.rb',{type:'li' /* liste */ }))
+	// .then(this.dispatch.bind(this, 'li'))
+	// .then(this.buildItemsOf.bind(this, Liste))
+	// .then(Ajax.send.bind(Ajax,'load.rb',{type:'ca' /* carte */}))	
+	// .then(this.dispatch.bind(this, 'ca'))
+	// .then(this.buildItemsOf.bind(this, Carte))
+	// .then(ret => {
+	// 	App._isUpAndRunning = true
+	// 	console.log("Application prête")
+	// 	console.log("This.lastIds", this.lastIds)
+	// })
 	.catch(console.error)
 },
 
@@ -91,15 +91,26 @@ dispatch_config(data){
 
 setConfig(hdata){
 	Object.assign(this.config, hdata)
+	console.log("Enregistrement de la configuration : ", this.config)
 	Ajax.send('save.rb', {data: this.config})
-	.catch(console.error)
+	.then(ret => {
+		if (ret.error) return erreur(ret.error)
+		console.log("Configuration enregistrée avec succès.")
+	})
+	.catch(ret => {
+		erreur("Impossible d'enregistrer la configuration : " + ret.error + ' (consulter la console')
+		console.error("Données envoyées pour sauvegarde :", this.config)
+	})
 },
 
 
 dispatch_data(data, type){
 	// console.log("dispatch_data(type = %s) with data", type, data)
 	const my = this
+	if ( !type ) { return systemError("[Montrello#dispatch_data] +type+ devrait être défini.") }
+	if ( !data ) { return systemError("[Montrello#dispatch_data] +data+ devrait être défini.") }
 	Object.assign(my.lastIds, {[type]: 0})
+	if ( data.length == 0 ) return // aucun élément
 	const Classe = this.type2class(data[0].ty)
 	Classe.items = {}
 	data.forEach(hdata => {
@@ -114,12 +125,15 @@ dispatch_data(data, type){
 },
 
 buildItemsOf(classe,ret){
-	if ( !classe.items ) return
-	const items = Object.values(classe.items)
-	if ( items.length == 0 ) return
-	const aItem = items[0]
-	const method = 'function' == typeof(aItem.build_and_observe) ? 'build_and_observe' : 'build'
-	items.forEach(item => item[method]())
+	return new Promise((ok,ko) => {
+		if ( !classe.items ) return ok() ;
+		const items = Object.values(classe.items)
+		if ( items.length == 0 ) return
+		const aItem = items[0]
+		const method = 'function' == typeof(aItem.build_and_observe) ? 'build_and_observe' : 'build'
+		items.forEach(item => item[method]())
+		ok()
+	})
 },
 
 /**
@@ -128,18 +142,23 @@ buildItemsOf(classe,ret){
 	*
 	*/
 ensureCurrentTableau:function(){
-	let current ;
-	if ( this.config.current_pannel_id ){
-		current = Tableau.get(this.config.current_pannel_id)
-	} 
-	if ( current ) Tableau.current = current
-	else {
-		// Si aucun tableau courant n'est défini ou n'existe plus, il 
-		// faut en créer un
-		Tableau.create("Mon premier tableau")
-	}
-	// Peuplement du menu des tableaux dans l'header
-	Tableau.updateFeedableMenu()
+	return new Promise((ok,ko) => {
+		let current ;
+		if ( this.config.current_pannel_id ){
+			current = Tableau.get(this.config.current_pannel_id)
+		} 
+		if ( current ) {
+			Tableau.setCurrent(current)
+		}
+		else {
+			// Si aucun tableau courant n'est défini ou n'existe plus, il 
+			// faut en créer un
+			Tableau.create("Mon premier tableau")
+		}
+		// Peuplement du menu des tableaux dans l'header
+		Tableau.updateFeedableMenu()
+		ok()
+	})
 },
 
 }//Montrello

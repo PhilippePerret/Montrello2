@@ -31,7 +31,8 @@ static setIn(owner){
 		const maxW = devjauge.offsetWidth
 		// console.log("Largeur : ", maxW)
 		var taskDone = 0
-		// Il faut voir combien de tâches sont faites
+		// Il faut voir combien de tâches sont effectuées
+		console.log("owner.tasks", owner.tasks)
 		owner.tasks.forEach(task => {
 			if ('object' != typeof(task)) task = CheckListTask.get(task)
 			if ( task.checked ) ++ taskDone
