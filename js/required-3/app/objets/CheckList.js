@@ -1,7 +1,5 @@
 'use strict'
-class CheckList {
-
-static get(item_id){ return this.items[item_id]}
+class CheckList extends MontrelloObjet {
 
 /**
 	* Création d'une check-list
@@ -24,6 +22,7 @@ static createFor(owner){
 	clist.build_and_observe()
 	clist.createTask()
 	clist.save()
+	this.addItem(clist)
 	// On doit ajouter la liste à la carte
 	owner.carte.addObjet(clist)
 }
@@ -31,6 +30,7 @@ static createFor(owner){
 static get ownerClass(){ return Carte }
 
 constructor(data){
+	super(null) // formule pour ne pas défini this.data dans MontrelloObjet
 	// console.log("Instanciation CheckList avec :", data)
 	this._data = data /** Quand une donnée doit être modifiée dans les
 											* données avant enregistrement, comme ici la

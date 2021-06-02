@@ -8,8 +8,12 @@
   - peut-être que le modèle est toujours lié, ou alors une option pour le déterminer
     Si le modèle est toujours lié, on l'actualise à chaque fois
 * Gérer les tâches/carte en cours, les mettre dans une partie dédiée dans le tableau de bord
-* La jauge de la carte doit s'actualiser quand on ajoute/retire des tasks
-* Recréer le bloc d'information qu'on créait juste avant le crash.
+* CARTES
+  * Possibilité de cocher la date pour indiquer que la tâche est finie
+  * Régler la couleur de la date en fonction de la date courante (à l'approche, dépassée, achevée, etc.)
+  * Méthode 'displayUpdate' pour la carte. Appelée :
+    * quand on ajoute/modifie/supprime la date dans la carte, actualiser son affichage
+    * quand on modifie la liste des tâches
 * S'il n'y a aucune donnée dans une nouvelle carte, mais qu'il y a une description, c'est cette description qu'on écrit.
 * Les dates doivent apparaitre sur la carte éditée
 * Gérer cette Todo liste dans l'application elle-même (tableau "Programmes" avec Montrello)

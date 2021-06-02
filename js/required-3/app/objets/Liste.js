@@ -1,9 +1,5 @@
 'use strict'
-class Liste {
-
-static get(liste_id){
-	return this.items[liste_id]
-}
+class Liste extends MontrelloObjet {
 
 /**	Créer une liste pour le tableau courant
 	*
@@ -13,6 +9,7 @@ static create(){
 	const newItem = new Liste({owner:owner, ti:"Nouvelle liste", ct:'tb', ty:'li', ow:owner.ref, id:Montrello.getNewId('li')})
 	newItem.build()
 	newItem.save()
+	this.addItem(newItem)
 	newItem.editTitle()
 }
 
@@ -20,7 +17,7 @@ static get ownerClass(){return Tableau}
 
 
 constructor(data){
-	this.data = data
+	super(data)
 }
 
 build(){

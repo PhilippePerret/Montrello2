@@ -11,23 +11,24 @@ const MASSET_TYPES = {
 	, 'url': {name: 'URL', picto:'🌏', command: 'Go'}
 }
 
-class Masset {
-
-static get(ma_id){ return this.items[ma_id] }
+class Masset extends MontrelloObjet {
 
 /**
 	* Création d'un nouveau Masset de type +mtype+ pour +owner+
 	*
+	* +mtype+ 	Le type du Masset à créer (dossier, url, etc.)
+	* +owner+		Le propriétaire (instance)
 	* +btn+ Le bouton qui a déclenché la méthode (pour la position)
 	*/
 static create(mtype, owner, btn){
 	// console.log("Je dois créer un masset de mtype %s pour", mtype, owner)
-	const masset = new Masset({ty:'ma', mty: mtype}, owner)
+	const masset = new Masset({ty:'ma', mty: mtype, ow:owner.ref}, owner)
 	masset.edit(btn)
+	this.addItem(masset)
 }
 
 constructor(data, owner){
-	this.data = data
+	super(data)
 	owner && (this.owner = owner)
 	// console.log("this.owner = ", this.owner)
 }

@@ -1,13 +1,5 @@
 'use strict'
-class Tableau {
-
-/**
-	* Retourne le tableau d'identifiant +item_id+
-	*/
-static get(item_id) { 
-	this.items || (this.items = {})
-	return this.items[item_id]
-}
+class Tableau extends MontrelloObjet {
 
 static get current(){ return this._current }
 
@@ -40,6 +32,7 @@ static create(element){
 	this.current = new Tableau({ty:'tb',ti:pannel_name, id:Montrello.getNewId('tb')})
 	this.current.save()
 	this.current.editTitle()
+	this.addItem(this.current)
 	FeedableMenu.get('menu-tableaux').add(this.current)
 }
 
@@ -71,6 +64,7 @@ static onChooseItem(item){
 }
 
 constructor(data){
+	super()
 	this.data = data
 }
 

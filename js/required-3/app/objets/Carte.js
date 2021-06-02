@@ -1,7 +1,5 @@
 'use strict'
-class Carte {
-
-static get(item_id){ return this.items[item_id] }
+class Carte extends MontrelloObjet {
 
 // 
 // Pour créer une nouvelle carte à la liste
@@ -10,14 +8,15 @@ static create(element){
 	// console.log("add carte pour", element, element.owner)
 	const newItem = new this({
 			ct: `#${element.owner.domId}`
+		, ow:element.owner.ref
 		, id: Montrello.getNewId('ca')
 		, ty:'ca'
 		, ti: 'Nouvelle carte'
-		, ow:element.owner.ref
 		, objs: {}
 	})
 	newItem.build()
 	newItem.save()
+	this.addItem(newItem)
 	newItem.editTitle()
 	return newItem
 }
@@ -27,7 +26,7 @@ static get ownerClass(){return Liste}
 
 constructor(data){
 	// console.log("data initialisation de la carte :", data)
-	this.data = data
+	super(data)
 }
 
 get ref(){return `${this.ty}-${this.id}`}
