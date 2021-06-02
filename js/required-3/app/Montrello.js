@@ -59,6 +59,7 @@ init:function(){
 	.then(this.dispatch.bind(this, 'ca'))
 	.then(this.buildItemsOf.bind(this, Carte))
 	.then(ret => {
+		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true
 		console.log("Application prête")
 		console.log("This.lastIds", this.lastIds)
