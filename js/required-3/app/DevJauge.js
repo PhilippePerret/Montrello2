@@ -12,7 +12,8 @@ class DevJauge {
 static setIn(owner){
 	let devjauge
 	try {
-		owner.obj || raise("Le propriétaire doit répondre à 'obj' qui doit retourner son objet DOM")
+		owner 			|| raise("DevJauge::setInt doit recevoir le propriétaire en premier argument. Rien n'a été reçu.")
+		owner.obj 	|| raise("Le propriétaire doit répondre à 'obj' qui doit retourner son objet DOM")
 		owner.tasks || raise("Le propriétaire doit répondre à 'tasks', qui doit retourner les IDs de ses tâches")
 		devjauge = owner.obj.querySelector('devjauge')
 		devjauge || raise("Le propriétaire doit posséder une balise <devjauge> pour sa jauge")
@@ -32,7 +33,7 @@ static setIn(owner){
 		// console.log("Largeur : ", maxW)
 		var taskDone = 0
 		// Il faut voir combien de tâches sont effectuées
-		console.log("owner.tasks", owner.tasks)
+		// console.log("owner.tasks", owner.tasks)
 		owner.tasks.forEach(task => {
 			if ('object' != typeof(task)) task = CheckListTask.get(task)
 			if ( task.checked ) ++ taskDone

@@ -19,7 +19,11 @@ let TOMiniMethods = {
 	/**
 		*	=== MÉTHODES DE PROPRIÉTÉS ===
 		*/
+
+
 	save(params){
+
+		this.saved = false
 
 		if (undefined == this.data) this.data = {}
 
@@ -47,10 +51,15 @@ let TOMiniMethods = {
 			else {
 				// console.log("Données sauvegardées :", data4save)
 				// message("Donnée sauvegardée avec succès.")
+				this.saved = true
+				return true
 			}
 		})
 	},
 
+	/**
+	 * Actualise les propriétés de l'objet et les sauve
+	 */
 	set(hdata){
 		Object.assign(this.data, hdata)
 		// Si c'est un champ autoéditable

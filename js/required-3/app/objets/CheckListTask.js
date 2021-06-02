@@ -1,6 +1,6 @@
 'use strict'
 
-class CheckListTask {
+class CheckListTask extends MontrelloObjet {
 
 static get(item_id){
 	// console.log("-> CheckListTask.get", item_id, this.items)
@@ -24,9 +24,11 @@ static createFor(owner){
 	newtask.build_and_observe()
 	newtask.edit()
 	owner.save()
+	this.addItem(newtask)
 }
 
 constructor(data){
+	super()
 	data.owner && (this.checklist = data.owner)
 	this._data = data /** Cf. l'explication dans CheckList */
 }

@@ -1,3 +1,4 @@
+.git/
 
 # On ne doit pas télécharger les données propres et secrètes
 /data/montrello/
