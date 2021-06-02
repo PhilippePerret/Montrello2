@@ -49,6 +49,24 @@ get data(){
 	return this._data
 }
 
+/**
+ * Méthode appelée pour retirer la tâche +task+ de la liste des
+ * tâches (et enregistrement de la nouvelle liste => méthode asynchrone
+ * retournant la promesse)
+ * 
+ * Cette méthode actualise aussi la jauge associée à la liste.
+ * 
+ */
+removeTask(task){
+	var idx = this.tasks.indexOf(task.id)
+	if (idx < 0) {
+		return erreur("La tâche d'identifiant "+task.id+" est introuvable dans la liste "+this.tasks.join(', ')+"… Je dois renoncer à la suppression.")
+	}
+	this._data_tasks.splice(idx,1)
+	this.updateDevJauge()
+	return this.saveAsync()
+}
+
 /**	
 	* Retourne la liste des tâches DANS LES DONNÉES (*)
 	*
@@ -136,7 +154,7 @@ build(){
 	* Appelée quand on termine de trier la liste des tâches
 	*
 	* À la fin du déplacement des tâches, on met en route un compte à 
-	* rebours qui, s'il arrive à son termen, enregistre le nouveau
+	* rebours qui, s'il arrive à son terme, enregistre le nouveau
 	* classement. Sinon, si on commence à déplacer un autre item (cf.
 	* onStartSorting), ça interrompt le compte à rebours (pour ne pas
 	* enregistrer plein de fois si plusieurs changements sont opérés)

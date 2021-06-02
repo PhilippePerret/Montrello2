@@ -18,6 +18,21 @@ static addItem(item) {
   PanelInfos.update()
 }
 
+/**
+ * Retire l'item +item+ de la liste des itemps
+ * (par exemple après sa destruction)
+ * 
+ */
+ static removeItem(item){
+    if ( this.items[item.id] ) {
+      this.items[item.id] = undefined
+      delete this.items[item.id]
+      PanelInfos.update()
+    } else {
+      return erreur("Impossible de détruire l'item "+item.ref+" : il est inconnu de la liste des items du constructor…")
+    }
+ }
+
 
 /**
   * Retourne l'item d'identifiant +item_id+

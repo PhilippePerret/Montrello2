@@ -2,13 +2,6 @@
 
 class CheckListTask extends MontrelloObjet {
 
-static get(item_id){
-	// console.log("-> CheckListTask.get", item_id, this.items)
-	if ( this.items ) {
-		return this.items[item_id]
-	}
-}
-
 /**
 	* Pour créer une nouvelle tâche dans +owner+
 	*/
@@ -112,8 +105,29 @@ edit(){
 	MiniEditor.edit(this.lab)
 }
 
+/**
+ * Méthode appelée quand on veut détruire la tâche
+ * Cette destruction implique :
+ * 	- la destruction de son fichier dans les données enregistrées
+ * 	- la suppression dans la checklist parente
+ * 	- l'enregistrement de la checklist parente pour tenir compte de
+ * 		la nouvelle liste.
+ *  - l'actualisation de la jauge dans la carte éditée
+ * 	- l'actualisation de la jauge dans la carte sur le bureau
+ * 	- la destruction de l'item dans le constructor (items)
+ * 	- actualiser les infos générales sur Montrello
+ * 	- la destruction de l'objet de la tâche dans la carte éditée
+ */
 onClickSupTask(ev){
-	message("Je dois détruire la tâche")
+	message("Destruction de la tâche en cours…")
+	Ajax.send('remove.rb', {type:'tk', id:this.id})
+	.then(this.checklist.removeTask.bind(this.checklist, this))
+	.then(ret => {
+		this.constructor.removeItem(this)
+		this.obj.remove() // pour finir
+		message("Tâche détruit avec succès", {keep:false})
+	})
+	.catch(console.error)
 }
 
 get checked(){ return this.data.on === true }

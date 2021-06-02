@@ -23,6 +23,8 @@ let TOMiniMethods = {
 
 	save(params){
 
+		params = params || {}
+
 		this.saved = false
 
 		if (undefined == this.data) this.data = {}
@@ -43,18 +45,29 @@ let TOMiniMethods = {
 		delete data4save.owner
 		delete data4save.cr // régression
 
-		console.log("Data à sauvegarder : ", data4save)
 
-		Ajax.send('save.rb', {data: data4save}).then(ret => {
-			// console.log("Retour d'ajax : ", ret)
-			if (ret.erreur) erreur(ret.erreur)
-			else {
-				// console.log("Données sauvegardées :", data4save)
-				// message("Donnée sauvegardée avec succès.")
-				this.saved = true
-				return true
-			}
-		})
+		console.log("Data à sauvegarder de façon %s: ", (params.async?'a':'')+'synchrone', data4save)
+
+		if ( params.async ) {
+			return Ajax.send('save.rb', {data: data4save})
+		} else {
+			Ajax.send('save.rb', {data: data4save}).then(ret => {
+				// console.log("Retour d'ajax : ", ret)
+				if (ret.erreur) erreur(ret.erreur)
+				else { return this.saved = true }
+			})
+		}
+	},
+
+	/**
+	 * Sauver de façon asynchrone, c'est-à-dire en retournant une
+	 * promesse.
+	 * 
+	 */
+	saveAsync(params){
+		params = params || {}
+		Object.assign(params, {async: true})
+		return this.save(params)
 	},
 
 	/**
