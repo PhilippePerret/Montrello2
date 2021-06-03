@@ -5,32 +5,31 @@ class CheckList extends MontrelloObjet {
 	* Création d'une check-list
 	* (dans le formulaire de carte)
 	*
-	* Note : le propriétaire +owner+ est la CarteForm et doit le rester
-	* pour écrire les éléments, etc. En revanche, c'est owner.carte qui
-	* doit recevoir les modifications de données, selon le principe du
-	* pipe.
+	* Note : avant, le propriétaire de la checklist était le formulaire
+	* d'édition de la carte, maintenant c'est la carte elle-même pour
+	* simplifier les opérations.
 	*
 	*/
 static createFor(owner){
-	const clist = new CheckList({
-			ow: 		null
+	return this.createItemFor(owner.carte)
+}
+
+static initNewItemFor(owner){
+	return new CheckList({
+			ow: 		owner.ref
 		, owner: 	owner
 		, ty: 		'cl'
 		, id: 		Montrello.getNewId('cl')
 		, tasks:  []
 	})
-	clist.build_and_observe()
-	clist.createTask()
-	clist.save()
-	this.addItem(clist)
-	// On doit ajouter la liste à la carte
-	owner.carte.addObjet(clist)
 }
 
 static get ownerClass(){ return Carte }
 
 constructor(data){
-	super(null) // formule pour ne pas défini this.data dans MontrelloObjet
+	super(null) /** formule pour ne pas définir this.data dans 
+								* MontrelloObjet
+								*/
 	// console.log("Instanciation CheckList avec :", data)
 	this._data = data /** Quand une donnée doit être modifiée dans les
 											* données avant enregistrement, comme ici la
@@ -41,12 +40,67 @@ constructor(data){
 											*/
 }
 
+/**
+ * Appelée après la création de la liste
+ * 
+ */
+afterCreate(){
+	this.createTask()
+	this.owner.carte.addObjet(this)
+}
 
 // *** Données et propriétés ***
 
 get data(){
 	if (this.ul) this._data.tasks = this.getTaskListIds()
 	return this._data
+}
+
+
+/**
+ * Modélise la liste, c'est-à-dire la transforme en un modèle
+ * qui sera utilisable par d'autres cartes
+ * 
+ * Note : chaque objet doit définir sa modélisation car elle dépend
+ * beaucoup des objets qu'elle contient, comme ici les tâches
+ * 
+ * Attention : il ne faut pas confondre cette méthode avec la 
+ * méthode qui enregistre l'objet en tant que modèle utilisable.
+ * Cette méthode-ci retourne les données pour créer la copie.
+ * 
+ * @return L'instance CheckList de la nouvelle liste, enregistrée
+ * 				 qu'il ne reste plus qu'à construire.
+ */
+async makeCopy(owner){
+	var d = {}
+	Object.assign(d, this.data)
+	delete d.id
+	// On doit faire une duplication des tâches
+	let task_ids = []
+	var copy
+	this.tasks.forEach(taskid => {
+		const task = CheckListTask.get(taskid)
+		// copy = await task.makeCopy() // le texte initial
+		await(copy = task.makeCopy())
+		console.log("copy", copy)
+		copy || raise("La copie doit être définie")
+		task_ids.push(copy.id)
+	})
+	Object.assign(d, {
+			owner: 	owner
+		, ow: 		owner.ref
+		, tasks: 	task_ids
+	})
+	return this.constructor.createNewItemWith(d)
+}
+
+/**
+	* Pour ajouter une tâche à la liste
+	*
+	*/
+createTask(){
+	CheckListTask.createFor(this)
+	this.updateDevJauge()
 }
 
 /**
@@ -77,7 +131,8 @@ removeTask(task){
 get tasks(){ return this._data.tasks }
 set tasks(v){this._data.tasks = v}
 
-// Retourne la liste des identifiants de tâche
+// Retourne la liste des identifiants de tâche dans l'ordre relevé
+// dans la liste affichée
 getTaskListIds(){
 	let idlist = []
 	this.ul.querySelectorAll('task').forEach(tk => {
@@ -88,11 +143,6 @@ getTaskListIds(){
 
 // *** Construction et observation ***
 
-build_and_observe(){
-	this.build()
-	this.observe()
-}
-
 /**
 	*	Construction de la checklist
 	*
@@ -102,19 +152,12 @@ build_and_observe(){
 	*/
 build(){
 	const o = DOM.clone('modeles checklist')
-	o.id = `checklist-${this.id}`
+	o.id = this.domId
 	this.ul = o.querySelector('ul')
 
 	this.btn_add = o.querySelector('button.btn-add')
 	this.btn_sup = o.querySelector('button.btn-sup')
 	this.btn_mod = o.querySelector('button.btn-to-modele') // => pour faire un modèle de liste
-
-	// On rend la liste classable
-	$(this.ul).sortable({
-			axis:'y'
-		, stop:this.onStopSorting.bind(this)
-		, start:this.onStartSorting.bind(this)
-	})
 
 	this.obj = o
 
@@ -141,9 +184,12 @@ build(){
 	 	* depuis l'instanciation de l'application) alors on construit les
 	 	* éléments dans le document. NON, pour le mmoment, on ne les
 	 	* ajoute pas.
+	 	* 
+	 	* Note : maintenant, ici, +owner+ est une Carte. Il faut tester 
+	 	* sa propriété @form pour savoir si elle est éditée
 	 	*/
-	if (this.owner && this.owner.obj){ 
-		this.owner.obj.querySelector('div#carte-taches-div > content').appendChild(o)
+	if (this.owner && this.owner.form && this.owner.form.obj){ 
+		this.owner.form.obj.querySelector('div#carte-taches-div > content').appendChild(o)
 		o.classList.remove('hidden')
 	} else {
 		document.body.appendChild(o)
@@ -177,6 +223,14 @@ onStartSorting(){
 	*
 	*/
 observe(){
+
+	// On rend la liste classable
+	$(this.ul).sortable({
+			axis:'y'
+		, stop:this.onStopSorting.bind(this)
+		, start:this.onStartSorting.bind(this)
+	})
+
 	// 
 	// Bouton pour ajouter une tâche
 	// 
@@ -204,20 +258,21 @@ onClickRemoveList(ev){
 onClickMakeModele(ev){
 	message("Je dois faire un modèle de cette liste")
 	// QUESTION Quid de si c'est déjà un modèle
+	// On doit demander le nom du modèle
+	// On doit enregistrer la checklist comme un modèle
+	// Note : les modèles s'enregistrent comme les autres objets, avec un type ty, mais avec
+	// le préfixe 'm-'
+	// Donc 'm-cl' pour un modèle checklist
+	const modele = MontrelloModele.createFrom(this)
+	message("Modèle créé avec succès. Tu pourras l'utiliser avec la prochaine Checklist.")
+	message("Cette liste a été associée à ce modèle")
 }
 
-/**
-	* Pour ajouter une tâche à la liste
-	*
-	*/
-createTask(){
-	CheckListTask.createFor(this)
-	this.updateDevJauge()
-}
 
 updateDevJauge(){
+	return // pour le moment ça ne va pas TODO à régler ensuite
 	DevJauge.setIn(this)
-	DevJauge.setIn(this.carte)
+	this.owner.form && DevJauge.setIn(this.owner.form)
 }
 
 /**

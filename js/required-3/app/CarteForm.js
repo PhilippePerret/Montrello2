@@ -9,6 +9,7 @@ class CarteForm {
 static edit(element){
 	const carte = element.owner
 	const cform = new this(carte.data)
+	carte.form 	= cform
 	/** On met cette instance en instance courante pour les boutons
 		*
 		*/

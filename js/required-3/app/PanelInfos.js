@@ -56,8 +56,8 @@ static build(){
  */
 static update(){
   this.DATA_PANEL_INFOS.forEach(dinfo => {
-    console.log("dinfo.classe", dinfo.classe)
-    console.log("dinfo.classe.items", dinfo.classe.items)
+    // console.log("dinfo.classe", dinfo.classe)
+    // console.log("dinfo.classe.items", dinfo.classe.items)
     var count
     if ( !dinfo.classe.items ) count = 0
     else { count = Object.keys(dinfo.classe.items).length }

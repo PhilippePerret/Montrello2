@@ -26,6 +26,30 @@ constructor(data){
 	this._data = data /** Cf. l'explication dans CheckList */
 }
 
+/**
+ * @async
+ * 
+ * Produit une copie de la tâche (en l'enregistrant, mais sans
+ * la construire -- c'est le propriétaire qui le fera)
+ * 
+ * Note : cette méthode sert à la gestion des modèles
+ * 
+ * @return L'instance de la tâche produite
+ * 
+ */
+async makeCopy(){
+	var d = {}
+	Object.assign(d, this._data)
+	delete d.id
+	Object.assign(d, {
+			on: 		false
+		, owner: 	undefined
+		, ow: 		undefined
+	})
+	const newTask = await this.constructor.createNewItemWith(d)
+	return newTask
+}
+
 // *** Propriétés ***
 
 get data(){
@@ -34,11 +58,6 @@ get data(){
 }
 
 // *** Construction et observation ***
-
-build_and_observe(){
-	this.build()
-	this.observe()
-}
 
 build(){
 	const o 	= DOM.clone('modeles task')

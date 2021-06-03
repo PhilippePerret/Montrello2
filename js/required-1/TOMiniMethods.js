@@ -19,57 +19,6 @@ let TOMiniMethods = {
 	/**
 		*	=== MÉTHODES DE PROPRIÉTÉS ===
 		*/
-
-
-	save(params){
-
-		params = params || {}
-
-		this.saved = false
-
-		if (undefined == this.data) this.data = {}
-
-		// 
-		// Le 'constname', le constructeur en minuscule => type
-		// 
-		this.data.ty || (this.data.ty = this.constname)
-
-		// 
-		// Si l'identifiant n'est pas défini
-		this.data.id ||= (this.data.id = Montrello.getNewId(this.data.type))
-
-		// 
-		// Certains valeurs sont à retirer
-		const data4save = {}
-		Object.assign(data4save, this.data)
-		delete data4save.owner
-		delete data4save.cr // régression
-
-
-		console.log("Data à sauvegarder de façon %s: ", (params.async?'a':'')+'synchrone', data4save)
-
-		if ( params.async ) {
-			return Ajax.send('save.rb', {data: data4save})
-		} else {
-			Ajax.send('save.rb', {data: data4save}).then(ret => {
-				// console.log("Retour d'ajax : ", ret)
-				if (ret.erreur) erreur(ret.erreur)
-				else { return this.saved = true }
-			})
-		}
-	},
-
-	/**
-	 * Sauver de façon asynchrone, c'est-à-dire en retournant une
-	 * promesse.
-	 * 
-	 */
-	saveAsync(params){
-		params = params || {}
-		Object.assign(params, {async: true})
-		return this.save(params)
-	},
-
 	/**
 	 * Actualise les propriétés de l'objet et les sauve
 	 */
@@ -160,7 +109,7 @@ let TOMiniMethods = {
 	},
 
 	/**
-		* Méthode qui règle dans la carte (*) les propriétés communes, par
+		* Méthode qui règle dans l'objet (*) les propriétés communes, par
 		* exemple le titre ou l'identifiant.
 		*
 		* (*) Ou dans l'édition de la carte.
@@ -201,6 +150,11 @@ let TOMiniMethods = {
 }
 
 const TOMiniProperties = {
+
+	ref:{
+		enumerable: true,
+		get(){return `${this.type}-${this.id}`}
+	},
 
 	commonDisplayedProperties:{
 		enumerable: true,

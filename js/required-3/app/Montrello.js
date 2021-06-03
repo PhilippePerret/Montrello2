@@ -27,6 +27,21 @@ getNewId:function(type){
 },
 
 /**
+ * Permet d'actualiser le dernier identifiant d'un type
+ * 
+ * Cette méthode a été inaugurée pour les modèles et elle n'est 
+ * employée que pour eux pour le moment.
+ * 
+ */
+addOrNotLastIdFrom:function(item){
+	this.lastIds || (this.lastIds = {})
+	this.lastIds[item.type] || Object.assign(this.lastIds, {[item.type]: 0})
+	if ( this.lastIds[item.type] < item.id ){
+		this.lastIds[item.type] = item.id
+	}
+},
+
+/**
 	* Initialisation de Montrello (au chargement de l'application)
 	*
 	* On charge toutes les données et on les dispatche dans les 
@@ -58,6 +73,7 @@ init:function(){
 	.then(Ajax.send.bind(Ajax,'load.rb',{type:'ca' /* carte */}))	
 	.then(this.dispatch.bind(this, 'ca'))
 	.then(this.buildItemsOf.bind(this, Carte))
+	.then(MontrelloModele.loadAllModeles.bind(MontrelloModele)) // les modèles
 	.then(ret => {
 		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true

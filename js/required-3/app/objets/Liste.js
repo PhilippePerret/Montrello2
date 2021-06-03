@@ -1,16 +1,22 @@
 'use strict'
 class Liste extends MontrelloObjet {
 
-/**	Créer une liste pour le tableau courant
-	*
-	*/
-static create(){
-	const owner = Tableau.current
-	const newItem = new Liste({owner:owner, ti:"Nouvelle liste", ct:'tb', ty:'li', ow:owner.ref, id:Montrello.getNewId('li')})
-	newItem.build()
-	newItem.save()
-	this.addItem(newItem)
-	newItem.editTitle()
+/**
+ * Créer une liste pour le tableau courant
+ *
+ */
+static create(element){
+	this.createItemFor(element.owner)
+}
+
+static initNewItemFor(owner){
+	return new Liste({
+			owner:owner
+		, ti:"Nouvelle liste"
+		, ct:'tb'
+		, ty:'li'
+		, ow:owner.ref
+		, id:Montrello.getNewId('li')})
 }
 
 static get ownerClass(){return Tableau}
@@ -18,6 +24,13 @@ static get ownerClass(){return Tableau}
 
 constructor(data){
 	super(data)
+}
+
+/**
+ * Appelée après la création de la liste
+ */
+afterCreate(){
+  this.editTitle()
 }
 
 build(){
@@ -31,10 +44,13 @@ build(){
 	}
 	this.obj = DOM.clone('modeles liste')
 	this.obj.id = this.domId
-	this.owner.obj.querySelector('items.listes').appendChild(this.obj)
-	this.obj.owner = this
-	UI.setEditableIn(this.obj)
+	DGet('items.listes', this.owner.obj).appendChild(this.obj)
 	this.setCommonDisplayedProperties()
+}
+
+observe(){
+	this.obj.owner = this
+	UI.setEditableIn(this.obj)	
 	// La liste des cartes doit être sortable
 	$(this.obj.querySelector('content > items')).sortable({
 		axis:'y'

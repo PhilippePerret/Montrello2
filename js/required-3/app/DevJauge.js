@@ -15,7 +15,7 @@ static setIn(owner){
 		owner 			|| raise("DevJauge::setInt doit recevoir le propriétaire en premier argument. Rien n'a été reçu.")
 		owner.obj 	|| raise("Le propriétaire doit répondre à 'obj' qui doit retourner son objet DOM")
 		owner.tasks || raise("Le propriétaire doit répondre à 'tasks', qui doit retourner les IDs de ses tâches")
-		devjauge = owner.obj.querySelector('devjauge')
+		devjauge = DGet('devjauge', owner.obj)
 		devjauge || raise("Le propriétaire doit posséder une balise <devjauge> pour sa jauge")
 	} catch(err) {console.error(err);return erreur(err)}
 	
