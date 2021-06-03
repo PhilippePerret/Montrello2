@@ -2,10 +2,11 @@
 
 Object.assign(UI,{
 	init(){
+		if ( this.inited ) return
 		Menu.init()
-
 		// Tous les éléments textuels éditables doivent l'être
 		this.setEditableIn(document)
+		this.inited = true
 	},
 
 

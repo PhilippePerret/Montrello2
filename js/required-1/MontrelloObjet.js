@@ -9,6 +9,15 @@
 class MontrelloObjet {
 
 /**
+ * @return Nombre d'items de la classe
+ * 
+ */
+static get count(){
+  this.items || (this.items = {})
+  return Object.keys(this.items).length
+}
+
+/**
  * Méthode génénique de création d'un objet
  * 
  * Il faut fournir son propriétaire

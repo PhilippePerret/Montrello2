@@ -55,14 +55,22 @@ static build(){
  * 
  */
 static update(){
-  this.DATA_PANEL_INFOS.forEach(dinfo => {
-    // console.log("dinfo.classe", dinfo.classe)
-    // console.log("dinfo.classe.items", dinfo.classe.items)
-    var count
-    if ( !dinfo.classe.items ) count = 0
-    else { count = Object.keys(dinfo.classe.items).length }
-    DGet(`#panel-info-${dinfo.id}`, this.obj).innerHTML = count
-  })
+  if ( this.obj ) {
+    this.DATA_PANEL_INFOS.forEach(dinfo => {
+      // console.log("dinfo.classe", dinfo.classe)
+      // console.log("dinfo.classe.items", dinfo.classe.items)
+      var count
+      if ( !dinfo.classe.items ) count = 0
+      else { count = Object.keys(dinfo.classe.items).length }
+      DGet(`#panel-info-${dinfo.id}`, this.obj).innerHTML = count
+    })
+  } else {
+    /** Cela arrive au tout premier lancement de l'application, par
+     * exemple, lorsqu'un premier tableau est créé mais que le 
+     * panel-info ne l'est pas encore
+     */
+    return    
+  }
 }
 
 }

@@ -12,8 +12,13 @@ $(document).ready(function(){
   .then(UI.insert.bind(UI,  'picker_dates',     'modeles'))
   .then(UI.insert.bind(UI, 	'carte_form', 			'modeles'))
   .then(UI.insert.bind(UI,	'footer', 					'body'))
-  .then(UI.init.bind(UI))
-  .then(Montrello.init.bind(Montrello))
+  /**
+   * Si on veut lancer les tests plutôt que l'application, on décommente la ligne
+   * suivante et on commente les deux lignes d'après.
+   */
+  .then(MiniTest.run.bind(MiniTest))
+  // .then(UI.init.bind(UI))
+  // .then(Montrello.init.bind(Montrello))
   .catch(console.error)
   
 

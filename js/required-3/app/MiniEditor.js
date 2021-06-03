@@ -93,34 +93,26 @@ set value(v){
 }
 
 build(){
-	let o = document.createElement('DIV')
-	o.id = 'mini-editor'
+	let o = document.createElement('MINIEDITOR')
 	o.class = 'hidden'
 
-	let i = document.createElement('INPUT')
-	i.type = 'text'
-	i.classList.add('hidden')
+	let i = DCreate('INPUT', {type:'text', class:'hidden', id:'minieditor-text-field'})
 	o.appendChild(i)
 	i.addEventListener('keypress', this.onKeyPressed.bind(this))
 	i.addEventListener('keydown', this.onKeyDown.bind(this))
 
-	let t = document.createElement('TEXTAREA')
+	let t = DCreate('TEXTAREA', {class:'hidden', id:'minieditor-textarea'})
 	o.appendChild(t)
-	t.classList.add('hidden')
 	t.addEventListener('keypress', this.onKeyPressedTA.bind(this))
 	t.addEventListener('keydown', this.onKeyDown.bind(this))		
 
 
-	let bs = document.createElement('BUTTONS')
-	let bsave = document.createElement('BUTTON')
-	bsave.class="btn-save"
-	bsave.id="mini-editor-btn-save"
-	bsave.innerHTML = 'Enregistrer'
+	let bs = DCreate('BUTTONS')
+	
+	let bsave = DCreate('BUTTON', {id:'minieditor-btn-save', class:'btn-save', text:'Enregistrer'})
 	bsave.addEventListener('click', this.onClickSave.bind(this))
-	let bcanc = document.createElement('BUTTON')
-	bcanc.class = 'btn-cancel'
-	bcanc.id = "mini-editor-btn-cancel"
-	bcanc.innerHTML = 'Renoncer'
+	
+	let bcanc = DCreate('BUTTON',{id:'minieditor-btn-cancel',class:'btn-cancel', text:'Renoncer'})
 	bcanc.addEventListener('click', this.onClickCancel.bind(this))
 	
 	bs.appendChild(bsave)

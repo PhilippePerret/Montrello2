@@ -1,14 +1,35 @@
 'use strict'
 /**
-	* Pour le moment, juste pour les inside-tests
+	* La classe de l'application
 	*
 	*/
 class App {
 
-// Appelé par InsideTests
-static init(){
-	return new Promise((ok,ko) => ok())
+/**
+ * Méthode utile aux tests pour réinitialiser complètement l'applica-
+ * tion, par exemple après un degel
+ * 
+ * @return Une promise
+ */
+static async reset(){
+	
+	DGet('tableaux').innerHTML = ""
+
+	Montrello.types2class || Montrello.type2class('tb')// Pour forcer la définition
+	delete Montrello.lastIds
+	delete Montrello.config
+
+	Object.values(Montrello.types2class).forEach(classe => {
+		delete classe['items']
+		delete classe['_current']
+		// console.log("Classe %s remise à zéro.", classe.name)
+	})
+
+	await UI.init()
+	return Montrello.init.call(Montrello)
 }
+
+static get name(){return 'Montrello'}
 
 /**
 	* Pour les tests (uniquement ?) pour savoir si l'application est

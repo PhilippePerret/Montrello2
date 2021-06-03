@@ -132,8 +132,11 @@ function clip(what, msg){
 }
 
 /**
-* Pour charger un module JS quelconque du dossier './js'
-***/
+ * @async
+ * 
+ * Pour charger un module JS quelconque du dossier './js'
+ * 
+ */
 function loadJS(moduleName){
   moduleName.endsWith('.js') || (moduleName += '.js')
   return new Promise((ok,ko)=>{
