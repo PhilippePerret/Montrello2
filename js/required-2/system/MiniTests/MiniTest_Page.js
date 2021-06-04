@@ -14,6 +14,15 @@
  *  page.has(<selector>, <attrs>)
  */
 class Page {
+
+/**
+ * doc/
+ * page.contains("<string>")
+ * 
+ *  Retourne true si la page contient le texte <string>
+ * 
+ * /doc
+ */
 contains(msg){
   const res = document.body.innerHTML.match(msg)
   console.log("-> contains %s", msg, res)
@@ -21,6 +30,23 @@ contains(msg){
 }
 
 /**
+ * doc/
+ * page.has("<selector>"[{<attributs>}])
+ * 
+ *  Retourne true si la page contient le selecteur spécifié avec les
+ *  attributs optionnels.
+ * 
+ *  <attributs> peut contenir n'importe quel attribut de balise 
+ *  HTML ou les valeurs spéciales :
+ *    :in       Le contenaire dans lequel chercher.
+ *    :count    Le nombre d'éléments qu'on doit trouver
+ *    :text     Le texte que doit contenir le sélecteur.
+ * 
+ *  Par exemple :
+ * 
+ *    page.has('a', {href: "http://www.atelier-icare.net"})
+ * 
+ * /doc
  * 
  * +attrs+
  *    N'importe quel attribut HTML
@@ -38,29 +64,6 @@ has(selector, attrs){
     delete attrs.in
   }
   return HTML.has(container, selector, attrs)
-
-  let count = null;
-  if (attrs && attrs.count){
-    count = 0 + attrs.count
-    delete attrs.count
-  }
-  ;(attrs && Object.keys(attrs).length) || (attrs = null)
-
-  if ( attrs ) {
-    for(var attr in attrs){
-      selector += `[${attr}="${attrs[attr]}"]`
-    }
-  }
-
-  // console.log("Recherche de %s", selector, container.querySelector(selector))
-
-  if ( count ) {
-    res = container.querySelectorAll(selector)
-    return res.length == count
-  } else {
-    return container.querySelector(selector) != null
-  }
-
 }
 
 }// class Page

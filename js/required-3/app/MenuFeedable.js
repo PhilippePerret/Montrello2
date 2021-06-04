@@ -51,12 +51,18 @@ add(item){
 	const cr = item.constructor
 	// console.log("ajout d'un item au feedable menu (item, owner =)", item, cr)
 	cr.items || (cr.items = {})
+	if (cr.items[item.id]){
+		// On ne reconstruit pas un item qui existe déjà
+		// Ça n'arrive que pendant les mini-tests, normalement
+		return false
+	}
 	Object.assign(cr.items, {[item.id]: item})
 	this.ul || this.prepare()
 	this.ul.appendChild((new FeedableMenuItem(this, item)).obj)
 }
 
 prepare(){
+	if(this.isPrepared) return
 	if ( !this.owner.items || Object.keys(this.owner.items).length == 0) {
 		// return console.log("Pas d'items, je ne peux pas prépare le menu feedable de %s", this.owner.name)
 		return
@@ -71,6 +77,8 @@ prepare(){
 	this.element.classList.add('closed')
 	this.content.appendChild(this.ul)
 	this.element.addEventListener('click', this.toggle.bind(this))
+
+	this.isPrepared = true
 }
 
 get content(){return this._content || (this._content = DGet('content',this.element))}
@@ -88,6 +96,7 @@ get obj(){return this._obj || (this._obj = this.build() )}
 build(){
 	const o = document.createElement('LI')
 	o.setAttribute('data-owner-ref', this.owner.ref)
+	o.classList.add(`${this.owner.ref}-name`) // pour changer la valeur facilement
 	o.innerHTML = this.owner.titre
 	o.addEventListener('click', this.onClick.bind(this))
 	this._obj = o

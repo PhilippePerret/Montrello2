@@ -28,14 +28,21 @@ static setCurrent(t){
 	*/
 static create(element){
 	// console.log("-> Création d'un nouveau tableau avec :", element)
-	let pannel_name = ('string' == typeof(element)) ? element : "Nouveau tableau"
-	this.current = new Tableau({ty:'tb',ti:pannel_name, id:Montrello.getNewId('tb')})
+	this.current = this.createNewItemWith(element)
 	this.current.save()
 	this.current.editTitle()
 	this.addItem(this.current)
 	FeedableMenu.get('menu-tableaux').add(this.current)
 }
 
+static createNewItemWith(element){
+	let pannel_name = ('string' == typeof(element)) ? element : "Nouveau tableau"
+	return new Tableau({
+			ty: 'tb'
+		,	ti: pannel_name
+		, id: Montrello.getNewId('tb')
+	})
+}
 /**
 	* Le container <tableaux> contenant tous les tableaux
 	*/
@@ -63,6 +70,21 @@ static onChooseItem(item){
 	this.current = item // ça fait tout
 }
 
+/**
+ * Sert au reset de l'application
+ * (pour les mini-tests par exemple)
+ * 
+ */
+static eraseAll(){
+	DGet('tableaux').innerHTML = ""
+	// Le menu des tableaux courants (normalement, il n'y en a qu'un, mais bon…)
+	const menuTableaux = DGet('menu#menu-tableaux')
+	DGet('content', menuTableaux).querySelectorAll('ul.feeded-menu').forEach(ul => ul.remove())
+	// On supprime tous les observers de ce menu en en faisant un clone
+	UI.clone(menuTableaux)
+	console.log("menuTableaux:", menuTableaux)
+}
+
 constructor(data){
 	super()
 	this.data = data
@@ -71,7 +93,8 @@ constructor(data){
 afterSet(hdata){
 	if (hdata.ti){ 
 		this.spanName.innerHTML = this.titre
-		// TODO Changer le nom dans le menu des titres
+		// On change le nom du tableau partout où il est affiché
+		document.body.querySelectorAll(`.${this.ref}-name`).forEach(o => o.innerHTML = this.titre)
 	}
 }
 
@@ -87,15 +110,15 @@ get spanName(){
 }
 
 
-get ref(){return `${this.ty}-${this.id}`}
+// get ref(){return `${this.ty}-${this.id}`}
 
 show(){ this.obj.classList.remove('hidden')}
 hide(){ this.obj.classList.add('hidden')}
 
-build_and_observe(){
-	this.build()
-	this.observe()
-}
+// build_and_observe(){
+// 	this.build()
+// 	this.observe()
+// }
 
 /**
 	* Construction du tableau

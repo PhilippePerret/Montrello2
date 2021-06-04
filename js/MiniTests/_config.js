@@ -4,6 +4,7 @@
 MiniTest.tests_list = [
     'helpers'
   , 'premier_tableau'
+  // , 'modele_checklist'
 
 ]
 

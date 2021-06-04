@@ -7,6 +7,8 @@ class HTML {
 
 static has(container, selector, attrs){
   attrs = attrs || {}
+
+  // console.log("HTML.has avec", container, selector, attrs)
   
   let count = null
     , text  = null

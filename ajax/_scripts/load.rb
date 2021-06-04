@@ -19,7 +19,6 @@ if type == 'config'
 		{ty:'config'}
 	end
 else
-	log("type:#{type.inspect}, path:#{path_type.inspect} existe ? #{File.exist?(path_type).inspect}")
 	if File.exist?(path_type)
 		Dir["#{path_type}/*.yaml"].collect{ |fpath| YAML.load_file(fpath) }
 	else
@@ -37,7 +36,5 @@ if opt_id
 	end
 	data = found
 end
-
-log("type:#{type.inspect} data: #{data.inspect}")
 
 Ajax << {data:data, type:type}

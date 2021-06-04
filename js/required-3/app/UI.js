@@ -2,17 +2,48 @@
 
 Object.assign(UI,{
 	init(){
-		if ( this.inited ) return
 		Menu.init()
 		// Tous les éléments textuels éditables doivent l'être
 		this.setEditableIn(document)
-		this.inited = true
 	},
 
+	/**
+	 * Remplace le noeud +n+ par son propre clone, par exemple pour
+	 * supprimer tous les écouteurs d'évènement
+	 */
+	clone(n){
+		n.replaceWith(n.cloneNode(true))
+	},
+
+	/**
+	 * Méthode qui, pour les tests, permet de supprimer tous les
+	 * écouteurs d'évenement.
+	 * 
+	 */
+	unsetAllEditableContainers(){
+		[
+				'.editable'
+			, '*[data-strict-class][data-method]'
+			, 'button[data-owner-method]'
+		].forEach(selector => {
+			document.body
+				.querySelectorAll(selector).forEach(this.clone.bind(this))
+		})
+
+		document.body
+		.querySelectorAll('*[data-strict-class]').forEach(e => {
+			e.querySelectorAll('*[data-method]').forEach(tag => {
+				tag.replaceWith(tag.cloneNode(true))
+			})
+		})
+	},
 
 	/**
 		* Méthode qui transforme tous les éléments de classe .editable
 		*	en éléments dont on peut éditer le texte directement
+		* 
+		* ATTENTION : si des écoutes sont ajoutées, penser à les retirer
+		* dans unsetEditableIn ci-dessous
 		*/
 	setEditableIn(container){
 		// console.log("-> UI#setEditableIn, dans container :", container)

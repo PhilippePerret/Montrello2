@@ -19,7 +19,12 @@ class App {
 static async resetBeforeTest(){
 	log("-> App.resetBeforeTest", 8)
 	
-	DGet('tableaux').innerHTML = ""
+	// On détruit tous les écouteurs d'évènement dans les
+	// containeurs éditables.
+	UI.unsetAllEditableContainers()
+
+	// On efface tous les tableaux (et le menu des tableaux)
+	Tableau.eraseAll()
 
 	Montrello.types2class || Montrello.type2class('tb')// Pour forcer la définition
 	delete Montrello.lastIds
