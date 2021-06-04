@@ -2,8 +2,8 @@
 
 
 MiniTest.tests_list = [
-  
-  'premier_tableau'
+    'helpers'
+  , 'premier_tableau'
 
 ]
 

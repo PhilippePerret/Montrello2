@@ -4,8 +4,6 @@ MiniTest.add("Création automatique du premier tableau quand aucune donnée, ave
 
   await degel("init")
 
-  // await wait(1)
-
   // console.error("J'attends 60 secondes pour que tu puisses vérifier les données enregistrées (problème des 3 tableaux")
   // await wait(60)
 
@@ -48,8 +46,9 @@ MiniTest.add("Modification du titre du premier tableau quand aucune donnée", as
   this.suivi("Le miniéditeur est bien caché")
   expect(DGet('header span.pannel_name').innerHTML).eq(new_titre_tableau).else("Le titre affiché du tableau devrait être '#expected', or c'est '#actual'.")
   this.suivi("Le nouveau titre est bien affiché")
-
-  // - la nouvelle valeur est bien affichée
+  let hdata = (await TData.get('tb', 1))
+  expect(hdata).has({ti: new_titre_tableau}).else("Le fichier YAML devrait contenir le nouveau titre.")
+  this.suivi("Le nouveau titre est bien enregistré dans le fichier")
   // - la nouvelle valeur est bien enregistrée dans le fichier yaml
   // - le titre est changé dans le menu des tableaux
 

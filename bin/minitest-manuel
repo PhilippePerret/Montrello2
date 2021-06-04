@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require_relative 'lib/required'
+require_relative 'lib/CLI'
+
+path_md   = File.join(APP_FOLDER,'js','required-2', 'system','MiniTests','Manuel.md')
+path_pdf  = File.join(APP_FOLDER,'js','required-2', 'system','MiniTests','Manuel.pdf')
+
+path =
+  if ARGV[0] == '-d'
+    path_md
+  else
+    puts "Ajouter l'option '-d' pour ouvrir la version markdown dans Typora.".bleu
+    path_pdf
+  end
+
+`open -a Finder "#{path}"`

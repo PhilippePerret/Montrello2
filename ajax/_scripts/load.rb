@@ -5,7 +5,8 @@
 =end
 require 'yaml'
 
-type = Ajax.param(:type)
+type 		= Ajax.param(:type) || Ajax.param(:ty)
+opt_id 	= Ajax.param(:id) # seulement si un identifiant est fourni
 
 path_type = File.join(APP_FOLDER,'data','montrello', type.to_s)
 path_type = "#{path_type}.yaml" if type == 'config'
@@ -24,6 +25,17 @@ else
 	else
 		[]
 	end
+end
+
+if opt_id
+	found = nil
+	data.each do |hdata|
+		if hdata[:id] == opt_id
+			found = hdata
+			break
+		end
+	end
+	data = found
 end
 
 log("type:#{type.inspect} data: #{data.inspect}")

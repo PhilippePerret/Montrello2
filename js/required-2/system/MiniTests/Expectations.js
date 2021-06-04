@@ -45,8 +45,8 @@ not_eq(expected){
 
 /**
  * doc/
- * has / not_has
- *  expect(page).has(<selector>[,<attributs>]).else(<erreur>)
+ * has / not_has (page)
+ *  expect(page).has(<selector>[,<attributs>]).else("<erreur>")
  * 
  *  Test de l'existence d'un élément dans la page, avec ou
  *  sans les attributs +attributs+.
@@ -60,22 +60,84 @@ not_eq(expected){
  *  Le test de l'inexistence se fait avec #{'not_has'.jaune}
  * 
  * /doc
+ * 
+ * doc/
+ * has / not_has (Hash)
+ *  expect(<hash>).has({<keys: values>}).else("<erreur>")
+ * 
+ *  Test l'existence d'une clé avec une valeur dans une table de
+ *  hashage.
+ * 
+ *  Exemple :
+ * 
+ *    expect(hash)
+ *      .has({cle: "ma valeur"})
+ *      .else("La table hash devrait contenir la clé 'k' de valeur 'ma valeur'")
+ * 
+ *  Pour obtenir toute la table (attention aux gros objets)
+ * 
+ *    expect(hash)
+ *      .has({cle:"ma valeur"})
+ *      .else("La table #actual devrait contenir #expected")
+ * 
+ * /doc
  */
 has(expected, attrs){
-  return new ACase(this.sujet.has(expected, attrs), expected, null)
-
+  if ( 'function' == typeof(this.sujet.has) ) {
+    /**
+     * La page
+     */
+    return new ACase(this.sujet.has(expected, attrs), expected, null)
+  } else {
+    /**
+     * Un Hash
+     */
+    let hsujet = JSON.stringify(this.sujet)
+    let hexpected = JSON.stringify(expected)
+    let [ok, motif] = this.hashContains(this.sujet, expected)
+    return new ACase(ok, hexpected, hsujet, motif)
+  }
 }
 not_has(expected, attrs){
   return new ACase(false == this.sujet.has(expected, attrs), expected, null)
 }
 
+
+/**
+ * ---------------------------------------------------------------
+ *  Private methods
+ */
+
+/**
+ * @return  [resultat, raison_echec_if_any]
+ *          resultat est true si la table +hash+ contient toutes les
+ *          clés/valeurs de hexpe
+ */
+hashContains(hash, hexpe){
+  var raisons = [], actual
+  for(var k in hexpe){
+    if ( hash[k] != hexpe[k] ) {
+      actual = (undefined === hash[k]) ? 'est indéfinie' : `vaut '${hash[k]}'` ;
+      raisons.push(`la clé '${k}' devrait valoir '${hexpe[k]}', elle ${actual}`)
+    }
+  }
+  let ok = raisons.length == 0
+  if (raisons.length) {
+    raisons = raisons.join(', ')
+  } else {
+    raisons = undefined 
+  }
+  return [ok, raisons]
+}//hashContains
+
 }//Class Expectation
 
 class ACase {
-constructor(resultat, expected, actual){
+constructor(resultat, expected, actual, motif){
   this.resultat = resultat
   this.expected = expected
   this.actual   = actual
+  this.motif    = motif
 }
 else(failure_message){
   if ( this.resultat ) {
@@ -94,6 +156,7 @@ else(failure_message){
     stack = stack.substring(idx, lastIdx)
     if ( this.actual )  failure_message = failure_message.replace(/\#actual/g, this.actual)
     if ( this.expected) failure_message = failure_message.replace(/\#expected/g, this.expected)
+    if ( this.motif)    failure_message += "\nRaison : " + this.motif
     throw `${failure_message}\n--> ${stack}`
   }
 }
