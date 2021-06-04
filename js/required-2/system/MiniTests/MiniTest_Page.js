@@ -37,6 +37,8 @@ has(selector, attrs){
     container = document.body.querySelector(attrs.in)
     delete attrs.in
   }
+  return HTML.has(container, selector, attrs)
+
   let count = null;
   if (attrs && attrs.count){
     count = 0 + attrs.count

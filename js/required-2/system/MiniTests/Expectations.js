@@ -83,19 +83,26 @@ not_eq(expected){
  * /doc
  */
 has(expected, attrs){
+  var ok, motif, hsujet, hexpected ;
   if ( 'function' == typeof(this.sujet.has) ) {
     /**
      * La page
      */
     return new ACase(this.sujet.has(expected, attrs), expected, null)
+  } else if (this.sujet instanceof HTMLElement) {
+    /**
+     * Un élément HTML
+     */
+     hsujet = this.sujet.tagName
+     this.sujet.id && (hsujet += `#${this.sujet.id}`)
+     ;(!this.sujet.id) && this.sujet.className && (hsujet += `.${this.sujet.className}`)
+     return new ACase(HTML.has(this.sujet, expected, attrs), HTML.hsujet)
   } else {
     /**
      * Un Hash
      */
-    let hsujet = JSON.stringify(this.sujet)
-    let hexpected = JSON.stringify(expected)
-    let [ok, motif] = this.hashContains(this.sujet, expected)
-    return new ACase(ok, hexpected, hsujet, motif)
+    [ok, motif] = this.hashContains(this.sujet, expected)
+    return new ACase(ok, JSON.stringify(expected), JSON.stringify(this.sujet), motif)
   }
 }
 not_has(expected, attrs){

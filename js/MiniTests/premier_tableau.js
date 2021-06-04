@@ -49,7 +49,10 @@ MiniTest.add("Modification du titre du premier tableau quand aucune donnée", as
   let hdata = (await TData.get('tb', 1))
   expect(hdata).has({ti: new_titre_tableau}).else("Le fichier YAML devrait contenir le nouveau titre.")
   this.suivi("Le nouveau titre est bien enregistré dans le fichier")
-  // - la nouvelle valeur est bien enregistrée dans le fichier yaml
+  const menuTableaux = DGet('header content menu#menu-tableaux')
+  console.log("typeof menuTableaux", typeof menuTableaux, menuTableaux instanceof HTMLElement)
+  expect(menuTableaux).has('button', {text: new_titre_tableau, count: 1})
+    .else("Le menu des tableaux devrait contenir le nouveau titre")
   // - le titre est changé dans le menu des tableaux
 
   return true
