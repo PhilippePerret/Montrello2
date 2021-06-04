@@ -134,7 +134,7 @@ save(params){
   delete data4save.owner
   delete data4save.cr // régression
 
-  console.log("Data à sauvegarder de façon %s: ", (params.async?'a':'')+'synchrone', data4save)
+  // console.log("Data à sauvegarder de façon %s: ", (params.async?'a':'')+'synchrone', data4save)
 
   if ( params.async ) {
     return Ajax.send('save.rb', {data: data4save})

@@ -11,6 +11,11 @@
 
 */
 
+function log(msg, level = 5){
+  if ( level > MiniTest.config.debug_level ) return
+  console.log('%c'+"\t"+msg, 'color:#888;font-style:italic;font-size:0.85em;')
+}
+
 /**
  * Pour attendre un certain nombre de secondes
  * 
@@ -53,9 +58,17 @@ function escapeRegExp(string){
 }
 
 
-function degel(gel_name){
-  return Ajax.send('MiniTest/degel.rb',{gel_name:gel_name})
+// function degel(gel_name){
+//   return Ajax.send('MiniTest/degel.rb',{gel_name:gel_name})
+// }
+async function degel(gel_name){
+  await Ajax.send('MiniTest/degel.rb',{gel_name:gel_name})
+  if (MiniTest.config.reset_before_each_test){
+    log(`Réinitialisation de l'app après le dégel de '${gel_name}'`, 5)
+    await App.resetBeforeTest()
+  }
 }
+
 function gel(gel_name, gel_description){
   return Ajax.send('MiniTest/gel.rb', {gel_name:gel_name, gel_description:gel_description})
 }

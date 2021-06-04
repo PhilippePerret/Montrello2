@@ -6,12 +6,18 @@
 class App {
 
 /**
+ * @async
+ * 
  * Méthode utile aux tests pour réinitialiser complètement l'applica-
  * tion, par exemple après un degel
  * 
+ * Si MiniTest.config.reset_before_each_test (_config.js) est true, 
+ * cette méthode est automatiquement appelée avant chaque test.
+ * 
  * @return Une promise
  */
-static async reset(){
+static async resetBeforeTest(){
+	log("-> App.resetBeforeTest", 8)
 	
 	DGet('tableaux').innerHTML = ""
 
@@ -26,6 +32,7 @@ static async reset(){
 	})
 
 	await UI.init()
+	log("<- App.resetBeforeTest", 8)
 	return Montrello.init.call(Montrello)
 }
 

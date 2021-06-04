@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# frozen_string_litteral: true
+=begin
+
+  Ce script liste les expectations des minitests
+
+=end
+require_relative 'lib/required'
+require_relative 'lib/CLI'
+
+# Fichier définissant les expectations
+EXPECTATIONS_FILE = File.join(APP_FOLDER,'js','required-2','system','MiniTests','Expectations.js')
+
+clear
+wr "\n=== MINITEST - LISTE DES EXPECTATIONS ==="
+
+flux_opened     = false
+next_is_first   = false
+next_is_second  = false
+File.readlines(EXPECTATIONS_FILE).each do |line|
+  line = line.strip
+  if line.match?('\* doc\/')
+    flux_opened   = true
+    next_is_first = true
+  elsif line.match?('\* \/doc')
+    flux_opened = false
+  elsif flux_opened
+    if next_is_first
+      line = "\n\n#{line.jaune}"
+      next_is_first = false
+      next_is_second = true
+    elsif next_is_second
+      line = "#{line.bleu}"
+      next_is_second = false
+    else
+      line = eval("%Q{#{line}}")
+    end
+    w(line)
+  end
+end
+
+puts "\n\n"

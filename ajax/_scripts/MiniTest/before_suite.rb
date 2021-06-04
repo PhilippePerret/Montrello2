@@ -15,7 +15,7 @@ require_relative 'required'
 # de côté car ce sont vraiment des bonnes données. Sinon, on ne
 # touche à rien.
 
-msg_final = "J'ai mis les données de côté."
+msg_final = "Data montrello mise de côté."
 
 begin
   data_montrello_path = File.join(APP_FOLDER,'data','montrello')

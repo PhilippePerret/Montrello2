@@ -21,10 +21,15 @@
 
 ## Liste des tests à jouer
 
-La liste des tests à jouer doit être définie dans le fichier `./js/MiniTests/_tests_list.js` grâce au code :
+La liste des tests à jouer doit être définie dans le fichier `./js/MiniTests/_config.js` grâce au code :
 
 ~~~javascript
+// _config.js
 'use strict'
+
+MiniTest.config = {
+  ...
+}
 
 MiniTest.tests_list = [
 		'<affixe premier test>'
@@ -33,6 +38,78 @@ MiniTest.tests_list = [
   , '<affixe dernier test>'
 ]
 ~~~
+
+---
+
+<a id="expectations"></a>
+
+## Expectations
+
+Les “expectations” (attentes) ont toutes la forme :
+
+~~~javascript
+expect(<sujet>).<verbe>(<valeur>).else(<message d’erreur>)
+~~~
+
+Par exemple :
+
+~~~javascript
+expect(2 + 2).eq(4).else("2 + 2 devrait être égal à 4. Il vaut #actual.")
+~~~
+
+La valeur attendue et la valeur réelle, lorsqu'elles peuvent s'exprimer, peuvent être introduire dans les messages en utilisant respectivement `#expected` et `#actual`.
+
+Toutes les méthodes d’expectation sont défines dans le fichier [js/required-2/system/MiniTests/Expectations.js](js/required-2/system/MiniTests/Expectations.js).
+
+Pour une liste complète des méthodes d’expectation, ouvrir une fenêtre de Terminal au dossier de l’application et jouer :
+
+~~~bash
+> bin/minitest-expectations
+~~~
+
+
+---
+
+<a id="reinit"></a>
+
+## Réinitialisation de l'application
+
+Les tests s'exécutant à l'intérieur même de l'application, il est nécessaire de la ré-initialiser au début de chaque test.
+
+Pour ce faire :
+
+* créer une méthode **`App.resetBeforeTest()`** qui réinitialisera toutes les valeurs nécessaires (à suivre de près au cours du développement),
+* définir dans le fichier `./js/MiniTests/_config.js` que l'application doit être ré-initialisée à chaque nouveau tests :
+	
+	~~~javascript
+	MiniTest.config = {
+		...
+		, reset_before_each_test: true
+	  ...
+	}
+	~~~
+* OU ALORS appeler cette méthode à chaque début de test :
+
+	~~~javascript
+	MiniTest.add("Mon test avec réinitialisation", async function(){
+		App.resetBeforeTest()
+		degel("mon-gel-utile")
+		
+		// ... le test ...
+		
+		return ok
+	})
+	~~~
+
+
+
+Noter que le reset de l’application sera également **appelé après chaque dégel**. Prendre en compte le fait que dans ces cas-là, la réinitialisation se fait deux fois : une fois avant le dégel, avant le test, et une fois après le dégel. Si la réinitialisation est longue, les tests peuvent être très ralentis.
+
+
+
+---
+
+<a id="les-gels"></a>
 
 ## Les Gels
 
@@ -167,7 +244,61 @@ MiniTest.add("Mon test avec erreur précise", async function(){
 })
 ~~~
 
+---
 
+## Messages en cours de test
+
+Dans tous les cas, pour afficher des messages provisoires ou non, on peut utiliser les méthodes de console habituelles :
+
+~~~javascript
+console.log(...)
+console.error(...)
+console.warn(...)
+~~~
+
+Mais ces messages “pollueront” un peu les retours de test.
+
+On peut utiliser plus profitablement la méthode `log` qui permet de ne rien produire en mode “quiet” avec un `debug_level` à 0 (défini dans la [configuration](#configuration) des tests).
+
+~~~javascript
+log("Mon message sensible", 1)
+// Ce message ne s'affichera que si les debug_level est supérieur ou
+// égal à 1
+
+log("Mon message insensible", 9)
+// Ce message ne s'affichera que si le debug_level est supérieur ou
+// égal à 9
+~~~
+
+
+
+---
+
+<a id="configuration"></a>
+
+## Configuration des tests
+
+La configuration des tests est définie dans le fichier `./js/MiniTests/_config.js`
+
+On trouve :
+
+~~~javascript
+
+MiniTest.config = {
+	
+	// Juste pour la virgule
+	config: true
+	
+	// Pour définir le mode de débuggage. Tous les messages 
+	// en dessous de cette valeur seront affichés.
+	, debug_level: 0 
+	
+	// Pour réinitialiser l'application avant chaque test
+	// cf. la section qui en parle
+	, reset_before_each_test: true
+}
+
+~~~
 
 ---
 

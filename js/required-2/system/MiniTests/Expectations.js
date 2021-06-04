@@ -2,14 +2,10 @@
 /**
  * class Expection
  * ----------------
- * Pour les attentes des tests, par exemple :
+ * Pour toutes les attentes
  * 
- *    expect(maSomme).eq(12)
- * 
- * ou
- * 
- *    expect(page).has('div#mon-div')
- * 
+ * Pour obtenir la liste "propre" de ces attentes, ouvrir un Terminal
+ * au dossier de l'application et jouer 'bin/minitest-expectations'
  * 
  */
 
@@ -30,6 +26,16 @@ constructor(sujet){
  * 
  */
 
+/**
+ * doc/
+ * eq / not_eq
+ *  expect(<sujet>).eq(<valeur>).else(<erreur>)
+ * 
+ *  Test de l'équalité entre +sujet+ et +valeur+
+ * 
+ *  Le test de la non égalité se fait avec #{'not_eq'.jaune}.
+ * /doc
+ */
 eq(expected){
   return new ACase(this.sujet == expected, expected, /* actual = */ this.sujet)
 }
@@ -37,6 +43,24 @@ not_eq(expected){
   return new ACase(this.sujet != expected, expected, /* actual = */ this.sujet)
 }
 
+/**
+ * doc/
+ * has / not_has
+ *  expect(page).has(<selector>[,<attributs>]).else(<erreur>)
+ * 
+ *  Test de l'existence d'un élément dans la page, avec ou
+ *  sans les attributs +attributs+.
+ * 
+ *  Exemple :
+ * 
+ *    expect(page)
+ *      .has("div#mon-div", {class:'hidden'})
+ *      .else("La page devrait contenir #expected")
+ * 
+ *  Le test de l'inexistence se fait avec #{'not_has'.jaune}
+ * 
+ * /doc
+ */
 has(expected, attrs){
   return new ACase(this.sujet.has(expected, attrs), expected, null)
 

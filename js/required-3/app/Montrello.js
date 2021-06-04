@@ -77,8 +77,8 @@ init:function(){
 	.then(ret => {
 		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true
-		console.log("Application prête")
-		console.log("This.lastIds", this.lastIds)
+		log("Application prête", 5)
+		// console.log("This.lastIds", this.lastIds)
 	})
 	.catch(console.error)
 },
@@ -108,11 +108,11 @@ dispatch_config(data){
 
 setConfig(hdata){
 	Object.assign(this.config, hdata)
-	console.log("Enregistrement de la configuration : ", this.config)
+	// console.log("Enregistrement de la configuration : ", this.config)
 	Ajax.send('save.rb', {data: this.config})
 	.then(ret => {
 		if (ret.error) return erreur(ret.error)
-		console.log("Configuration enregistrée avec succès.")
+		// console.log("Configuration enregistrée avec succès.")
 	})
 	.catch(ret => {
 		erreur("Impossible d'enregistrer la configuration : " + ret.error + ' (consulter la console')

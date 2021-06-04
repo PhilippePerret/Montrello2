@@ -9,11 +9,11 @@
 class MiniTest {
 
 /**
- * Liste des tests à jouer
+ * Configuration + liste des tests à jouer
  * 
  */
-static async defineSuiteTests(){
-  return loadJS('MiniTests/_tests_list.js')
+static async loadConfig(){
+  return loadJS('MiniTests/_config.js')
 }
 /**
  * Tests à charger
@@ -41,7 +41,7 @@ static loadTest(tpath){
  * 
  */
 static async run(){
-  await this.defineSuiteTests()
+  await this.loadConfig()
   await this.loadTests()
   // console.log("<-- Retour de loadTests")
   if ( undefined == this.tests || this.tests.length == 0 ) {
@@ -62,11 +62,15 @@ static reset(){
   this.failures = []
   this.pendings = []
 }
-static runNextTest(){
+static async runNextTest(){
   const test = this.tests.shift()
   if ( test ) {
     this.tests_done.push(test)
-    test.run().then(this.runNextTest.bind(this))
+    if (this.config.reset_before_each_test){
+      await App.resetBeforeTest()
+    }
+    await test.run()
+    await this.runNextTest.call(this)
   } else {
     this.end()
   }
@@ -82,7 +86,7 @@ static end(){
   this.pendings_count = this.pendings.length
   console.log("\n\n")
   let color = this.failures_count ? 'red' : 'green'
-  console.log("%c Succès : %i – échecs : %i – attentes : %i", `color:${color};font-weight:bold;font-size:1.1em;`, this.success_count, this.failures_count, this.pendings_count)
+  console.log("%c Succès : %i – échecs : %i – attentes : %i", `color:${color};font-weight:bold;font-size:1.1em;border-top:1px solid;width:100%;display:block;padding-top:2px;`, this.success_count, this.failures_count, this.pendings_count)
   Ajax.send('MiniTest/after_suite.rb').then(this.displayMessages.bind(this)).catch(console.error)
 }
 
@@ -92,7 +96,7 @@ static end(){
  */
 static displayMessages(ret){
   if (ret.error ) console.error(ret.error)
-  else if (ret.message) console.log(ret.message)
+  else if (ret.message) log(ret.message, 5)
 }
 
 /**
@@ -156,7 +160,7 @@ run(){
         resultat = ret
       })
     } catch(err) {
-      console.log("Je passe dans le catch du run")
+      log("Je passe dans le catch du run", 1)
       raison = err
       resultat = false
     }
@@ -168,24 +172,61 @@ run(){
     resultat = resultat || res_appel_fonction
     if ( resultat === true || resultat === null) {
       // Succès
-      logGreenBold(my.name)
+      my.writeMessageSynthese(true)
       my.constructor.addSuccess(my)
     } else if ( resultat === 'pending' ) {
+      // Test à implémenter
       logOrange(my.name)
       my.constructor.addPending(my)
     } else if ( resultat === false || 'string' == typeof(resultat)) {
       // Échec
+      my.writeMessageSynthese(false, resultat)
       my.raison_failure = resultat
-      raison = my.name
-      if ('string' == typeof(resultat)) raison += ` (${resultat})`
-      logRed(raison)
       my.constructor.addFailure(my)
     } else {
-      console.error("resultat invalide :", resultat)
+      console.error("Résultat invalide :", resultat)
       console.error(`Le test ${my.name} doit absolument retourner une valeur valide.`)
     }
     ok()
   })
+}
+
+/**
+ * Définit le message (vert ou rouge) qui doit s'afficher en console
+ * avec le nom du test, les éventuelles erreurs et le suivi s'il 
+ * existe.
+ * 
+ * +ok+   {Boolean} True si c'est un succès, false dans le cas contraire
+ * 
+ * +motif_erreur+   {String} Le message d'erreur donné en résultat
+ *                  if any.
+ * 
+ */
+writeMessageSynthese(ok, motif_erreur){
+  let msg = ""
+  msg += this.name + '. '
+
+  if (ok){ 
+    logGreenBold(msg)
+  } else {
+    motif_erreur && (msg += "\nErreur : " + motif_erreur)
+    logRedBold(msg)
+  }
+  
+  if (this.suivis) {
+    logGreen("\t- " + this.suivis.join("\n\t- "))
+  }
+}
+
+/**
+ * Pour ajouter des messages de suivi positif au test
+ * 
+ * Dans le test, on écrit 'this.suivi("<message>")'
+ * 
+ */
+suivi(msg){
+  this.suivis || (this.suivis = [])
+  this.suivis.push(msg)
 }
 
 }//class MiniTest

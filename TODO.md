@@ -1,5 +1,6 @@
 # Todo liste
 
+* Ajouter des dossiers ignorés, concernant les données data/montrello (venant des tests et backups)
 * Gérer les suppressions de n'importe quel élément
   * Voir les suppressions qui doivent avoir une répercussion sur l'affichage (par exemple les jauges de développement)
 * Gérer les modèles

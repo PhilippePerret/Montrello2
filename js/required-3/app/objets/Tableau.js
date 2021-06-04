@@ -27,7 +27,7 @@ static setCurrent(t){
 	*
 	*/
 static create(element){
-	console.log("-> Création d'un nouveau tableau avec :", element)
+	// console.log("-> Création d'un nouveau tableau avec :", element)
 	let pannel_name = ('string' == typeof(element)) ? element : "Nouveau tableau"
 	this.current = new Tableau({ty:'tb',ti:pannel_name, id:Montrello.getNewId('tb')})
 	this.current.save()
