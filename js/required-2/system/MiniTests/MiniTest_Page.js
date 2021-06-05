@@ -25,7 +25,6 @@ class Page {
  */
 contains(msg){
   const res = document.body.innerHTML.match(msg)
-  console.log("-> contains %s", msg, res)
   return res != null
 }
 

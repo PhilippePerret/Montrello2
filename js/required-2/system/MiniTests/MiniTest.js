@@ -21,7 +21,7 @@ class MiniTest {
  *            l'application.
  */
 static async run(){
-  this.config = {debug_level:9} // [1]
+  this.config = {debug_level:0} // [1]
   log("-> MiniTest.run", 5)
 
 
@@ -149,7 +149,7 @@ static async loadCurrentFile(){
  * 
  */
 static async startSuite(){
-  console.clear()
+  // console.clear()
   log("=== Démarrage des tests ===", 1)
   await Ajax.send('MiniTest/before_suite.rb')
   this.dureeWait = 0
@@ -167,7 +167,10 @@ static endSuite(){
   this.displayReport()
 
   console.warn("Enregistrer aussi les résultats du test avec after_suite.rb")
-  Ajax.send('MiniTest/after_suite.rb', {tests: store.getData()}).then(this.displayMessages.bind(this)).catch(console.error)
+  Ajax.send('MiniTest/after_suite.rb', {tests: store.getData()})
+  .then(this.displayMessages.bind(this))
+  .then(App.init.bind(App))
+  .catch(console.error)
   store.clear()
 }
 

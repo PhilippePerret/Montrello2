@@ -9,35 +9,38 @@ MiniTest.add("L'helper wait permet d'attendre", async function(){
   return true
 })
 
-// MiniTest.add("Mon second test en essai qui doit produire un succès", async function(){
-//   console.log("Attente d'une seconde")
-//   await wait(1)
-//   console.log("Autre attente")
-//   await wait(2)
-//   return true
-// })
+MiniTest.add("eq et not_eq doivent produire le bon résultat", async function(){
 
-// MiniTest.add("Mon troisième test pour un test en attente", async function(){
-//   return 'pending'
-// })
+  expect(2+2).eq(4).else('#actual devrait être égal à #expected')
 
-// MiniTest.add("Mon test pour tester waitFor avec un texte", async function(){
-//   console.log("Je vais écrire le message %s dans quelques secondes, patience…")
-//   let msg = `Mon message sans caractères difficiles`
-//   setTimeout(function(){message(msg)}, 4000)
-//   let msgSearched = escapeRegExp(msg)
-//   await waitFor(function(){return page.contains(msgSearched)})
-//   console.log("J'ai bien attendu jusqu'à ce que le texte apparaisse.")
+  expect(3+2).not_eq(4).else('#actual ne devrait pas être égal à #expected')
 
-//   msg = `Mon message avec caractères difficiles (${new Date()})`
-//   console.log("Je vais écrire le message difficile '%s' dans quelques secondes, patience…")
-//   setTimeout(function(){message(msg)}, 4000)
-//   msgSearched = escapeRegExp(msg)
-//   await waitFor(function(){return page.contains(msgSearched)})
-//   console.log("J'ai bien attendu jusqu'à ce que le texte apparaisse.")
+  return true
+})
 
-//   return true
-// })
+MiniTest.add("Mon troisième test pour un test en attente", async function(){
+  
+  return 'pending'
+
+})
+
+MiniTest.add("Test de waitFor avec un texte attendu", async function(){
+  console.log("Je vais écrire le message %s dans quelques secondes, patience…")
+  let msg = `Mon message sans caractères difficiles`
+  setTimeout(function(){message(msg)}, 4000)
+  let msgSearched = escapeRegExp(msg)
+  await waitFor(function(){return page.contains(msgSearched)})
+  console.log("J'ai bien attendu jusqu'à ce que le texte apparaisse.")
+
+  msg = `Mon message avec caractères difficiles (${new Date()})`
+  console.log("Je vais écrire le message difficile '%s' dans quelques secondes, patience…")
+  setTimeout(function(){message(msg)}, 4000)
+  msgSearched = escapeRegExp(msg)
+  await waitFor(function(){return page.contains(msgSearched)})
+  console.log("J'ai bien attendu jusqu'à ce que le texte apparaisse.")
+
+  return true
+})
 
 MiniTest.add("Test de waitFor avec un DOMElement (aka test de 'page.has(...)'')", async function(){
 

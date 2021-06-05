@@ -32,12 +32,15 @@ span.close-btn
   cursor: pointer
   &:before
     // content: "\e91a"
-    content: "✖️"
-    margin-top: 4px
+    content: "✕"
+    color: black
+    margin-left: 1px
+    line-height: 33px
     vertical-align: -webkit-baseline-middle
-    line-height: 36px
   &:hover
     opacity: 1
     color: white
     transition: opacity 0.15s, background-color 0.15s
     background-color: #BBB
+    &:before
+      color: white

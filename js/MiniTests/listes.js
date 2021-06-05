@@ -21,7 +21,7 @@ MiniTest.add("On peut créer une nouvelle liste dans un tableau", async function
   this.suivi("Une instance CheckList doit répondre à build, observe, build_and_observe")    
 
   const tbl = Tableau.current
-  console.log("Tableau courant", tbl)
+  // console.log("Tableau courant", tbl)
   expect(tbl.obj).has('content buttons button', {class:'btn-add', text:'Ajouter une liste', count:1})
     .else("Le panneau du tableau devrait contenir un bouton pour créer une nouvelle liste")
   this.suivi("Le tableau courant possède un bouton pour créer une nouvelle liste")
@@ -55,4 +55,35 @@ MiniTest.add("On peut créer une nouvelle liste dans un tableau", async function
 
   return true
   
+})
+
+MiniTest.add("On peut détruire une liste en cliquant sur son bouton croix", async function(){
+
+  const initListeCount = Tableau.current.listesCount
+
+  // On prend une liste au hasard
+  const liste = Tableau.current.lastListe()
+
+  expect(liste.obj).has('header span.btn-kill').else("Les listes devraient posséder une croix pour les détruire.")
+  this.suivi("La liste possède un bouton pour la supprimer")
+
+  console.log("liste.btnKill", liste.btnKill)
+  liste.btnKill.click()
+  await wait(1)
+
+  expect(page).not_has(`#${liste.domId}`)
+    .else("La page ne devrait plus afficher la liste.")
+
+  expect(TData.get('li', liste.id)).eq(null)
+    .else("Le fichier de la donnée ne devrait plus exister.")
+
+  expect(Tableau.objs.li).not_has({[liste.id]: liste})
+    .else("La liste des objets listes du tableau ne devrait plus contenir la liste.")
+
+  expect(Tableau.current.listesCount).eq(initListeCount - 1)
+    .else("Le tableau courante devrait contenir une liste de moins.")
+  this.suivi("La liste est détruit quand on clique sur sa croix")
+
+
+  return true
 })

@@ -1,11 +1,16 @@
 liste
-	width: 300px
-	min-height: 60px
-	float: left
-	margin-top: 2em
-	margin-left: 2em
-	z-index: 1
-	> content
-		background-color: #EEEEEE!important
+  width: 300px
+  min-height: 60px
+  float: left
+  margin-top: 2em
+  margin-left: 2em
+  z-index: 1
+  > content
+    background-color: #EEEEEE!important
+  > header
+    > span.close-btn
+      &:hover
+        background-color: red!important
+        color: white!important
 liste + liste
-	margin-left: 0
+  margin-left: 0

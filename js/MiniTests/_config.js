@@ -1,8 +1,8 @@
 'use strict'
 
 MiniTest.tests_list = [
-  'minitest'
-  // 'listes'
+  // 'minitest'
+  'listes'
 // , 'premier_tableau'
 // , 'modele_checklist'
 

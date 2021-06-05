@@ -49,19 +49,22 @@ build(){
 }
 
 observe(){
-	if (this.observed) {
-		console.log("La liste est déjà observée")
-		return
-	}
 	this.obj.owner = this
 	UI.setEditableIn(this.obj)	
 	// La liste des cartes doit être sortable
 	$(this.obj.querySelector('content > items')).sortable({
 		axis:'y'
 	})
-	this.observed = true
+	this.btnKill.addEventListener('click', this.onClickKillButton.bind(this))
 }
 
+onClickKillButton(ev){
+	
+}
+
+get btnKill(){
+	return this._btnkill || (this._btnkill = DGet('header .btn-kill', this.obj))
+}
 
 }// class Liste
 
