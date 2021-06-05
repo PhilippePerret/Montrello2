@@ -5,40 +5,9 @@
 	*/
 class App {
 
-/**
- * @async
- * 
- * Méthode utile aux tests pour réinitialiser complètement l'applica-
- * tion, par exemple après un degel
- * 
- * Si MiniTest.config.reset_before_each_test (_config.js) est true, 
- * cette méthode est automatiquement appelée avant chaque test.
- * 
- * @return Une promise
- */
-static async resetBeforeTest(){
-	log("-> App.resetBeforeTest", 8)
-	
-	// On détruit tous les écouteurs d'évènement dans les
-	// containeurs éditables.
-	UI.unsetAllEditableContainers()
-
-	// On efface tous les tableaux (et le menu des tableaux)
-	Tableau.eraseAll()
-
-	Montrello.types2class || Montrello.type2class('tb')// Pour forcer la définition
-	delete Montrello.lastIds
-	delete Montrello.config
-
-	Object.values(Montrello.types2class).forEach(classe => {
-		delete classe['items']
-		delete classe['_current']
-		// console.log("Classe %s remise à zéro.", classe.name)
-	})
-
+static async init(){
 	await UI.init()
-	log("<- App.resetBeforeTest", 8)
-	return Montrello.init.call(Montrello)
+	await Montrello.init.call(Montrello)
 }
 
 static get name(){return 'Montrello'}

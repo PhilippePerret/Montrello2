@@ -21,6 +21,7 @@ function log(msg, level = 5){
  * 
  */
 function wait(secondes){
+  store.addDureeWait(secondes * 1000)
   return new Promise((ok,ko) => {
     setTimeout(ok, secondes * 1000)
   })
@@ -63,10 +64,7 @@ function escapeRegExp(string){
 // }
 async function degel(gel_name){
   await Ajax.send('MiniTest/degel.rb',{gel_name:gel_name})
-  if (MiniTest.config.reset_before_each_test){
-    log(`Réinitialisation de l'app après le dégel de '${gel_name}'`, 5)
-    await App.resetBeforeTest()
-  }
+  document.location.reload()
 }
 
 function gel(gel_name, gel_description){

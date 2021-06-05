@@ -4,6 +4,10 @@
  *
  */
 
+const now   = new Date()
+const TODAY_S = `${now.getDate()}/${1+now.getMonth()}`
+// const TODAY   = `${TODAY_S}/${now.getFullYear()}`
+
 
 class TData {
 

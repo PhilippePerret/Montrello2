@@ -1,10 +1,13 @@
 'use strict'
-// MiniTest.add("Mon premier test pour voir un échec", async function(){
-//   console.log("Je dois attendre 2 secondes")
-//   await wait(2)
-//   console.log("J'en ai fini d'attendre")
-//   return false
-// })
+MiniTest.add("L'helper wait permet d'attendre", async function(){
+  log("Je dois attendre 2 secondes", 3)
+  const depart = new Date().getTime()
+  await wait(2)
+  const fin   = new Date().getTime()
+  expect(fin - depart).greater_than(1500).else(/* message par défaut */)
+  
+  return true
+})
 
 // MiniTest.add("Mon second test en essai qui doit produire un succès", async function(){
 //   console.log("Attente d'une seconde")
@@ -45,7 +48,7 @@ MiniTest.add("Test de waitFor avec un DOMElement (aka test de 'page.has(...)'')"
     document.body.appendChild(DCreate('DIV',{id:'mon-mini-test'}))
     console.log("J'ai ajouté le div#mon-mini-test.")
   }, 3000)
-  await waitFor(page.has.bind(page, 'div#mon-mini-test'), 10).catch(ret => {
+  await waitFor(page.has.bind(page, 'div#mon-mini-test'), 5).catch(ret => {
     raison_echec = "le 'div#mon-mini-test' est introuvable"
   })
 

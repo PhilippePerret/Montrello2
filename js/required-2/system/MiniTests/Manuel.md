@@ -14,6 +14,16 @@
 * Implémenter **le fichier `./ajax/_scripts/MiniTest/degel.rb`** pour définir comment dégeler les gels.
 * Implémenter **tous les tests dans le dossier `./js/MiniTests/`**. Ce sont de simples fichiers javascript. cf.[leur implémentation](#implementation-tests).
 * Implémenter le fichier définissant la [**liste des tests à jouer**](#liste-tests), dans `./js/MiniTests/_tests_list.js`.
+* Implémenter la méthode **`App.init()`** qui doit initialiser l’application avant chaque test.
+
+
+
+### Retour des tests
+
+Les résultats des tests sont **retournés en console**, il faut donc ouvrir l’inspecteur javascript dans le navigateur.
+
+**Cocher aussi la case « Conserver l’historique »** pour ne pas le perdre à chaque changement. En revanche, il est inutile de le vider après les tests, ce sera fait automatiquement au début de la suite de tests.
+
 
 ---
 
@@ -68,42 +78,95 @@ Pour une liste complète des méthodes d’expectation, ouvrir une fenêtre de T
 ~~~
 
 
+
+---
+
+<a id="construction-test"></a>
+
+## Construction d'un test
+
+
+
+Après avoir installé les prérequis, on peut construire le premier test.
+
+On marque la base :
+
+~~~javascript
+MiniTest.add("Mon premier test", async function(){
+  
+  return true // pour le moment
+})
+~~~
+
+Si on doit partir d'un gel, on l'indique.
+
+~~~javascript
+MiniTest.add("Mon premier test", async function(){
+
+	degel('mon-gel-de-depart')
+	
+  return true // pour le moment
+})
+~~~
+
+
+
+On peut écrire ensuite les choses à attendre de ce test à l’aide de la méthode `suivi` des `MiniTest` :
+
+
+~~~javascript
+MiniTest.add("Mon premier test", async function(){
+  
+  degel('mon-gel-de-depart')
+  
+  // TODO
+  this.suivi("La balise div#mon-div existe")
+  
+  // TODO 
+  this.suivi("La classe MaClasse doit répondre à maMethode")
+  
+  // TODO
+  this.suivi("L'appelle de MaClasse#maMethode doit retourner le bon résultat")
+  
+  return true // pour le moment
+})
+~~~
+
+On peut ensuite implémenter les méthodes de test.
+
+~~~javascript
+MiniTest.add("Mon premier test", async function(){
+  
+  degel('mon-gel-de-depart')
+  
+  expect(page).has("div#mon-div").else("La balise #expected devrait exister.")
+  this.suivi("La balise div#mon-div existe")
+  
+  expect(MaClasse).respond_to('maMethode').else("La classe #sujet devrait répondre à la méthode #expected")
+  this.suivi("La classe MaClasse doit répondre à maMethode")
+  
+  let retour 		= MaClasse.maMethod()
+  let resultat 	= 12
+  expect(retour).eq(resultat).else("MaClasse.maMethod devait retourne '#expected'. Elle retourne '#actual'.")
+  this.suivi("L'appelle de MaClasse#maMethode doit retourner le bon résultat")
+  
+  return true // pour le moment
+})
+~~~
+
+
+
+
+
 ---
 
 <a id="reinit"></a>
 
 ## Réinitialisation de l'application
 
-Les tests s'exécutant à l'intérieur même de l'application, il est nécessaire de la ré-initialiser au début de chaque test.
+Maintenant que l’application se charge à chaque test (*), il est inutile de resetter l’application.
 
-Pour ce faire :
-
-* créer une méthode **`App.resetBeforeTest()`** qui réinitialisera toutes les valeurs nécessaires (à suivre de près au cours du développement),
-* définir dans le fichier `./js/MiniTests/_config.js` que l'application doit être ré-initialisée à chaque nouveau tests :
-	
-	~~~javascript
-	MiniTest.config = {
-		...
-		, reset_before_each_test: true
-	  ...
-	}
-	~~~
-* OU ALORS appeler cette méthode à chaque début de test :
-
-	~~~javascript
-	MiniTest.add("Mon test avec réinitialisation", async function(){
-		App.resetBeforeTest()
-		degel("mon-gel-utile")
-		
-		// ... le test ...
-		
-		return ok
-	})
-	~~~
-
-
-
-Noter que le reset de l’application sera également **appelé après chaque dégel**. Prendre en compte le fait que dans ces cas-là, la réinitialisation se fait deux fois : une fois avant le dégel, avant le test, et une fois après le dégel. Si la réinitialisation est longue, les tests peuvent être très ralentis.
+> (*) sauf dans des cas particuliers où on veut faire un seul test, avec une configuration spéciale et que la propriété de configuration ‘reset_before_each_test’ est mise à false.
 
 
 
@@ -296,6 +359,10 @@ MiniTest.config = {
 	// Pour réinitialiser l'application avant chaque test
 	// cf. la section qui en parle
 	, reset_before_each_test: true
+  
+  // Pour indiquer s'il faut ou non afficher les messages
+  // de suivi
+  , hide_suivi_messages: false
 }
 
 ~~~
@@ -338,3 +405,92 @@ MiniTest.add("mon test du click", async function(){
 })
 ~~~
 
+---
+
+<a id="annexe"></a>
+
+## Annexe
+
+<a id="gestion-reset"></a>
+
+### Gestion du reset
+
+Comme nous l'avons expliqué, pour réinitialiser l'application avant chaque test, on recharge la page (est-ce vraiment suffisant, d'ailleurs ?…). Le fonctionnement est le suivant :
+
+Nouveau fonctionnement plus simple :
+
+~~~
+
+On prend le premier fichier de la liste tests_list (sans le sortir de la
+liste).
+
+On le charge, ce qui définit tous ses cas.
+
+Si store.last_case_index est non défini, on le met à -1
+				Note : 'store' est un objet qui permet de simplifier les choses
+
+On met MiniTest.case_index à 0.
+
+Si le cas last_case_index + 1 existe, on le joue et on incrémente
+last_case_index.
+				Note : on ne le décrémente qu'à la fin, ce qui permet de
+				gérer les dégels plus facilement.
+
+Au prochain chargement, on recharge le même fichier.
+S'il reste des cas, on les joue.
+S'il ne reste pas de cas, on passe au fichier suivant.
+
+
+~~~
+
+Ancien fonctionnement :
+
+~~~
+
+Au tout premier lancement, rien n'est enregistré dans 
+le localStorage [1]. On doit faire une relève des tests.
+				[1] 'minitest_data' n'existe pas
+						Ce sera une table jsonnée
+
+On charge toutes les feuilles de test défini pour les
+relever en mode relève [2]
+				[2] MiniTest.mode_releve = true
+						Chaque test est mis dans une liste, dans
+						la donnée minitest_data.tests
+
+-----------------------------------------------------
+À partir d'ici, la méthode est la même pour tous les 
+rechargement de page après les tests ou les dégels.
+-----------------------------------------------------
+
+On retire le dernier test de la liste [4] pour pouvoir 
+prendre le suivant.
+				[4] À la relève de la liste, on a pris soin d'en
+						ajouter un vide pour lancer le tout premier.
+						Lire la note [N001]
+
+S'il ne reste plus de tests, c'est la fin des tests, on produit
+le résultat en l'enregistrant dans un fichier local. Et on
+détruit minitest_data.
+
+Le dernier test de la liste [3] est lancé
+				[3] Pour faciliter la démarche en utilisant la
+						méthode pop(), la liste des gels a été 
+						inversée avant d'être enregistrée.
+
+On mémorise les résultats de chaque test dans le localStorage
+
+
+Notes
+=====
+
+N001		Le test courant est toujours laissé en dernier
+----		dans la liste des tests, cela permet de produire
+un dégel sans passer au test suivant.
+
+Fonctionnement pour un gel
+--------------------------
+Un gel indique de ne pas passer au gel suivant en 
+mettant 'minitest_after_gel' à true.
+
+~~~

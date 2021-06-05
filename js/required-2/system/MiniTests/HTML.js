@@ -25,6 +25,11 @@ static has(container, selector, attrs){
     delete attrs.text
   }
 
+  if (attrs.class){
+    selector += `.${attrs.class}`
+    delete attrs.class
+  }
+
   ;(attrs && Object.keys(attrs).length) || (attrs = null)
 
   if ( attrs ) {

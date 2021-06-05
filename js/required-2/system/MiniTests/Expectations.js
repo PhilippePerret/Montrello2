@@ -45,6 +45,22 @@ not_eq(expected){
 
 /**
  * doc/
+ * greater_than / not_greater_than
+ *  expect(<sujet>).greater_than(<valeur>).else([<erreur>])
+ * 
+ *  Produit un succès si <sujet> est plus grand que <valeur>, sinon,
+ *  produit un échec.
+ * 
+ * /doc
+ */
+greater_than(expected){
+  return new ACase(this.sujet > expected, expected, this.sujet, null, `#sujet devrait être plus grand que #expected`)
+}
+not_greater_than(expected){
+  return new ACase(this.sujet <= expected, expected, this.sujet, null, `#sujet ne devrait pas être plus grand que #expected`)
+}
+/**
+ * doc/
  * has / not_has (page)
  *  expect(page).has(<selector>[,<attributs>]).else("<erreur>")
  * 
@@ -109,7 +125,32 @@ not_has(expected, attrs){
   return new ACase(false == this.sujet.has(expected, attrs), expected, null)
 }
 
-
+/**
+ * doc/
+ * responds_to / not_responds_to (class/object)
+ * expect(<class|object>).responds_to("<method>").else("<error>")
+ * 
+ *  Test que la classe ou l'instance donnée en argument répond bien
+ *  à la méthode <method>. Sinon produit le message <error> et un
+ *  échec.
+ * 
+ *  Exemple :
+ * 
+ *    expect(MaClasse).responds_to("maMethode")
+ *      .else("La classe #sujet devrait répondre à la méthode #expected")
+ * 
+ * /doc
+ */
+responds_to(method){
+  const isClass = this.sujet.constructor.name == 'Function'
+  var hsujet = isClass ? this.sujet.name : this.sujet.constructor.name ;
+  return new ACase('function' == typeof(this.sujet[method]), method, hsujet)
+}
+not_responds_to(method){
+  const isClass = this.sujet.constructor.name == 'Function'
+  var hsujet = isClass ? this.sujet.name : this.sujet.constructor.name ;
+  return new ACase('function' != typeof(this.sujet[method]), method, hsujet)
+}
 /**
  * ---------------------------------------------------------------
  *  Private methods
@@ -140,11 +181,12 @@ hashContains(hash, hexpe){
 }//Class Expectation
 
 class ACase {
-constructor(resultat, expected, actual, motif){
+constructor(resultat, expected, actual, motif, message_failure_default){
   this.resultat = resultat
   this.expected = expected
   this.actual   = actual
   this.motif    = motif
+  this.message_failure_default = message_failure_default
 }
 else(failure_message){
   if ( this.resultat ) {
@@ -156,12 +198,16 @@ else(failure_message){
     /**
      * === FAILURE ===
      */
+    failure_message || (failure_message = message_failure_default)
     // Pour obtenir la ligne de l'erreur
     let stack = new Error().stack.split("\n")[1]
     let idx = stack.indexOf('js/MiniTests/') + 'js/MiniTests/'.length
     let lastIdx = stack.lastIndexOf(':')
     stack = stack.substring(idx, lastIdx)
-    if ( this.actual )  failure_message = failure_message.replace(/\#actual/g, this.actual)
+    if ( this.actual ){
+      failure_message = failure_message.replace(/\#actual/g, this.actual)
+      failure_message = failure_message.replace(/\#sujet/g, this.actual)
+    }
     if ( this.expected) failure_message = failure_message.replace(/\#expected/g, this.expected)
     if ( this.motif)    failure_message += "\nRaison : " + this.motif
     throw `${failure_message}\n--> ${stack}`

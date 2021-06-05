@@ -17,8 +17,7 @@ $(document).ready(function(){
    * suivante et on commente les deux lignes d'après.
    */
   .then(MiniTest.run.bind(MiniTest))
-  // .then(UI.init.bind(UI))
-  // .then(Montrello.init.bind(Montrello))
+  // .then(App.init.bind(App))
   .catch(console.error)
   
 

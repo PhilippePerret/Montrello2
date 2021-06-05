@@ -2,6 +2,10 @@
 
 MiniTest.add("Création automatique du premier tableau quand aucune donnée, avec le bon titre", async function(){
 
+  await wait(1)
+
+  return true
+
   await degel("init")
 
   // console.error("J'attends 60 secondes pour que tu puisses vérifier les données enregistrées (problème des 3 tableaux")
@@ -22,6 +26,11 @@ MiniTest.add("Création automatique du premier tableau quand aucune donnée, ave
 
 MiniTest.add("Modification du titre du premier tableau quand aucune donnée", async function(){
 
+
+  log("J'attends 3 secondes", 0)
+  await wait(3)
+
+  return true
 
   await degel("init")
 
