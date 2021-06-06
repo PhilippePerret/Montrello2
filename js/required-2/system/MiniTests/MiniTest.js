@@ -162,6 +162,8 @@ static async startSuite(){
  */
 static endSuite(){
 
+  // console.clear()
+  
   store.endAt = new Date().getTime()
 
   this.displayReport()
@@ -169,9 +171,13 @@ static endSuite(){
   console.warn("Enregistrer aussi les résultats du test avec after_suite.rb")
   Ajax.send('MiniTest/after_suite.rb', {tests: store.getData()})
   .then(this.displayMessages.bind(this))
-  .then(App.init.bind(App))
+  /**
+   * Ne pas réinitialiser l'application, sinon tous les messages
+   * seront effacés. */
+  // .then(App.init.bind(App))
+  .then(wait.bind(null,5))
+  .then(store.clear.bind(store))
   .catch(console.error)
-  store.clear()
 }
 
 /**
@@ -183,12 +189,13 @@ static displayReport(){
     , failures_count = store.failures.length
     , pendings_count = store.pendings.length
   let color = failures_count ? 'red' : 'green'
+  // On écrit toutes les lignes mémorisées
+  store.writeConsoleLines()
+  // On écrit le résultat
   console.log("\n\n")
-  console.log("%c Succès : %i – échecs : %i – attentes : %i", `color:${color};font-weight:bold;font-size:1.1em;border-top:1px solid;width:100%;display:block;padding-top:2px;`, success_count, failures_count, pendings_count)
+  console.log("%c success: %i – failures: %i – pendings: %i", `color:${color};font-weight:bold;font-size:1.1em;border-top:1px solid;width:100%;display:block;padding-top:2px;`, success_count, failures_count, pendings_count)
   logGris(`(durée totale : ${this.dureeTotale/1000} secs — durée hors attentes : ${this.dureeHorsAttentes/1000} secs`)
-  if (failures_count) {
-    logRed(store.failures.join("\n"))
-  }
+  failures_count && logRed(store.failures.join("\n"))
 
 }
 

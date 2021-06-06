@@ -49,7 +49,12 @@ static output(msg, style){
             + (style.left   ? `margin-left:${style.left}px;` : '')
             + (style.right  ? `margin-right:${style.right}px;` : '')
   }
-  console.log('%c'+msg, style)
+  var dlog = ['%c'+msg, style]
+  this.isModeTest && store.addConsoleLine(dlog)
+  console.log(...dlog)
 }
 
+static get isModeTest(){
+  return this._is_mode_test || (this._is_mode_test = 'undefined' != typeof(MiniTest))
+}
 }

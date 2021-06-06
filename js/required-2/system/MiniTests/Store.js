@@ -56,6 +56,47 @@ set failures(v){this.set('failures', v)}
 get pendings(){ return this.get('pendings')  || []}
 set pendings(v){this.set('pendings', v)}
 
+
+/**
+ * Pour ajouter une ligne de console (à remettre à la fin)
+ * 
+ * Cf. le manuel pour le détail (bin/minitest-manuel)
+ * 
+ * +dline+    Soit un String, soit une liste des paramètres
+ *            de console.log, pour styles par exemple.
+ */
+addConsoleLine(dline){
+  var line_id   = 1 + this.lastIdConsoleLine
+  var line_key  = `console_line_${line_id}`
+  this.set(line_key, dline)
+  this.set('last_id_console_line', line_id)
+}
+
+/**
+ * Pour écrire en console toutes les lignes
+ * 
+ */
+writeConsoleLines(){
+  var lines_count = this.lastIdConsoleLine
+  if ( lines_count == 0 ) return 
+  var i = 1, line_key, dline
+  for(; i <= lines_count; ++i){
+    line_key = `console_line_${i}`
+    dline = this.get(line_key)
+    if ( 'string' == typeof dline ) {
+      console.log(dline)
+    } else if ( null == dline ) {
+      // Ne rien faire
+    } else {
+      console.log(...dline)
+    }
+  }
+}
+
+get lastIdConsoleLine(){
+  return this.get('last_id_console_line') || 0
+}
+
 /**
  * Index du fichier test courant
  * 
@@ -122,7 +163,8 @@ clear(){ localStorage.clear() }
 
 get(k){ 
   k = `minitest_${k}`
-  return JSON.parse(localStorage.getItem(k)) 
+  var d = localStorage.getItem(k)
+  if ( d ) return JSON.parse(d)
 }
 set(k,v){ 
   k = `minitest_${k}`

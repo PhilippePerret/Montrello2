@@ -427,70 +427,36 @@ liste).
 On le charge, ce qui définit tous ses cas.
 
 Si store.last_case_index est non défini, on le met à -1
-				Note : 'store' est un objet qui permet de simplifier les choses
+				Note : 'store' est un objet qui permet de simplifier le travail
+							 avec localStorage.
 
 On met MiniTest.case_index à 0.
 
 Si le cas last_case_index + 1 existe, on le joue et on incrémente
-last_case_index.
+last_case_index pour prendre le prochain test au prochain chargement.
 				Note : on ne le décrémente qu'à la fin, ce qui permet de
 				gérer les dégels plus facilement.
 
 Au prochain chargement, on recharge le même fichier.
 S'il reste des cas, on les joue.
 S'il ne reste pas de cas, on passe au fichier suivant.
+S'il ne reste plus de fichier, on arrête les tests et on affiche le
+rapport.
 
 
 ~~~
 
-Ancien fonctionnement :
+Pour le moment, pour obtenir tous les messages, il faut “conserver l’historique” dans la console. À l’avenir, on pourra imaginer mémoriser le suivi et le ressortir à chaque fois (ou seulement à la fin ?)
 
-~~~
+#### Pour mémoriser toutes les lignes
 
-Au tout premier lancement, rien n'est enregistré dans 
-le localStorage [1]. On doit faire une relève des tests.
-				[1] 'minitest_data' n'existe pas
-						Ce sera une table jsonnée
+SI les tests sont longs, mémoriser toutes les lignes dans une seule donnée peut être très consommateur. Pour ne pas faire comme ça, on enregistre chaque ligne dans une donnée différente :
 
-On charge toutes les feuilles de test défini pour les
-relever en mode relève [2]
-				[2] MiniTest.mode_releve = true
-						Chaque test est mis dans une liste, dans
-						la donnée minitest_data.tests
+* un compteur ‘last_id_console_line’ mémorise le dernier numéro de ligne utilisé
+* lorsqu’on doit enregistrer une ligne, on incrémente `last_id_console_line` et on met la ligne dans la donnée `console_line_<last_id_console_line>`.
 
------------------------------------------------------
-À partir d'ici, la méthode est la même pour tous les 
-rechargement de page après les tests ou les dégels.
------------------------------------------------------
+On utilise pour ce faire la méthode `store.addConsoleLine(<line>)`.
 
-On retire le dernier test de la liste [4] pour pouvoir 
-prendre le suivant.
-				[4] À la relève de la liste, on a pris soin d'en
-						ajouter un vide pour lancer le tout premier.
-						Lire la note [N001]
+#### Pour écrire toutes les lignes
 
-S'il ne reste plus de tests, c'est la fin des tests, on produit
-le résultat en l'enregistrant dans un fichier local. Et on
-détruit minitest_data.
-
-Le dernier test de la liste [3] est lancé
-				[3] Pour faciliter la démarche en utilisant la
-						méthode pop(), la liste des gels a été 
-						inversée avant d'être enregistrée.
-
-On mémorise les résultats de chaque test dans le localStorage
-
-
-Notes
-=====
-
-N001		Le test courant est toujours laissé en dernier
-----		dans la liste des tests, cela permet de produire
-un dégel sans passer au test suivant.
-
-Fonctionnement pour un gel
---------------------------
-Un gel indique de ne pas passer au gel suivant en 
-mettant 'minitest_after_gel' à true.
-
-~~~
+C’est la méthode `store.writeConsoleLines()` qui est invoquée, en fin de tests.

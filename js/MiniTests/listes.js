@@ -62,7 +62,7 @@ MiniTest.add("On peut détruire une liste en cliquant sur son bouton croix", asy
   const initListeCount = Tableau.current.countListes()
 
   // On prend la dernière liste
-  // QUESTION : Quid s'il n'y en a pas ?
+  // QUESTION : Quid s'il n'y en a pas ?
   const liste = Tableau.current.lastListe()
 
   expect(liste.obj).has('header span.btn-kill')
@@ -96,7 +96,7 @@ MiniTest.add("On peut détruire une liste en cliquant sur son bouton croix", asy
   expect(Tableau.current.countListes()).eq(initListeCount - 1)
     .else("Le tableau courant devrait contenir une liste de moins.")
 
-  pending("Tous les objets de la liste devraient être détruits")
+  // pending("Tous les objets de la liste devraient être détruits")
   
   this.suivi("La liste est détruite quand on clique sur sa croix")
 

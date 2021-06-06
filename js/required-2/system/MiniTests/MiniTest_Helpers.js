@@ -13,7 +13,9 @@
 
 function log(msg, level = 5){
   if ( level > MiniTest.config.debug_level ) return
-  console.log('%c'+"\t"+msg, 'color:#888;font-style:italic;font-size:0.85em;')
+  var dlog = ['%c'+"\t"+msg, 'color:#888;font-style:italic;font-size:0.85em;']
+  store.addConsoleLine(dlog)
+  console.log(...dlog)
 }
 
 /**
