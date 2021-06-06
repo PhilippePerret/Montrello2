@@ -3,7 +3,6 @@
 const ExtensionListe = {
 
 clickButtonNewCarte(){
-  console.log("btnNewCarte", this.btnNewCarte)
   $(this.btnNewCarte).trigger('click')
 },
 

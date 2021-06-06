@@ -139,7 +139,7 @@ edit(){
  */
 onClickSupTask(ev){
 	message("Destruction de la tâche en cours…")
-	Ajax.send('remove.rb', {type:'tk', id:this.id})
+	Ajax.send('remove.rb', {ref:{ty:'tk', id:this.id}})
 	.then(this.checklist.removeTask.bind(this.checklist, this))
 	.then(ret => {
 		this.constructor.removeItem(this)

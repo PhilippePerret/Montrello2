@@ -2,23 +2,16 @@
 # frozen_string_literal: true
 =begin
 	
-	Destruction d'un objet
+	Destruction d'un objet quelconque
 
 =end
+require_relative 'lib/Objet'
 
-objet_type 	= Ajax.param(:type)
-objet_id 		= Ajax.param(:id)
+objet = Objet.new(Ajax.param(:ref).to_sym)
 
-p = File.join(APP_FOLDER,'data','montrello', objet_type)
-if File.exist?(p)
-	p = File.join(p, "#{objet_id}.yaml")
-	if File.exist?(p)
-		File.delete(p)
-		Ajax << {message: "Objet #{objet_type}-#{objet_id} détruit avec succès."}
-	else
-		Ajax << {error: "L'objet #{p} est introuvable."}
-	end
+if objet.exist?
+	File.delete(objet.path)
+	Ajax << {message: "Objet #{objet.ref} détruit avec succès."}
 else
-	Ajax << {error: "Le dossier #{p} est introuvable."}
+	Ajax << {error: "L'objet #{objet.path} est introuvable."}
 end
-

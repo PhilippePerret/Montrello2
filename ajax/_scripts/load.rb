@@ -1,12 +1,19 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 =begin
+
 	Chargement de toutes les données par type
+
 =end
 require 'yaml'
 
 type 		= Ajax.param(:type) || Ajax.param(:ty)
-opt_id 	= Ajax.param(:id) # seulement si un identifiant est fourni
+
+# 
+# Optionnellement, un IDentifiant peut être fourni
+# (pour les mini-tests par exemple, pour obtenir un élément)
+# 
+opt_id 	= Ajax.param(:id)
 
 path_type = File.join(APP_FOLDER,'data','montrello', type.to_s)
 path_type = "#{path_type}.yaml" if type == 'config'

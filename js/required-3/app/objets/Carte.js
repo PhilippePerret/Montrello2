@@ -36,6 +36,17 @@ afterCreate(){
 }
 
 build(){
+	if ( ! this.container ) {
+		/**
+		 * Cela se produit lorsque la liste qui contient la carte (ou
+		 * autre container) a été supprimer au niveau du fichier
+		 * 
+		 */
+		 erreur("Une erreur est survenue avec la carte "+this.ref+". Consulter la console.")
+		 console.error("Le container de la carte %s n'existe plus. Impossible de construire la carte.", this.ref)
+		 console.error("La liste qui la contient a dû être détruite à la main…")
+		 return
+	}
 	this.obj = DOM.clone('modeles carte#modele-carte')
 	this.obj.id = this.domId
 	this.obj.classList.remove('hidden')
@@ -58,6 +69,7 @@ build(){
  * Observation de la carte
  */
 observe(){
+	if ( undefined == this.obj ) return // erreur de construction
 	this.obj.owner = this
 	UI.setEditableIn(this.obj)
 }

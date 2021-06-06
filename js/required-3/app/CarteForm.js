@@ -136,7 +136,7 @@ removeObjets(objet){
 		this.carte.objs = objs
 	}
 	// 2. destruction de l'objet
-	Ajax.send('remove.rb', {type:objet.type, id:objet.id})
+	Ajax.send('remove.rb', {ref:{ty:objet.type, id:objet.id}})
 	.then(ret => {
 		// 3. Enregistrement de la carte
 		this.carte.save()

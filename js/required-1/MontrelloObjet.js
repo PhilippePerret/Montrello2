@@ -148,6 +148,16 @@ save(params){
 }
 
 /**
+ * @async
+ * 
+ * Pour détruire le fichier yaml
+ * 
+ */
+async destroyYamlFile(){
+  await Ajax.send('remove.rb', {ref:{ty:this.type, id:this.id}})
+}
+
+/**
  * Sauver de façon asynchrone, c'est-à-dire en retournant une
  * promesse.
  * 

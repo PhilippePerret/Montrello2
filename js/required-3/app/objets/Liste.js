@@ -58,8 +58,29 @@ observe(){
 	this.btnKill.addEventListener('click', this.onClickKillButton.bind(this))
 }
 
+/**
+ * @async
+ * 
+ * Méthode détruisant la liste
+ *
+ * Cela consiste à :
+ * 	- détruire toutes les cartes de la liste
+ * 	- détruire l'objet DOM
+ * 	- détruire l'instance dans le constructeur
+ * 	- détruire le fichier yaml 
+ */
+async destroy(){
+	this.obj.remove()
+	this.constructor.removeItem(this)
+	await this.destroyYamlFile()
+}
+
+/**
+ * Méthode appelée quand on clique sur le bouton (croix) permettant
+ * de détruire la liste
+ */
 onClickKillButton(ev){
-	
+	this.destroy()
 }
 
 get btnKill(){

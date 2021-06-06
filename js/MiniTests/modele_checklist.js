@@ -22,7 +22,7 @@ MiniTest.add("On peut créer un modèle de liste à partir d'une checklist", asy
   this.suivi("Une instance CheckList doit répondre à build, observe, build_and_observe")    
 
   const tbl = Tableau.current
-  const nombre_listes = tbl.listesCount()
+  const nombre_listes = tbl.countListes()
   const btnAdd = DGet('content buttons button.btn-add', tbl.obj)
   btnAdd.click()
   await wait(0.5)

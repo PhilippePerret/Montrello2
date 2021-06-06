@@ -4,8 +4,11 @@ Object.assign(Tableau.prototype, {
 
 /**
  * Retourne le nombre de listes
+ * 
+ * ATTENTION : c'est une fonction, pas une propriété
+ *              listeCount()
  */
-listesCount(){
+countListes(){
   return this.allListes().length
 },
 
@@ -16,7 +19,6 @@ lastListe(){
   const listes = this.allListes()
   const nb_listes = listes.length
   const last_liste = listes[nb_listes - 1]
-  console.log("Dernière liste", last_liste)
   const liste_id = last_liste.id.split('-')[1]
   return Liste.get(liste_id)
 },
