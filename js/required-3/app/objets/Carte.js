@@ -1,6 +1,8 @@
 'use strict'
 class Carte extends MontrelloObjet {
 
+static get dimType(){ return 'ca' }
+
 /**
  * Pour créer une nouvelle carte dans la liste
  * 
@@ -10,18 +12,8 @@ static create(element){
 	return this.createItemFor(element.owner)
 }
 static initNewItemFor(owner){
-	return new this({
-			ct: `#${owner.domId}`
-		, ow: owner.ref
-		, id: Montrello.getNewId('ca')
-		, ty:'ca'
-		, ti: 'Nouvelle carte'
-		, objs: {}
-	})
+	return this.defaultItemData('Nouvelle carte', owner)
 }
-
-static get ownerClass(){return Liste}
-
 
 constructor(data){
 	// console.log("data initialisation de la carte :", data)

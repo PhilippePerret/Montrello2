@@ -4,6 +4,7 @@ MiniTest.tests_list = [
   // 'minitest'
   'listes'
 // , 'premier_tableau'
+// , 'CheckList_test'
 // , 'modele_checklist'
 
 ]
@@ -13,6 +14,7 @@ MiniTest.helpers_list = [
 , 'TMiniEditor' // helpers pour le mini-éditeur
 , 'extensions/Tableau'
 , 'extensions/Liste'
+, 'extensions/Expectations'
 ]
 
 

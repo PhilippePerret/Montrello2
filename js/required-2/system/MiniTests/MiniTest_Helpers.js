@@ -19,11 +19,19 @@ function log(msg, level = 5){
 }
 
 /**
+ * Un test qui doit être implémenté
+ * 
+ */
+function pending(msg){
+  throw `PENDING:${msg}`
+}
+/**
  * Pour attendre un certain nombre de secondes
  * 
  */
-function wait(secondes){
+function wait(secondes, message){
   store.addDureeWait(secondes * 1000)
+  message && console.warn(message)
   return new Promise((ok,ko) => {
     setTimeout(ok, secondes * 1000)
   })
@@ -34,7 +42,8 @@ function wait(secondes){
  * 
  * +timeout+ Nombre de secondes max d'attente
  */
-function waitFor(fct, timeout = 30){
+function waitFor(fct, timeout = 30, message){
+  message && console.warn(message)
   const now = new Date()
   let finAttente = new Date()
   finAttente.setTime(now.getTime() + timeout*1000)

@@ -40,7 +40,7 @@ getData(){
  */
 addSuccess(test){ this.add('success', test.name) }
 addFailure(test){this.add('failures', test.failureFullMessage)}
-addPending(test){this.add('pendings',test.pendingFullMessage)}
+addPending(test){this.add('pendings', test.pendingFullMessage)}
 
 add(type, str){
   // console.log("J'ajoute '%s' au type '%s'", str, type)

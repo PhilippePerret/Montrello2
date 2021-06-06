@@ -246,6 +246,9 @@ static add(testName, testFunction){
   this.cases_list.push(new MiniTest(stack, testName, testFunction))
 }
 
+
+
+
 constructor(relpath, name, fonction){
   this.relpath = relpath
   this.name = name
@@ -264,11 +267,20 @@ run(){
          * On passe ici avec les méthodes expect, par exemple, quand
          * un throw est invoqué dans la fonction du test.
          * 
+         * On passe aussi quand c'est un pending, le message est
+         * alors préfixé par "PENDING:"
          */
-        resultat = ret
+
+        if ( 'string' == typeof(ret) && ret.substring(0,8) === 'PENDING:'){
+          raison = ret.substring(8, ret.length).trim()
+          resultat = 'pending'
+        }
+        else {
+          resultat = ret
+        }
       })
     } catch(err) {
-      log("Je passe dans le catch du run", 1)
+      log("Je passe dans le catch du run avec " + err, -1)
       raison = err
       resultat = false
     }
@@ -284,7 +296,7 @@ run(){
       store.addSuccess(my)
     } else if ( resultat === 'pending' ) {
       // Test à implémenter
-      logOrange(my.name)
+      my.writeMessageSynthese('pending', raison)
       store.addPending(my)
     } else if ( resultat === false || 'string' == typeof(resultat)) {
       // Échec
@@ -314,8 +326,11 @@ writeMessageSynthese(ok, motif_erreur){
   let msg = ""
   msg += this.name + '. '
 
-  if (ok){ 
+  if (ok === true){ 
     logGreenBold(msg)
+  } else if (ok == 'pending') {
+    motif_erreur && (msg += "\nAttente : " + motif_erreur)
+    logOrangeBold(msg)
   } else {
     motif_erreur && (msg += "\nErreur : " + motif_erreur)
     logRedBold(msg)

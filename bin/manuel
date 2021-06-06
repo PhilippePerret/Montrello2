@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+require_relative 'lib/required'
+require_relative 'lib/CLI'
+
+options = {write: false, dev: false}
+ARGV.each do |arg|
+  case arg
+  when '-w'
+    options[:write] = true
+  when '-d'
+    options[:dev] = true
+  end
+end
+
+path =
+  case options
+  when {write:false, dev:false}
+    File.join(APP_FOLDER,'Manuel','Manuel.pdf')
+  when {write:false, dev:true}
+    File.join(APP_FOLDER,'Manuel','Manuel_developpeur.pdf')  
+  when {write:true, dev:false}
+    File.join(APP_FOLDER,'Manuel','Manuel.mdf')
+  when {write:true, dev:true}
+    File.join(APP_FOLDER,'Manuel','Manuel_developpeur.md')
+  else
+    raise "Impossible de savoir quel manuel ouvrir."
+  end
+
+if not options[:write]
+  puts "Ajouter -w pour éditer le manuel".bleu
+end
+if not options[:dev]
+  puts "Ajouter -d pour le manuel développeur".bleu
+end
+
+`open -a Finder "#{path}"`

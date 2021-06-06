@@ -6,14 +6,26 @@ const Montrello = {
 
 type2class:function(type){
 	this.types2class = this.types2class || {
-			'tb': Tableau
-		, 'li': Liste
-		, 'ca': Carte
-		, 'cl': CheckList
-		, 'tk': CheckListTask
-		, 'ma': Masset
+			'tb': {classe: Tableau, parentClass:null, childClass: Liste}
+		, 'li': {classe: Liste, parentClass:Tableau, childClass:Carte}
+		, 'ca': {classe: Carte, parentClass:Liste, childClass:CheckList}
+		, 'cl': {classe: CheckList, parentClass:Carte, childClass:CheckListTask}
+		, 'tk': {classe: CheckListTask, parentClass:CheckList, childClass:Masset}
+		, 'ma': {classe: Masset, parentClass:CheckListTask, childClass: null}
 	}
-	return this.types2class[type]
+	return this.types2class[type].classe
+},
+
+/**
+ * @return n'importe quel objet de type +type+ et d'identifiant +id+
+ * 
+ * +type+		Le type (2 lettres) ou la référence (<type>-<id>)
+ * +id+			Identifiant ou rien (si type est référence)
+ * 
+ */
+get(type, id) { 
+	if ( !id ) [type, id] = type.split('-')
+	return this.type2class(type).get(id) 
 },
 
 /**
@@ -63,9 +75,9 @@ init:function(){
 	.then(this.ensureCurrentTableau.bind(this))
 	.then(Ajax.send.bind(Ajax,'load.rb',{type:'ma' /* masset */}))	
 	.then(this.dispatch.bind(this, 'ma'))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'tk' /* task de checklist */}))	
+	.then(Ajax.send.bind(Ajax,'load.rb',{type:'tk' /* task de checkList */}))	
 	.then(this.dispatch.bind(this, 'tk'))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'cl' /* checklist */}))	
+	.then(Ajax.send.bind(Ajax,'load.rb',{type:'cl' /* checkList */}))	
 	.then(this.dispatch.bind(this, 'cl'))
 	.then(Ajax.send.bind(Ajax,'load.rb',{type:'li' /* liste */ }))
 	.then(this.dispatch.bind(this, 'li'))

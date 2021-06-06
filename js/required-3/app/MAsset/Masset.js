@@ -13,6 +13,8 @@ const MASSET_TYPES = {
 
 class Masset extends MontrelloObjet {
 
+static get dimType(){ return 'ma' }
+
 /**
 	* Création d'un nouveau Masset de type +mtype+ pour +owner+
 	*

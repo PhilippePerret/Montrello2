@@ -18,11 +18,26 @@ static get count(){
 }
 
 /**
+ * @return  Les données par défaut pour un nouvel item de la classe
+ *          en lui mettant +titre+ comme titre et +owner+ comme
+ *          parent si cette donnée est définie.
+ * 
+ */
+static defaultItemData(titre, owner){
+  return {
+      ti: titre
+    , ty: this.dimType
+    , id: Montrello.getNewId(this.dimType)
+    , ow: (owner && owner.ref)
+  }
+}
+
+/**
  * Méthode génénique de création d'un objet
  * 
  * Il faut fournir son propriétaire
  * L'objet doit définir la méthode de classe initNewItemFor qui recevra
- * le propriétaire
+ * le propriétaire et instanciera un nouvel objet
  * 
  * Si l'objet définit une méthode d'instance 'afterCreate', elle est
  * appelée. Elle sert par exemple à mettre tout de suite en édition
@@ -31,12 +46,15 @@ static get count(){
  * @return L'instance du nouvel item créé
  * 
  */
-static createItemFor(owner){
-  const newItem = this.initNewItemFor(owner)
+static async createItemFor(owner){
+  const newItem = (await this.initNewItemFor(owner));
+  // console.log("newItem:", newItem)
   newItem.build_and_observe()
-  newItem.save()
+  await newItem.save()
   this.addItem(newItem)
+  owner && owner.addChild(newItem)
   newItem.afterCreate && newItem.afterCreate.call(newItem)
+  this.last_item_id = 0 + newItem.id // pour les tests
   return newItem
 }
 
@@ -51,13 +69,14 @@ static createItemFor(owner){
  * 
  * @return L'instance créé
  */
-static async createNewItemWith(hdata){
+static async duplicateItemWith(hdata){
   hdata.id || Object.assign(hdata, {id: Montrello.getNewId(hdata.ty)})
   const newItem = new this(hdata)
   this.addItem(newItem)
   await newItem.saveAsync()
   return newItem
 }
+
 /**
  * Ajoute un item à la liste des items de l'objet
  * 
@@ -94,6 +113,21 @@ static get(item_id) {
 }
 
 /**
+ * ==============================================================
+ * Méthodes de classe utiles aux tests 
+ */
+
+/**
+ * Retourne le dernier élément créé (utile aux tests)
+ * 
+ */
+static getLastItem(){ return this.get(this.last_item_id) }
+
+/**
+ * / Fin des méthodes utiles aux tests
+ * ============================================================== */
+
+/**
  * Instanciation dans la classe abstraite
  * 
  * [1]  On doit faire cette vérification pour les classes, comme 
@@ -103,6 +137,7 @@ static get(item_id) {
  */
 constructor(data){
   data && (this.data = data) // [1]
+  this.children = []
 }
 
 /**
@@ -181,15 +216,62 @@ build_and_observe(){
 
 
 /**
- * Récupération et définition du modèle
+ * ============================================================
+ * Méthodes pour les enfants
  * 
- * À quoi ça sert ? Maintenant, un modèle est juste une copie non
- * liée (sinon le traitement est trop compliqué)
- * 
- **/
-get modele(){ return this.data.mo }
-set modele(m){ 
-  if ( this._data ) this._data.mo = m.ref
-  else this.data.mo = m.ref
+ */
+
+addChild(child){
+  this.children.push(child)
 }
+
+forEachChild(fonction){
+  this.children.forEach(fonction)
+}
+
+get parent(){
+  return this._parent || (this._parent = this.getParent())
+}
+get owner(){ // régression
+  console.warn("'owner' est déprécié. Utiliser 'parent'", new Error().stack)
+  return this.parent
+}
+
+/**
+ * @private
+ * Retourne le parent de l'objet s'il existe
+ */
+getParent(){
+  return this.data.ow ? Montrello.get(this.data.ow) : null ;
+}
+
+/**
+ * /Fin des méthodes pour les enfants
+ * ============================================================ */
+
+
+/**
+ * ==============================================================
+ * Méthodes d'instance utiles aux tests 
+ */
+
+/**
+ * @return true si l'instance contient l'enfant +child+
+ * 
+ * +child+ Instance de l'enfant qui doit appartenir au sujet
+ */
+hasChild(child){
+  if ( null == this.children ) return false
+  var enf
+  for(enf of this.children ) {
+    if ( enf.id == child.id ) return true
+  }
+  return false
+}
+
+/**
+ * / Fin des méthodes d'instance utiles aux tests
+ * ============================================================== */
+
+
 }

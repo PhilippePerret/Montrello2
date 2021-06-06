@@ -2,14 +2,15 @@
 
 class CheckListTask extends MontrelloObjet {
 
+static get dimType(){ return 'tk' }
+
 /**
 	* Pour créer une nouvelle tâche dans +owner+
 	*/
 static createFor(owner){
 	const newtask = new CheckListTask({
-			owner:owner
-		, ow:owner.ref
-		, ty: 	'tk'
+		  ty: 	this.dimType
+		, ow: 	owner.ref
 		, id: 	Montrello.getNewId('tk')
 		, lab: 	"Nouvelle tâche"
 		, on: 	false

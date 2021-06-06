@@ -49,6 +49,28 @@ MiniTest.tests_list = [
 ]
 ~~~
 
+#### Filtre les « cases »
+
+Pour choisir les tests à jouer dans un fichier test, il suffit d’utiliser les « blocs de commentaires intelligents » en javascript :
+
+~~~javascript
+/* [Il suffit d'ajouter un '/' pour décommenter le test — et donc le jouer]
+MiniTest.add("mon test à commenter", async function(){
+	// ....
+})
+// [la subtilité est ici] */
+
+// Le même test décommenté :
+
+//* [Il suffit d'ajouter un '/' pour décommenter le test — et donc le jouer]
+MiniTest.add("mon test à commenter", async function(){
+	// ....
+})
+//*/
+~~~
+
+
+
 ---
 
 <a id="expectations"></a>
@@ -75,6 +97,36 @@ Pour une liste complète des méthodes d’expectation, ouvrir une fenêtre de T
 
 ~~~bash
 > bin/minitest-expectations
+~~~
+
+#### Expectations propres à l'application
+
+On peut définir des expectations propres à l’application dans un fichier qui portera le nom `Expectations.js` (\*) (par exemple dans le fichier `./js/MiniTests/extensions/Expectations.js`).
+
+> (*) pour pouvoir relever les méthodes avec le binaire `bin/minitest-expectations`
+
+Ce fichier devrait être chargé en l’ajoutant dans la liste `MiniTest.helpers_list` du fichier `_config.js`.
+
+~~~javascript
+'use strict'
+
+Object.assign(Expectation.prototype, {
+  
+ /**
+ 	* doc/
+ 	* hasChild(child) / not_hasChild(child)
+ 	*
+ 	*	... pour la documentation des expectations
+ 	*
+ 	* /doc
+ 	*/
+	hasChild(child){
+    return new ACase(<ok>, <expected>, <actual>, <motif>, <message failure défaut>)
+ 	}
+	not_hasChild(child){
+	  //  ...
+	}
+})
 ~~~
 
 
@@ -331,6 +383,8 @@ log("Mon message sensible", 1)
 log("Mon message insensible", 9)
 // Ce message ne s'affichera que si le debug_level est supérieur ou
 // égal à 9
+
+log("Un message qui s'affichera toujours", -1)
 ~~~
 
 

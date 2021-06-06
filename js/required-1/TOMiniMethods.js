@@ -135,18 +135,6 @@ let TOMiniMethods = {
 		}
 	},
 
-	getOwner(){
-		if ( this.data.ow ) {
-			const [type, id] = this.data.ow.split('-')
-			return Montrello.type2class(type).get(id)
-		} else if (this.constructor.ownerClass){
-			const owner = this.constructor.ownerClass.get(this.owner_id)
-			console.log("owner trouvé :", owner)
-			return owner
-		} else {
-			console.log("ownerClass n'est pas définit pour %s", this.constructor.name)
-		}
-	}
 }
 
 const TOMiniProperties = {
@@ -210,19 +198,6 @@ const TOMiniProperties = {
 		get(){
 			return this._titlefield || (this._titlefield = this.getTitleField())
 		}
-	},
-
-
-	owner:{
-		enumerable:true,
-		get(){return this._owner || (this._owner = this.data.owner || this.getOwner())},
-		set(v){this._owner = v}
-	},
-
-	owner_id:{
-		enumerable: true,
-		get(){return this.data.owner_id},
-		set(v){this.data.owner_id = v}
 	},
 
 	description:{

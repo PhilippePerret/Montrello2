@@ -1,6 +1,8 @@
 'use strict'
 class Tableau extends MontrelloObjet {
 
+static get dimType(){ return 'tb' }
+
 static get current(){ return this._current }
 
 /**

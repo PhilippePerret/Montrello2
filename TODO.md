@@ -3,7 +3,6 @@
 * Généraliser le fonctionnement de l'appartenance : plutôt que d'avoir des listes d'objets, définir le parent. Par exemple, les listes ont un owner ('ow') qui correspond au tableau auquel elles appartiennent. En revanche, les tableaux n'enregistrent pas de liste de liste.
   * Le truc est à faire sur les cartes (qui appartiennent aux listes)
   * le truc est à faire sur ?
-* Pour les mini-tests, plutôt que de conserver l'historique, mémoriser les tests passés (avec leur couleur) et les remettre à chaque fois — mais attention, ça supprime tout message console.log, console.warn etc. qui serait ajouté pour mieux voir ce qui se passe.
 * Ajouter des dossiers ignorés, concernant les données data/montrello (venant des tests et backups)
 * Gérer les suppressions de n'importe quel élément
   * Voir les suppressions qui doivent avoir une répercussion sur l'affichage (par exemple les jauges de développement)

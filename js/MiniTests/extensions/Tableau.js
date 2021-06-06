@@ -28,3 +28,13 @@ allListes(){
 },
 
 })
+
+Object.defineProperties(Tableau.prototype, {
+
+  btnAdd:{
+    get(){
+      return this._btnadd || (this._btnadd = DGet('content buttons button.btn-add',this.obj))
+    }
+  }
+
+})

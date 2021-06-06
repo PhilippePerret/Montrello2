@@ -1,6 +1,8 @@
 'use strict'
 class CheckList extends MontrelloObjet {
 
+static get dimType(){ return 'cl' }
+
 /**
 	* Création d'une check-list
 	* (dans le formulaire de carte)
@@ -23,8 +25,6 @@ static initNewItemFor(owner){
 		, tasks:  []
 	})
 }
-
-static get ownerClass(){ return Carte }
 
 constructor(data){
 	super(null) /** formule pour ne pas définir this.data dans 
