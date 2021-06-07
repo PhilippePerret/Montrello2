@@ -3,27 +3,11 @@ class CheckList extends MontrelloObjet {
 
 static get dimType(){ return 'cl' }
 
-/**
-	* Création d'une check-list
-	* (dans le formulaire de carte)
-	*
-	* Note : avant, le propriétaire de la checklist était le formulaire
-	* d'édition de la carte, maintenant c'est la carte elle-même pour
-	* simplifier les opérations.
-	*
-	*/
-static createFor(owner){
-	return this.createItemFor(owner.carte)
-}
 
-static initNewItemFor(owner){
-	return new CheckList({
-			ow: 		owner.ref
-		, owner: 	owner
-		, ty: 		'cl'
-		, id: 		Montrello.getNewId('cl')
-		, tasks:  []
-	})
+static newItemDataFor(owner){
+	var d = this.defaultItemData("Nouvelle Checklist")
+	Object.assign(d, {tasks:[]})
+	return d
 }
 
 constructor(data){
@@ -121,15 +105,6 @@ removeTask(task){
 	return this.saveAsync()
 }
 
-/**	
-	* Retourne la liste des tâches DANS LES DONNÉES (*)
-	*
-	* (*) Pour obtenir la liste des tâches dans l'affichage, il faut
-	*			impérativement utiliser la méthode getTaskListIds().
-	*
-	*/
-get tasks(){ return this._data.tasks }
-set tasks(v){this._data.tasks = v}
 
 // Retourne la liste des identifiants de tâche dans l'ordre relevé
 // dans la liste affichée
@@ -151,30 +126,8 @@ getTaskListIds(){
 	*
 	*/
 build(){
-	const o = DOM.clone('modeles checklist')
-	o.id = this.domId
-	this.ul = o.querySelector('ul')
-
-	this.btn_add = o.querySelector('button.btn-add')
-	this.btn_sup = o.querySelector('button.btn-sup')
-	this.btn_mod = o.querySelector('button.btn-to-modele') // => pour faire un modèle de liste
-
+	const o = DOM.clone('modeles checklist', {id: this.domId})
 	this.obj = o
-
-	/** Construction des tâches
-		*	-----------------------
-		* À la première construction, la check-list n'a pas de tâche. Mais
-		* ensuite, elle en a et il faut les ajouter.
-		*
-		*/
-	// console.log("this.tasks", this.tasks)
-	if ( this.tasks.length ) {
-		this.tasks.forEach(taskId => {
-			const task = CheckListTask.get(taskId)
-			task.checklist = this
-			task.build_and_observe()
-		})
-	}
 
 	/** Le conteneur de la liste de tâche
 		* ---------------------------------
@@ -223,51 +176,19 @@ onStartSorting(){
 	*
 	*/
 observe(){
-
-	// On rend la liste classable
-	$(this.ul).sortable({
+	super.observe()
+	// On rend la liste des tâches classable
+	$(this.childrenContainer).sortable({
 			axis:'y'
 		, stop:this.onStopSorting.bind(this)
 		, start:this.onStartSorting.bind(this)
 	})
 
 	// 
-	// Bouton pour ajouter une tâche
-	// 
-	this.btn_add.addEventListener('click', this.onClickAddTask.bind(this))
-
-	// 
-	// Bouton pour supprimer la liste
-	// 
-	this.btn_sup.addEventListener('click', this.onClickRemoveList.bind(this))
-
-	// 
 	// Bouton pour transformer la liste en modèle de liste
 	// 
-	this.btn_mod.addEventListener('click', this.onClickMakeModele.bind(this))
+	this.btn_mod
 }
-
-onClickAddTask(ev){
-	this.createTask()
-}
-
-onClickRemoveList(ev){
-	message("Je dois détruire la liste de tâche")
-}
-
-onClickMakeModele(ev){
-	message("Je dois faire un modèle de cette liste")
-	// QUESTION Quid de si c'est déjà un modèle
-	// On doit demander le nom du modèle
-	// On doit enregistrer la checklist comme un modèle
-	// Note : les modèles s'enregistrent comme les autres objets, avec un type ty, mais avec
-	// le préfixe 'm-'
-	// Donc 'm-cl' pour un modèle checklist
-	const modele = MontrelloModele.createFrom(this)
-	message("Modèle créé avec succès. Tu pourras l'utiliser avec la prochaine Checklist.")
-	message("Cette liste a été associée à ce modèle")
-}
-
 
 updateDevJauge(){
 	return // pour le moment ça ne va pas TODO à régler ensuite

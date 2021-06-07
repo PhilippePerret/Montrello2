@@ -39,7 +39,7 @@ static async run(){
   log("<-- MiniTest.loadConfig", 6)
 
   if ( isStartSuiteTests ){
-    await this.startSuite()
+    await this.init()
   }
 
   
@@ -87,6 +87,10 @@ static async run(){
     document.location.reload()
 
   }
+}
+
+static async init(){
+  await this.startSuite()
 }
 
 /**

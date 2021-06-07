@@ -3,15 +3,7 @@ class Carte extends MontrelloObjet {
 
 static get dimType(){ return 'ca' }
 
-/**
- * Pour créer une nouvelle carte dans la liste
- * 
- * @return L'instance de la carte créée
- */
-static create(element){
-	return this.createItemFor(element.owner)
-}
-static initNewItemFor(owner){
+static newItemDataFor(owner){
 	return this.defaultItemData('Nouvelle carte', owner)
 }
 
@@ -28,22 +20,7 @@ afterCreate(){
 }
 
 build(){
-	if ( ! this.container ) {
-		/**
-		 * Cela se produit lorsque la liste qui contient la carte (ou
-		 * autre container) a été supprimer au niveau du fichier
-		 * 
-		 */
-		 erreur("Une erreur est survenue avec la carte "+this.ref+". Consulter la console.")
-		 console.error("Le container de la carte %s n'existe plus. Impossible de construire la carte.", this.ref)
-		 console.error("La liste qui la contient a dû être détruite à la main…")
-		 return
-	}
-	this.obj = DOM.clone('modeles carte#modele-carte')
-	this.obj.id = this.domId
-	this.obj.classList.remove('hidden')
-	this.addInParent()
-	this.setCommonDisplayedProperties()
+	super.build()
 	// Les tags
 	PickerTags.drawTagsIn(this)
 	// La Jauge d'avancée
@@ -63,11 +40,6 @@ build(){
 observe(){
 	if ( undefined == this.obj ) return // erreur de construction
 	super.observe()
-}
-
-
-get massets(){
-	return this._massets || (this._massets = new Massets(this))
 }
 
 /**
@@ -92,10 +64,10 @@ updateDisplay(hdata){
 get tasks(){return this._tasks || (this._tasks = this.getAllTasks())}
 
 getAllTasks(){
-	if ( undefined == this.objs.cl || this.objs.cl.length == 0) return []
+	if ( this.children.length == 0 ) return []
 	let ts = []
-	this.objs.cl.forEach(cl_id => {
-		CheckList.get(cl_id).tasks.forEach(task_id => ts.push(CheckListTask.get(task_id)))
+	this.forEachChild(child => {
+		ts += child.children
 	})
 	return ts
 }

@@ -5,21 +5,13 @@ class CheckListTask extends MontrelloObjet {
 static get dimType(){ return 'tk' }
 
 /**
-	* Pour créer une nouvelle tâche dans +owner+
-	*/
-static createFor(owner){
-	const newtask = new CheckListTask({
-		  ty: 	this.dimType
-		, ow: 	owner.ref
-		, id: 	Montrello.getNewId('tk')
-		, lab: 	"Nouvelle tâche"
-		, on: 	false
-	})
-	newtask.build_and_observe()
-	newtask.edit()
-	owner.save()
-	this.addItem(newtask)
+ * @return des données par défaut pour une nouvelle tâche
+ * 
+ */
+static newItemDataFor(owner){
+	return this.defaultItemData("Nouvelle tâche à exécuter", owner)
 }
+
 
 constructor(data){
 	super()
@@ -44,7 +36,6 @@ async makeCopy(){
 	delete d.id
 	Object.assign(d, {
 			on: 		false
-		, owner: 	undefined
 		, ow: 		undefined
 	})
 	const newTask = await this.constructor.createNewItemWith(d)
@@ -54,33 +45,30 @@ async makeCopy(){
 // *** Propriétés ***
 
 get data(){
-	this.lab && (this._data.lab = this.lab.innerHTML)
+	this.ti && (this._data.ti = this.lab.innerHTML)
 	return this._data
 }
 
 // *** Construction et observation ***
 
 build(){
-	const o 	= DOM.clone('modeles task')
+	const o 	= DOM.clone('modeles task', {id: this.domId})
 	const cb 	= o.querySelector('span.checkmark')
 	const lab = o.querySelector('label')
 	
-	const o_id 	= `task-${this.id}`
-	const cb_id = `${o_id}-cb`
+	const cb_id = `${this.domId}-cb`
 
 	o.setAttribute('data-task-id', this.id)
-	o.id 	= o_id
 	o.classList.remove('hidden')
 	cb.id = cb_id
 	lab.setAttribute('for', cb_id)
-	lab.innerHTML = this._data.lab
+	lab.innerHTML = this._data.ti
 
 	// On met la tâche dans la liste
 	this.checklist.ul.appendChild(o)
 
 	// [1] Sert pour la méthode set() générale
 	this.li = this.obj /* [1] */ = o
-	this.btn_sup 	= o.querySelector('button.btn-sup')
 	this.lab 			= lab
 	this.cb 			= cb
 
@@ -95,9 +83,9 @@ build(){
 	*
 	*/
 observe(){
+	super.observe()
 	this.cb.addEventListener('click', this.onClickCheckTask.bind(this))
 	this.lab.addEventListener('click', this.onClickCheckTask.bind(this))
-	this.btn_sup.addEventListener('click', this.onClickSupTask.bind(this))
 	// Pour le label (éditable), il faut en plus indiquer le propriétaire
 	this.lab.owner = this
 }
@@ -128,26 +116,15 @@ edit(){
 /**
  * Méthode appelée quand on veut détruire la tâche
  * Cette destruction implique :
- * 	- la destruction de son fichier dans les données enregistrées
- * 	- la suppression dans la checklist parente
  * 	- l'enregistrement de la checklist parente pour tenir compte de
  * 		la nouvelle liste.
  *  - l'actualisation de la jauge dans la carte éditée
  * 	- l'actualisation de la jauge dans la carte sur le bureau
- * 	- la destruction de l'item dans le constructor (items)
  * 	- actualiser les infos générales sur Montrello
  * 	- la destruction de l'objet de la tâche dans la carte éditée
  */
-onClickSupTask(ev){
-	message("Destruction de la tâche en cours…")
-	Ajax.send('remove.rb', {ref:{ty:'tk', id:this.id}})
-	.then(this.checklist.removeTask.bind(this.checklist, this))
-	.then(ret => {
-		this.constructor.removeItem(this)
-		this.obj.remove() // pour finir
-		message("Tâche détruit avec succès", {keep:false})
-	})
-	.catch(console.error)
+afterDestroy(){
+	console.warn("Il faut poursuivre la destruction de la tâche")
 }
 
 get checked(){ return this.data.on === true }

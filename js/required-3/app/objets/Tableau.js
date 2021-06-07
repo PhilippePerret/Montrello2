@@ -52,10 +52,6 @@ static get container(){
 	return this._container || (this._container = DGet('tableaux'))
 }
 
-// Détruit le tableau courant
-static destroyCurrent(){
-	this.current.destroy()
-}
 
 // Édite les préférences du panneau courant
 static editPrefsCurrent(){
@@ -72,20 +68,7 @@ static onChooseItem(item){
 	this.current = item // ça fait tout
 }
 
-/**
- * Sert au reset de l'application
- * (pour les mini-tests par exemple)
- * 
- */
-static eraseAll(){
-	DGet('tableaux').innerHTML = ""
-	// Le menu des tableaux courants (normalement, il n'y en a qu'un, mais bon…)
-	const menuTableaux = DGet('menu#menu-tableaux')
-	DGet('content', menuTableaux).querySelectorAll('ul.feeded-menu').forEach(ul => ul.remove())
-	// On supprime tous les observers de ce menu en en faisant un clone
-	UI.clone(menuTableaux)
-	console.log("menuTableaux:", menuTableaux)
-}
+// ========================== INSTANCE =============================
 
 constructor(data){
 	super()
@@ -123,13 +106,11 @@ hide(){ this.obj.classList.add('hidden')}
 // }
 
 /**
-	* Construction du tableau
+	* Construction du tableau (masqué, par défaut)
 	*/
 build(){
-	this.obj = DOM.clone('modeles tableau')
-	this.obj.id = this.domId
+	this.obj = DOM.clone('modeles tableau', {id: this.domId})
 	Tableau.container.appendChild(this.obj)
-	this.obj.owner = this
 	this.hide()
 }
 

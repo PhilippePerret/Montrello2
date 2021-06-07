@@ -5,15 +5,19 @@ const Montrello = {
 
 
 type2class:function(type){
+	return this.type2dataClass(type).classe
+},
+
+type2dataClass:function(type){
 	this.types2class = this.types2class || {
-			'tb': {classe: Tableau, parentClass:null, childClass: Liste}
-		, 'li': {classe: Liste, parentClass:Tableau, childClass:Carte}
-		, 'ca': {classe: Carte, parentClass:Liste, childClass:CheckList}
-		, 'cl': {classe: CheckList, parentClass:Carte, childClass:CheckListTask}
-		, 'tk': {classe: CheckListTask, parentClass:CheckList, childClass:Masset}
-		, 'ma': {classe: Masset, parentClass:null, childClass: null}
+			'tb': {classe: Tableau, parentClass:null, childClass: Liste, modeleName:'tableau'}
+		, 'li': {classe: Liste, parentClass:Tableau, childClass:Carte, modeleName:'liste'}
+		, 'ca': {classe: Carte, parentClass:Liste, childClass:CheckList, modeleName:'carte'}
+		, 'cl': {classe: CheckList, parentClass:Carte, childClass:CheckListTask, modeleName:'checklist'}
+		, 'tk': {classe: CheckListTask, parentClass:CheckList, childClass:Masset, modeleName:'task'}
+		, 'ma': {classe: Masset, parentClass:null, childClass: null, modeleName: 'masset'}
 	}
-	return this.types2class[type].classe
+	return this.types2class[type]
 },
 
 /**
@@ -89,7 +93,7 @@ init:function(){
 	.then(ret => {
 		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true
-		log("Application prête", 5)
+		console.log("Application prête", 5)
 		// console.log("This.lastIds", this.lastIds)
 	})
 	.catch(console.error)

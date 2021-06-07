@@ -9,12 +9,30 @@
 class MontrelloObjet {
 
 /**
+ * @return  les données pour la classe, 
+ *          la classe des enfants 
+ *          la classe du parent
+ * 
+ */
+static get dataClass(){ return Montrello.type2dataClass(this.dimType)}
+static get childClass(){  return this.dataClass.childClass}
+static get parentClass(){ return this.dataClass.parentClass}
+/**
  * @return Nombre d'items de la classe
  * 
  */
 static get count(){
   this.items || (this.items = {})
   return Object.keys(this.items).length
+}
+
+/**
+ * Retourne une nouvelle instance de l'objet pour le propriétaire
+ * (parent) +owner+
+ * 
+ */
+static newItemFor(owner){
+  return new this(this.newItemDataFor(owner))
 }
 
 /**
@@ -47,12 +65,13 @@ static defaultItemData(titre, owner){
  * 
  */
 static async createItemFor(owner){
-  const newItem = (await this.initNewItemFor(owner));
+  // console.log("-> createItemFor(", owner)
+  const newItem = this.newItemFor(owner)
+  // console.log("new item = ", newItem)
   // console.log("newItem:", newItem)
   newItem.build_and_observe()
   await newItem.save()
   this.addItem(newItem)
-  owner && owner.addChild(newItem)
   newItem.afterCreate && newItem.afterCreate.call(newItem)
   this.last_item_id = 0 + newItem.id // pour les tests
   return newItem
@@ -146,10 +165,25 @@ constructor(data){
  * 
  */
 
-
-save(params){
-
+/**
+ * Sauver de façon asynchrone, c'est-à-dire en retournant une
+ * promesse.
+ * 
+ */
+saveAsync(params){
   params = params || {}
+  Object.assign(params, {async: true})
+  return this.save(params)
+}
+
+/**
+ * @sync
+ * @async
+ * 
+ * Sauvegarde synchrone (sauf si params.async est true)
+ * 
+ */
+save(params = {}){
 
   this.saved = false
 
@@ -202,11 +236,10 @@ save(params){
  * 
  */
 async destroy(ev){
-  console.warn("Je dois détruire l'objet ", this)
   this.obj.remove()
   this.constructor.removeItem(this)
   await this.destroyYamlFile()
-  this.forEachChild(child => child.destroy())
+  this.forEachChild(async (child) => { await child.destroy() })
   this.afterDestroy && this.afterDestroy()
 }
 
@@ -218,17 +251,6 @@ async destroy(ev){
  */
 async destroyYamlFile(){
   await Ajax.send('remove.rb', {ref:{ty:this.type, id:this.id}})
-}
-
-/**
- * Sauver de façon asynchrone, c'est-à-dire en retournant une
- * promesse.
- * 
- */
-saveAsync(params){
-  params = params || {}
-  Object.assign(params, {async: true})
-  return this.save(params)
 }
 
 
@@ -243,6 +265,19 @@ build_and_observe(){
 }
 
 /**
+ * Méthode commune pour tous les objets (sauf les tableaux, qui
+ * n'appellent pas cette méthode)
+ * 
+ */
+build(){
+  if ( null == this.parent ) {
+    return erreur(`Désolé, mais l'objet ${this.ref} ne définit pas son parent… Nous ne pouvons pas le construire.`)
+  }
+  this.obj = DOM.clone(`modeles ${this.constructor.dataClass.modeleName}`, {id: this.domId})
+  this.addInParent()
+  this.setCommonDisplayedProperties()
+}
+/**
  * Observation des éléments communs
  * 
  * Ne pas oublier de mettre 'super()' dans l'écouteur de la sous
@@ -250,11 +285,18 @@ build_and_observe(){
  * 
  */
 observe(){
+  console.log("-> observe", this)
   this.obj.owner = this
 
-  // Le bouton pour détruire l'élément
   this.btnKill.addEventListener('click', this.destroy.bind(this))
-  this.btnAddChild.addEventListener('click', this.addChild.bind(this))
+
+  if ( this.btnAddChild ) {
+    this.btnAddChild.addEventListener('click', this.addChild.bind(this))
+  }
+
+  if ( this.btnModelise ) {
+    this.btnModelise.addEventListener('click', this.makeModele.bind(this))
+  }
 
   // Les autres éléments éditables
   UI.setEditableIn(this.obj)
@@ -262,21 +304,36 @@ observe(){
 }
 
 /**
- * @return le bouton pour détruire l'objet
+ * Méthode permettant de transformer l'objet en modèle
  * 
  */
-get btnKill(){
-  return this._btnkill || (this._btnkill = DGet('.btn-self-remove', this.obj))
+makeModele(ev){
+  console.error("Je ne sais pas encore transformer l'objet en modèle")
+  return
+    message("Je dois faire un modèle de cette liste")
+  // QUESTION Quid de si c'est déjà un modèle
+  // On doit demander le nom du modèle
+  // On doit enregistrer la checklist comme un modèle
+  // Note : les modèles s'enregistrent comme les autres objets, avec un type ty, mais avec
+  // le préfixe 'm-'
+  // Donc 'm-cl' pour un modèle checklist
+  const modele = MontrelloModele.createFrom(this)
+  message("Modèle créé avec succès. Tu pourras l'utiliser avec la prochaine Checklist.")
+  message("Cette liste a été associée à ce modèle")
+
 }
+
 
 /**
  * ============================================================
- * Méthodes d'évènement
+ * Méthodes pour les Massets de l'objet
  * 
  */
 
-// destroy() cf. plus haut
-// addChild() cf. les méthodes pour les enfants
+get massets(){
+  return this._massets || (this._massets = new Massets(this))
+}
+
 
 /**
  * ============================================================
@@ -284,9 +341,18 @@ get btnKill(){
  * 
  */
 
-addChild(ev){
-  console.warn("Je dois ajouter un enfant à l'objet", this)
-  console.error("La méthode pour ajouter un enfant doit être refactorisée")
+
+/**
+ * Méthode principale appelée quand on doit ajouter un enfant à 
+ * l'objet.
+ * 
+ * Appelée par le bouton 'Ajouter'
+ * 
+ */
+async addChild(ev){
+  console.log("-> addChild in", this)
+  const child = (await this.childClass.createItemFor(this));
+  console.log("child = ", child)
   this.children.push(child)
 }
 
@@ -319,14 +385,8 @@ getParent(){
   return this.data.ow ? Montrello.get(this.data.ow) : null ;
 }
 
-/**
- * @private
- * Retourne le bouton pour ajouter un enfant
- * 
- */
-get btnAddChild(){
-  return this._btnaddchild || (this._btnaddchild = DGet('button.btn-add-child', this.obj))
-}
+// Raccourci
+get childClass(){return this.constructor.childClass}
 
 /**
  * /Fin des méthodes pour les enfants
@@ -367,6 +427,29 @@ get childrenContainer(){
   return this._childcont || (this._childcont = DGet('children', this.obj))
 }
 
+/**
+ * @return le bouton pour détruire l'objet
+ * 
+ */
+get btnKill(){
+  return this._btnkill || (this._btnkill = DGet('.btn-self-remove', this.obj))
+}
+
+/**
+ * Retourne le bouton pour ajouter un enfant
+ * 
+ */
+get btnAddChild(){
+  return this._btnaddchild || (this._btnaddchild = DGet('button.btn-add-child', this.obj))
+}
+
+/**
+ * Le bouton pour créer un modèle de l'objet (if any)
+ * 
+ */
+get btnModelise(){
+  return this._btnmodele || (this._btnmodele = DGet('btn-modelise', this.obj))
+}
 
 /**
  * / Fin des méthodes d'élément DOM

@@ -1,6 +1,8 @@
 'use strict'
 /*
 
+  log("<msg>")
+  
   await wait(<nombre secondes>)
 
   await waitFor(<function>[,<time out>]).catch(ret => {motif_echec = "..."})
