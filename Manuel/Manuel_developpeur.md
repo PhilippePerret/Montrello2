@@ -34,9 +34,23 @@ Si on connait la classe de l’élément, on peut bien sûr l’obtenir par :
 const l12 = Liste.get(12)
 ~~~
 
+---
 
+<a div="modele-element"></a>
 
-## Appartenir des éléments
+### Modèle d'éléments
+
+Chaque type d'élément (tableau, liste, carte, etc.) possède un modèle dans le dossier `./html/`. Comme les éléments sont des objets semblables (héritant tous de `MontrelloObjet`) ils doivent posséder des éléments communs :
+
+* Un **bouton pour détruire l’élément**. Il doit posséder la classe **‘btn-self-remove’.** La méthode `observe` de la classe abstrait `Montrello` renseigne automatiquement ce bouton à la création de l’élément.
+* Une balise `<children>` pour placer les enfants, quel que soit leur type.
+* Un **bouton pour ajouter un enfant à l’élément**. Il possède la classe **`btn-add-child`**. La méthode `MontrelloObjet#observe` place automatiquement un écoute d’évènement clic sur cet élément.
+
+---
+
+<a div="ownership-element"></a>
+
+## Appartenance des éléments
 
 Les principes d’appartenance appliqués sont :
 

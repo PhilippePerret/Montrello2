@@ -42,7 +42,7 @@ build(){
 	this.obj = DOM.clone('modeles carte#modele-carte')
 	this.obj.id = this.domId
 	this.obj.classList.remove('hidden')
-	this.container.querySelector('content > items').appendChild(this.obj)
+	this.addInParent()
 	this.setCommonDisplayedProperties()
 	// Les tags
 	PickerTags.drawTagsIn(this)
@@ -62,8 +62,7 @@ build(){
  */
 observe(){
 	if ( undefined == this.obj ) return // erreur de construction
-	this.obj.owner = this
-	UI.setEditableIn(this.obj)
+	super.observe()
 }
 
 
@@ -99,16 +98,6 @@ getAllTasks(){
 		CheckList.get(cl_id).tasks.forEach(task_id => ts.push(CheckListTask.get(task_id)))
 	})
 	return ts
-}
-
-/**
-	* Pour définir le propriétaire de ses éléments
-	*/
-ownerise(){
-	const my = this
-	// Les checklists (souvent une seule)
-	if ( undefined == this.objs.cl || this.objs.cl.length == 0) return
-	this.objs.cl.forEach(clid => CheckList.get(clid).carte = my)
 }
 
 

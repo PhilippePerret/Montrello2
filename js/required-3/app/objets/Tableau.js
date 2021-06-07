@@ -138,15 +138,14 @@ build(){
 	*/
 observe(){
 
-	/**
-	 * Les objets doivent être éditable
-	 */
-	UI.setEditableIn(this.obj)
+	// Les écouteurs hérités (bouton pour détruire, ajouter un enfant,
+	// etc.)
+	super.observe()
 
 	/**	
 	 	* La liste des listes doit être sortable
 	 	*/
-	$(this.obj.querySelector('items')).sortable({
+	$(this.childrenContainer).sortable({
 			axis:'x'
 		, items: '> liste'
 		, activate: function(ev,ui){ui.helper.addClass('moved')}
@@ -159,7 +158,7 @@ observe(){
 	*/
 destroy(){
 	if(!confirm("Voulez-vous vraiment détruire ce tableau ET TOUTES SES LISTES ?")) return
-
+	super.destroy()
 }
 
 }

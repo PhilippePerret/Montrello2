@@ -37,53 +37,16 @@ build(){
 	}
 	this.obj = DOM.clone('modeles liste')
 	this.obj.id = this.domId
-	DGet('items.listes', this.parent.obj).appendChild(this.obj)
+	this.addInParent()
 	this.setCommonDisplayedProperties()
 }
 
 observe(){
-	this.obj.owner = this
-	UI.setEditableIn(this.obj)	
-	// La liste des cartes doit être sortable
-	$(this.obj.querySelector('content > items')).sortable({
-		axis:'y'
-	})
-	this.btnKill.addEventListener('click', this.onClickKillButton.bind(this))
+	super.observe()
+	// On doit pouvoir trier les cartes
+	$(this.childrenContainer).sortable({axis:'y'})
 }
 
-/**
- * @async
- * 
- * Méthode détruisant la liste
- *
- * Cela consiste à :
- * 	- détruire toutes les cartes de la liste
- * 	- détruire l'objet DOM
- * 	- détruire l'instance dans le constructeur
- * 	- détruire le fichier yaml 
- * 
- * TODO: METTRE EN MÉTHODE ABSTRAITE CAR IL FAUT FAIRE CE TRAVAIL SUR TOUS LES OBJETS
- */
-async destroy(){
-	this.obj.remove()
-	this.constructor.removeItem(this)
-	await this.destroyYamlFile()
-	this.forEachChild(child => child.destroy())
-	this.afterDestroy && this.afterDestroy()
-}
-
-
-/**
- * Méthode appelée quand on clique sur le bouton (croix) permettant
- * de détruire la liste
- */
-onClickKillButton(ev){
-	this.destroy()
-}
-
-get btnKill(){
-	return this._btnkill || (this._btnkill = DGet('header .btn-kill', this.obj))
-}
 
 }// class Liste
 

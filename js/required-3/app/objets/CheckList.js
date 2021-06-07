@@ -275,38 +275,8 @@ updateDevJauge(){
 	this.owner.form && DevJauge.setIn(this.owner.form)
 }
 
-/**
-	* À l'instanciation de Montrello, associe la CheckList courante
-	* à ses tâches
-	*/
-ownerise(){
-	const my = this
-	var newListTaskIds = [] // pour mettre la nouvelle liste, si elle a changé
-	this.tasks.forEach(tkid => {
-		const task = CheckListTask.get(tkid)
-		if ( task ) {
 
-			task.checklist = my
-			newListTaskIds.push(tkid)
+}// class CheckList
 
-		} else {
-
-			// La tâche n'existe plus
-			console.log("[Erreur composition] La tâche %s n'existe plus. On retire son ID de la liste.", tkid)
-
-		}
-	})
-
-	//
-	// Si la liste a changé (suite à la destruction manuelle d'une
-	// tâche par exemple), on doit la modifier.
-	// 
-	if ( this.tasks.length > newListTaskIds.length ) {
-		this.tasks = newListTaskIds
-	}
-
-}
-
-}
 Object.assign(CheckList.prototype, TOMiniMethods)
 Object.defineProperties(CheckList.prototype, TOMiniProperties)

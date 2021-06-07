@@ -11,7 +11,7 @@ type2class:function(type){
 		, 'ca': {classe: Carte, parentClass:Liste, childClass:CheckList}
 		, 'cl': {classe: CheckList, parentClass:Carte, childClass:CheckListTask}
 		, 'tk': {classe: CheckListTask, parentClass:CheckList, childClass:Masset}
-		, 'ma': {classe: Masset, parentClass:CheckListTask, childClass: null}
+		, 'ma': {classe: Masset, parentClass:null, childClass: null}
 	}
 	return this.types2class[type].classe
 },
@@ -143,13 +143,9 @@ dispatch_data(data, type){
 	const Classe = this.type2class(data[0].ty)
 	Classe.items = {}
 	data.forEach(hdata => {
-		// console.log("Construction de l'objet %s: ", hdata.type, hdata)
 		if (my.lastIds[type] < hdata.id) my.lastIds[type] = Number(hdata.id)
 		const item = new Classe(hdata)
 		Object.assign(Classe.items, {[hdata.id]: item})
-		// Associe les enfants au parent. Par exemple, associe les tasks
-		// aux CheckLists. +item+ ci-dessous est une CheckList
-		item.ownerise && item.ownerise()
 	})
 },
 

@@ -185,6 +185,34 @@ save(params){
 /**
  * @async
  * 
+ * Méthode principale de destruction de l'élément
+ * 
+ * Consiste à :
+ *  - détruire toutes les cartes de la liste
+ *  - détruire l'objet DOM
+ *  - détruire l'instance dans le constructeur
+ *  - détruire le fichier yaml 
+ *  - détruire tous les enfants en cascade
+ * 
+ * C'est la méthode appelée par le bouton pour détruire l'élément
+ * 
+ * Certains objet, comme les tableaux, possèdent leur propre méthode,
+ * qui ne fait que demander confirmation de la destruction avant 
+ * d'appeler cette méthode-ci.
+ * 
+ */
+async destroy(ev){
+  console.warn("Je dois détruire l'objet ", this)
+  this.obj.remove()
+  this.constructor.removeItem(this)
+  await this.destroyYamlFile()
+  this.forEachChild(child => child.destroy())
+  this.afterDestroy && this.afterDestroy()
+}
+
+/**
+ * @async
+ * 
  * Pour détruire le fichier yaml
  * 
  */
@@ -214,6 +242,41 @@ build_and_observe(){
   this.observe()
 }
 
+/**
+ * Observation des éléments communs
+ * 
+ * Ne pas oublier de mettre 'super()' dans l'écouteur de la sous
+ * classe
+ * 
+ */
+observe(){
+  this.obj.owner = this
+
+  // Le bouton pour détruire l'élément
+  this.btnKill.addEventListener('click', this.destroy.bind(this))
+  this.btnAddChild.addEventListener('click', this.addChild.bind(this))
+
+  // Les autres éléments éditables
+  UI.setEditableIn(this.obj)
+
+}
+
+/**
+ * @return le bouton pour détruire l'objet
+ * 
+ */
+get btnKill(){
+  return this._btnkill || (this._btnkill = DGet('.btn-self-remove', this.obj))
+}
+
+/**
+ * ============================================================
+ * Méthodes d'évènement
+ * 
+ */
+
+// destroy() cf. plus haut
+// addChild() cf. les méthodes pour les enfants
 
 /**
  * ============================================================
@@ -221,8 +284,19 @@ build_and_observe(){
  * 
  */
 
-addChild(child){
+addChild(ev){
+  console.warn("Je dois ajouter un enfant à l'objet", this)
+  console.error("La méthode pour ajouter un enfant doit être refactorisée")
   this.children.push(child)
+}
+
+/**
+ * Ajoute l'objet dans le container enfants de son parent, dans le 
+ * DOM
+ * 
+ */
+addInParent(){
+  this.parent.childrenContainer.appendChild(this.obj)
 }
 
 forEachChild(fonction){
@@ -243,6 +317,15 @@ get owner(){ // régression
  */
 getParent(){
   return this.data.ow ? Montrello.get(this.data.ow) : null ;
+}
+
+/**
+ * @private
+ * Retourne le bouton pour ajouter un enfant
+ * 
+ */
+get btnAddChild(){
+  return this._btnaddchild || (this._btnaddchild = DGet('button.btn-add-child', this.obj))
 }
 
 /**
@@ -273,5 +356,20 @@ hasChild(child){
  * / Fin des méthodes d'instance utiles aux tests
  * ============================================================== */
 
+
+/**
+ * ==============================================================
+ * Méthodes d'élément DOM
+ */
+
+
+get childrenContainer(){
+  return this._childcont || (this._childcont = DGet('children', this.obj))
+}
+
+
+/**
+ * / Fin des méthodes d'élément DOM
+ * ============================================================== */
 
 }

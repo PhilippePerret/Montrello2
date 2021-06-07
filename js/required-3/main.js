@@ -16,8 +16,8 @@ $(document).ready(function(){
    * Si on veut lancer les tests plutôt que l'application, on décommente la ligne
    * suivante et on commente les deux lignes d'après.
    */
-  .then(MiniTest.run.bind(MiniTest))
-  // .then(App.init.bind(App))
+  // .then(MiniTest.run.bind(MiniTest))
+  .then(App.init.bind(App))
   .catch(console.error)
   
 

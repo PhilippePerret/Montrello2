@@ -1,12 +1,14 @@
 <liste id="modele-liste" class="objet-container any-objet">
 	<header>
-		<span class="close-btn btn-kill" title="Détruire la liste"></span>
+		<span class="close-btn btn-self-remove" title="Détruire la liste"></span>
 		<title class="editable" data-prop="ti">Titre de la liste</title>
 	</header>
 	<content>
-		<items></items>
+		<children>
+			<!-- Pour mettre les cartes -->
+		</children>
 	</content>
 	<footer>
-		<button data-strict-class="Carte" data-method="create" class="btn-add">Ajouter une carte…</button>
+		<button class="btn-add-child">Ajouter une carte…</button>
 	</footer>
 </liste>
