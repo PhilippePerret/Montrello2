@@ -53,4 +53,4 @@ build-iPhoneSimulator/
 # .ruby-version
 # .ruby-gemset
 
-/.sass-cache/
+.sass-cache/
