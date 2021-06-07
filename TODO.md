@@ -1,6 +1,7 @@
 # Todo liste
 
-* [BUG] Revoir l'édition d'une carte, qui ne fonctionne plus (la description produit une erreur, est-elle générale ?)
+* Reprendre complètement l'édition d'une carte par le formulaire de carte, en l'isolant complètement, c'est-à-dire sans le faire hériter des méthodes TOMiniMethods.
+  * Il faut que ce soit une "pipe" complet vers la carte éditée. C'est-à-dire que lorsqu'on modifie une valeur, elle est modifiée a) dans le formulaire de carte et b) dans la carte elle-même si c'est une valeur affichée.
 
 * Enregistrer l'ordre des enfants (mais ne le faire que lorsque la liste a été modifiée une première fois)
   * en tenir compte lorsque l'on construit le parent

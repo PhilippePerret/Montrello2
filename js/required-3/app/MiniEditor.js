@@ -20,6 +20,7 @@ class MiniEditor {
 
 edit(element){
 	this.element = element
+	this.owner   = element.owner
 	this.forSpan = element.tagName != 'DIV'
 	this.prepare({text: element.innerHTML})	
 	this.show()
@@ -36,11 +37,23 @@ prepare(params){
 
 
 positionne(){
-	// console.log("position:", this.element.getBoundingClientRect())
-	const rectE = this.element.getBoundingClientRect()
-	this.obj.style.top 	= (parseInt(rectE.top)) + 'px'
-	let newLeft = parseInt(rectE.left,10) - 15
-	if (newLeft < 20) newLeft = 20
+	let newLeft, newTop ;
+	let rectE = this.element.getBoundingClientRect()
+	if ( this.forSpan ) {
+		newTop 	= rectE.top
+		newLeft = parseInt(rectE.left,10) - 15
+	} else {
+		/**
+		 * Quand c'est un DIV (le mini-éditeur est alors un textarea), on
+		 * remplace ce div par le miniéditeur qu'on ne met pas en posi-
+		 * tion absolue mais relative
+		 */
+		newTop  = rectE.top - 40
+		newLeft = rectE.left
+	}
+	if ( newLeft < 20 ) newLeft = 20
+	if ( newTop < 20 ) newTop = 20
+	this.obj.style.top 	= px(newTop)
 	this.obj.style.left = px(newLeft)
 }
 
@@ -49,7 +62,10 @@ show(){
 	this.textField.focus()
 	this.textField.select()
 }
-hide(){this.obj.classList.add('hidden')}
+hide(){
+	this.obj.classList.add('hidden')
+	document.body.appendChild(this.obj)
+}
 
 
 onKeyPressed(ev){
@@ -70,10 +86,10 @@ onKeyDown(ev){
 onClickSave(ev){
 	// this.element.innerHTML = this.value
 	// console.log("this.element = ", this.element)
-	// console.log("this.element.owner = ", this.element.owner)
+	console.log("this.element.owner = ", this.element.owner)
 	// console.log("this.property = ", this.element.getAttribute('data-prop'))
 	// Il faut aller plus loin = modifier la propriété dans l'objet
-	this.element.owner.set({[this.element.getAttribute('data-prop')]: this.value})
+	this.owner.set({[this.element.getAttribute('data-prop')]: this.value})
 	this.stopEdition()
 }
 onClickCancel(ev){

@@ -86,6 +86,18 @@ edit(carte){
 	this.setValues()
 }
 
+show(){this.obj.classList.remove('hidden')}
+hide(){this.obj.classList.add('hidden')}
+
+/**
+ * Un essai de méthode 'save' pour répondre au mini-éditeur quand on 
+ * modifie la description de la carte.
+ * Pour surclasser la méthode 'set' qui vient de TOMiniMethods
+ */
+set(hdata){
+	console.log("-> set()", hdata)
+}
+
 /**
 	*
 	*	On place les valeurs de la carte dans le formulaire de carte
@@ -95,19 +107,31 @@ edit(carte){
 	*
 	*/
 setValues(){
-	this.setCommonDisplayedProperties()
+	// this.setCommonDisplayedProperties()
 }
 
 close(){ this.obj.remove()}
 
 build(){
-	const o = document.querySelector('carte_form').cloneNode(true)
+	const o = DOM.clone('carte_form')
 	o.owner = this
 	o.setAttribute('data-owner-ref', this.carte.ref)
 	document.body.appendChild(o)
 	$(o).draggable()
 	this.obj = o
 	this.buildObjets()
+	this.observe()
+}
+
+observe(){
+	/**
+	 * On définit que le formulaire de carte est le propriétaire des 
+	 * bouton utiles, par exemple celui qui permet d'édition la 
+	 * description, donc le div description
+	 */
+	const divDescription = this.obj.querySelector('div#carte-description-div div.description')
+	divDescription.owner = this
+
 }
 
 /**
@@ -179,5 +203,5 @@ buildObjets(){
 	}
 }
 }
-Object.assign(CarteForm.prototype, TOMiniMethods)
-Object.defineProperties(CarteForm.prototype, TOMiniProperties)
+// Object.assign(CarteForm.prototype, TOMiniMethods)
+// Object.defineProperties(CarteForm.prototype, TOMiniProperties)

@@ -3,6 +3,7 @@
 # On ne doit pas télécharger les données propres et secrètes
 /data/montrello/
 /data/secret/
+/data/MiniTest/
 
 *.gem
 *.rbc
