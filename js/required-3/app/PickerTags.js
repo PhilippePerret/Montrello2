@@ -53,16 +53,24 @@ class PickerTags {
 			const otags = owner.obj.querySelector('tags')
 			otags || raise("Le propriétaire doit posséder une balise &lt;tags>")
 			otags.innerHTML = ''
-			owner.tags.forEach(colorid => {
-				const tag = document.createElement('TAG')
-				tag.style.backgroundColor = DATA_TAGGER.colors[colorid].color
-				otags.appendChild(tag)
+			owner.tags.forEach(colorId => {
+				const dColor = this.dataColor(colorId)
+				if ( dColor ) {
+					const tag = DCreate('TAG', {style:`background-color:${dColor.color};`})
+					otags.appendChild(tag)
+				} else {
+					console.error("La couleur #%i est inconnue…", colorId)
+				}
 			})
 		} catch (error){
 			erreur(error)
 			console.error(error)
 		}
 	}
+
+static dataColor(colorId /* = tagId */){
+	return DATA_TAGGER.colors[Number(colorId)]
+}
 
 constructor(data){
 	this.data = data

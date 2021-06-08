@@ -41,7 +41,7 @@ const UniversalHelpersMethods = {
   },
 
   setTags(tagListIds){
-    this.tags = tagListIds
+    this.tags = numberizeIn(tagListIds) // liste de nombres
   },
 
   editDates(btn, ev){

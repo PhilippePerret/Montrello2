@@ -5,6 +5,14 @@ function getRandom(min, max){
   return min + Math.floor(Math.random() * Math.floor(max))
 }
 
+/**
+ * Transforme les éléments de +liste+ en nombre ou en NaN si ce ne
+ * sont pas des nombres
+ */
+function numberizeIn(liste){
+	for(var i in liste){liste[i]=Number(liste[i])}
+	return liste
+}
 
 function extract_number(n){
 	if ( 'string' != typeof(n) ) return n

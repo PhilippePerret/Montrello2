@@ -73,7 +73,10 @@ addRule(){
 }
 
 get tags(){return this._tags || (this._tags = [])}
-set tags(v){this._tags = v}
+set tags(v){
+	this._tags = v
+	this.set({tags: v})
+}
 
 /**
  * /Fin des méthodes répondant aux boutons de la colonne droite
@@ -84,13 +87,6 @@ set tags(v){this._tags = v}
 
 /**
 	****************************************************************/
-
-afterSet(hdata){
-	console.log("-> CarteForm#afterSet", hdata)
-	this.carte.updateDisplay(hdata)
-	hdata.tags && PickerTags.drawTagsIn(this)
-}
-
 
 show(){this.obj.classList.remove('hidden')}
 hide(){this.obj.classList.add('hidden')}
@@ -103,7 +99,17 @@ hide(){this.obj.classList.add('hidden')}
 set(hdata){
 	console.log("-> CarteForm#set", hdata)
 	this.carte.set(hdata)
+	this.afterSet(hdata)
+}
+/**
+ * À faire après avoir régler les valeurs.
+ * On pourrait très bien le faire à la suite de la méthode set, mais
+ * je préfère distinguer les deux parties/temps
+ */
+afterSet(hdata){
+	console.log("-> CarteForm#afterSet", hdata)
 	this.setValues(hdata)
+	this.carte.updateDisplay(hdata)
 }
 
 /**
@@ -123,21 +129,25 @@ get(key){
 	*/
 setValues(hdata){
 	hdata || (hdata = this.data);
-	if ( hdata.ti ) {
-		this.titreField.innerHTML = hdata.ti
-	}
-	this.descriptionField.innerHTML = hdata.dsc || '[Mettre ici la définition de la carte]'
+	console.log("CarteForm#setValues(hdata =)", hdata)
+	
+	hdata.ti && this.writeTitre(hdata.ti)
+	this.writeDescription(hdata.dsc || '[Mettre ici la définition de la carte]')	
 
-	if ( hdata.tags ) {
-		// Mettre les tags
-		PickerTags.drawTagsIn(this)
-	}
+	hdata.tags 	&& this.drawTags(hdata.tags)
+	hdata.dates && this.writeDates(hdata.dates)
 
-	if ( hdata.dates ) {
-		var hdate = []
-		var compDate = new ComplexeDate(hdata.dates)
-		this.obj.querySelector('dates').innerHTML = compDate.asComplete
-	}
+}
+
+writeTitre(titre){ this.titreField.innerHTML = titre }
+writeDescription(desc){	this.descriptionField.innerHTML = desc}
+drawTags(tags){
+	this._tags = tags
+	PickerTags.drawTagsIn(this) 
+}
+writeDates(hdate){
+	var compDate = new ComplexeDate(hdate)
+	this.obj.querySelector('dates').innerHTML = compDate.asComplete
 }
 
 build_and_observe(){
