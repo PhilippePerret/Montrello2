@@ -16,29 +16,6 @@ Object.assign(UI,{
 	},
 
 	/**
-	 * Méthode qui, pour les tests, permet de supprimer tous les
-	 * écouteurs d'évenement.
-	 * 
-	 */
-	unsetAllEditableContainers(){
-		[
-				'.editable'
-			, '*[data-strict-class][data-method]'
-			, 'button[data-owner-method]'
-		].forEach(selector => {
-			document.body
-				.querySelectorAll(selector).forEach(this.clone.bind(this))
-		})
-
-		document.body
-		.querySelectorAll('*[data-strict-class]').forEach(e => {
-			e.querySelectorAll('*[data-method]').forEach(tag => {
-				tag.replaceWith(tag.cloneNode(true))
-			})
-		})
-	},
-
-	/**
 		* Méthode qui transforme tous les éléments de classe .editable
 		*	en éléments dont on peut éditer le texte directement
 		* 
@@ -93,6 +70,36 @@ Object.assign(UI,{
 				})
 			})
 		}
+
+		/**
+		 * Autre manière de procéder (sans eval), avec un DOM Element
+		 * de class 'methods-container', sur lequel on place un owner
+		 * qui recevra toutes les méthodes. De cette manière, il suffit
+		 * de définir le owner de ce DOM Element pour savoir à qui
+		 * s'applique les méthodes
+		 */
+		container.querySelectorAll('.methods-container').forEach(cont => {
+			if ( cont.owner ) {
+				cont.querySelectorAll('*[data-method]').forEach(trigger => {
+					const method = trigger.getAttribute('data-method')
+					if ('function' == typeof cont.owner[method]){
+						trigger.addEventListener('click', cont.owner[method].bind(cont.owner))
+					} else {
+						console.error("Erreur implémentation : la méthode '%s' est inconnu de", method, cont.owner)
+					}
+				})
+			} else {
+				// C'est normal si c'est un modèle (comme le modèle de carte)
+				var p = cont
+				var isModele = false
+				while (p = p.parentNode){
+					if (p.tagName == 'MODELES'){isModele = true; break;}
+				}
+				if (false == isModele){
+					console.error("L'élément DOM suivant devrait définir son owner pour l'appliquer aux méthodes qu'il contient.", cont)
+				}
+			}
+		})
 
 
 		container.querySelectorAll('*[data-class]').forEach(container => {

@@ -144,4 +144,5 @@ destroy(){
 
 }
 Object.assign(Tableau.prototype, TOMiniMethods)
+Object.assign(Tableau.prototype, UniversalHelpersMethods)
 Object.defineProperties(Tableau.prototype, TOMiniProperties)

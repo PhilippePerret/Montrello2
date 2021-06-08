@@ -146,6 +146,14 @@ static getLastItem(){ return this.get(this.last_item_id) }
  * / Fin des méthodes utiles aux tests
  * ============================================================== */
 
+
+
+
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
+
+
 /**
  * Instanciation dans la classe abstraite
  * 
@@ -285,7 +293,6 @@ build(){
  * 
  */
 observe(){
-  console.log("-> observe", this)
   this.obj.owner = this
 
   this.btnKill.addEventListener('click', this.destroy.bind(this))
@@ -330,6 +337,20 @@ makeModele(ev){
  * 
  */
 
+/**
+ * Exécute la fonction +fonction+ sur tous les Masset de l'objet
+ * 
+ */
+forEachMasset(fonction){
+  this.massets.massets.forEach(fonction)
+}
+
+/**
+ * @return une instance pluriel de la liste des Masset de l'objet
+ * 
+ * Note : l'objet est le plus souvent une carte
+ * 
+ */
 get massets(){
   return this._massets || (this._massets = new Massets(this))
 }

@@ -1,5 +1,7 @@
 # Todo liste
 
+* Pour la destruction, "rassembler" d'abord tous les objets à détruire et faire un seul appel Ajax pour détruire tous les objets d'un coup (faire un backup lorsqu'il y en a un certain nombre)
+
 * Reprendre complètement l'édition d'une carte par le formulaire de carte, en l'isolant complètement, c'est-à-dire sans le faire hériter des méthodes TOMiniMethods.
   * Il faut que ce soit une "pipe" complet vers la carte éditée. C'est-à-dire que lorsqu'on modifie une valeur, elle est modifiée a) dans le formulaire de carte et b) dans la carte elle-même si c'est une valeur affichée.
 

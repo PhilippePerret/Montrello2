@@ -8,9 +8,9 @@ class MiniEditor {
 	// Méthode principale appelée par un objet possédant la classe
 	// 'editable'
 	// 
-	static edit(element){
+	static edit(element, pos, ev){
 		this.miniEditor || this.buildMiniEditor()
-		this.miniEditor.edit(element)
+		this.miniEditor.edit(element, ev)
 	}
 
 	static buildMiniEditor(){
@@ -18,12 +18,17 @@ class MiniEditor {
 		this.miniEditor.build()
 	}
 
-edit(element){
+/**
+ * Méthode appelée quand on clique sur un élément éditable, pour
+ * éditer son texte.
+ */
+edit(element, ev){
 	this.element = element
 	this.owner   = element.owner
 	this.forSpan = element.tagName != 'DIV'
 	this.prepare({text: element.innerHTML})	
 	this.show()
+	return ev && stopEvent(ev)
 }
 
 prepare(params){

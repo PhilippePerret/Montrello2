@@ -19,6 +19,12 @@ afterCreate(){
 	this.editTitle()
 }
 
+afterDestroy(){
+	// Si la carte était en édition, il faut aussi détruire son 
+	// formulaire
+	this.form && this.form.remove()
+}
+
 build(){
 	super.build()
 	// Les tags
@@ -38,8 +44,18 @@ build(){
  * Observation de la carte
  */
 observe(){
-	if ( undefined == this.obj ) return // erreur de construction
+	if ( undefined == this.obj ){  // erreur de construction
+		console.error("Impossible d'observer la carte %s : son objet n'a pas pu être construit", this.ref)
+		return
+	}
 	super.observe()
+	// Quand on clique sur la carte (n'importe où, on l'édite)
+	this.obj.addEventListener('click', this.edit.bind(this))
+}
+
+edit(){
+	this.form || (this.form = new CarteForm(this))
+	this.form.open()
 }
 
 /**
@@ -73,6 +89,33 @@ getAllTasks(){
 }
 
 
+/**
+ * ===============================================================
+ * Méthodes répondant aux boutons du formulaire de carte
+ */
+
+ modelize(){
+ 	erreur("Je ne sais pas encore modéliser une carte.")
+ }
+
+copy(){
+	erreur("Je ne sais pas encore copier la carte")
+}
+
+follow(){
+	erreur("Je ne sais pas encore suivre une carte")
+}
+
+archive(){
+	erreur("Je ne sais pas encore archiver une carte")
+}
+
+/**
+ * /Fin des méthodes répondant aux boutons du formulaire de carte
+ * =============================================================== */
+
+
 }// class Carte
 Object.assign(Carte.prototype, TOMiniMethods)
+Object.assign(Carte.prototype, UniversalHelpersMethods)
 Object.defineProperties(Carte.prototype, TOMiniProperties)

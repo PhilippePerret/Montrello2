@@ -200,4 +200,5 @@ updateDevJauge(){
 }// class CheckList
 
 Object.assign(CheckList.prototype, TOMiniMethods)
+Object.assign(CheckList.prototype, UniversalHelpersMethods)
 Object.defineProperties(CheckList.prototype, TOMiniProperties)

@@ -131,4 +131,5 @@ get checked(){ return this.data.on === true }
 
 }//class CheckListTask
 Object.assign(CheckListTask.prototype, TOMiniMethods)
+Object.assign(CheckListTask.prototype, UniversalHelpersMethods)
 Object.defineProperties(CheckListTask.prototype, TOMiniProperties)

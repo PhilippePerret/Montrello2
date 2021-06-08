@@ -2,32 +2,30 @@
 
 class CarteForm {
 
-/**
-	* Méthode appelée quand on clique sur la carte dans sa liste
-	* pour l'éditer
-	*/
-static edit(element){
-	const carte = element.owner
-	const cform = new this(carte.data)
-	carte.form 	= cform
-	/** On met cette instance en instance courante pour les boutons
-		*
-		*/
-	this.current = cform
-	cform.carte = carte
-	cform.build()
-	cform.setOwner(carte)
-	cform.edit(carte)
-	UI.setEditableIn(cform.obj)
-	cform.obj
-		.querySelector('header > span.close-btn')
-		.addEventListener('click', cform.close.bind(cform))
-	// Mettre les tags
-	PickerTags.drawTagsIn(cform)
+constructor(carte){
+	this.carte 	= carte
+	this.data 	= carte.data
 }
 
-constructor(data){
-	this.data = data
+/**
+ * Méthode appelée dès qu'il faut éditer la carte, que ce soit la 
+ * première ou la nième fois.
+ * 
+ */
+open(){
+	this.obj || this.build_and_observe()
+	this.show()
+	this.positionne()
+	this.setValues()
+	this.constructor.current = this
+}
+positionne(){
+	// On positionne toujours la fenêtre au milieu
+	const rectO = this.obj.getBoundingClientRect()
+	const margeTop 	= parseInt((Window.height - rectO.height)/2,10) - 10
+	const margeLeft = parseInt((Window.width - rectO.width)/2,10)
+	this.obj.style.top 	= px(margeTop)
+	this.obj.style.left = px(margeLeft)
 }
 
 /**
@@ -36,7 +34,7 @@ constructor(data){
 	*/
 get ref(){ return this.carte.ref }
 
-/**
+/** ================================================================
 	*		*** Méthodes répondant aux boutons de la colonne droite
 	*/ 
 
@@ -69,6 +67,14 @@ addFolder(btn, ev){
 addRule(){
 	message("Je dois ajouter une règle pour cette carte")
 }
+
+get tags(){return this._tags || (this._tags = [])}
+set tags(v){this._tags = v}
+
+/**
+ * /Fin des méthodes répondant aux boutons de la colonne droite
+ * =============================================================== */
+
 /**
 	****************************************************************/
 
@@ -77,14 +83,6 @@ afterSet(hdata){
 	hdata.tags && PickerTags.drawTagsIn(this)
 }
 
-setOwner(owner){
-	this.carte = owner
-}
-
-edit(carte){
-	this.show()
-	this.setValues()
-}
 
 show(){this.obj.classList.remove('hidden')}
 hide(){this.obj.classList.add('hidden')}
@@ -107,30 +105,49 @@ set(hdata){
 	*
 	*/
 setValues(){
-	// this.setCommonDisplayedProperties()
+	this.setCommonDisplayedProperties()
+	// Mettre les tags
+	PickerTags.drawTagsIn(this)
+
 }
 
-close(){ this.obj.remove()}
-
-build(){
-	const o = DOM.clone('carte_form')
-	o.owner = this
-	o.setAttribute('data-owner-ref', this.carte.ref)
-	document.body.appendChild(o)
-	$(o).draggable()
-	this.obj = o
-	this.buildObjets()
+build_and_observe(){
+	this.build()
 	this.observe()
 }
+build(){
+	this.obj = DOM.clone('carte_form', {id: this.domId})
+	this.obj.setAttribute('data-owner-ref', this.carte.ref)
+	this.buildObjets()
+	document.body.appendChild(this.obj)
+}
+
+/**
+ * Quand la carte est détruire, il faut aussi détruire son formulaire
+ */
+remove(){
+	this.obj.remove()
+	if ( this.isCurrent ) delete this.constructor.current
+
+}
+
 
 observe(){
+	$(this.obj).draggable()
+
+
+	// Notamment tous les boutons de la colonne droite
+	this.obj.querySelector('liste_actions.for-objets').owner = this
+	this.obj.querySelector('liste_actions.for-carte').owner = this.carte
+	UI.setEditableIn(this.obj)
 	/**
 	 * On définit que le formulaire de carte est le propriétaire des 
 	 * bouton utiles, par exemple celui qui permet d'édition la 
 	 * description, donc le div description
 	 */
-	const divDescription = this.obj.querySelector('div#carte-description-div div.description')
+	const divDescription = DGet('div#carte-description-div div.description', this.obj)
 	divDescription.owner = this
+
 
 }
 
@@ -176,32 +193,44 @@ removeObjets(objet){
 /**
 	* Construction des objets de la carte
 	*
-	* QUESTION Faudrait-il généraliser à tous les objets ?
+	* Les « objets », ici, sont les checklist (children) et les
+	* Massets
+	* 
 	*/
 buildObjets(){
+	
+	const my = this
 
-	if (!this.carte.objs || Object.keys(this.carte.objs).length == 0){
-		console.log("Aucun objet de carte à afficher")
-		return
-	}
-	for(var otype in this.carte.objs) {
-		const aryObjets = this.carte.objs[otype]
-		// console.log("Afficher les objets de type %s :", otype, aryObjets)
-		const classe = Montrello.type2class(otype)
-		const conteneur = this.obj.querySelector(`content[data-type-objet="${otype}"]`)
-		// console.log("Conteneur : ", conteneur)
-		aryObjets.forEach(objet_id => {
-			const objet = classe.get(objet_id)
-			// console.log("objet = ", objet)
-			objet.obj || objet.build_and_observe()
-			conteneur.appendChild(objet.obj)
-			if ( otype == 'ma' /* masset */){
-				objet.obj.querySelectorAll('button').forEach(btn => btn.owner = this)
-			}
-			objet.show()
-		})
-	}
+	this.carte.forEachChild(child => {
+		console.log("Je dois construire le child :", child)
+		child.build_and_observe_for(my)
+	})
+	
+	this.carte.forEachMasset(masset => {
+		console.log("Je dois construire le Masset : ", masset)
+		masset.build_and_observe_for(my)
+		masset.obj.querySelectorAll('button').forEach(b => b.owner = my)
+	})
+
+	// La ligne ci-dessous servait pour l'ancienne façon de faire
+  // const conteneur = this.obj.querySelector(`content[data-type-objet="${otype}"]`)
 }
+
+/**
+ * @return TRUE si c'est la carte courante
+ * 
+ */
+get isCurrent(){
+	return this.constructor.current && this.constructor.current.id == this.id
 }
-// Object.assign(CarteForm.prototype, TOMiniMethods)
-// Object.defineProperties(CarteForm.prototype, TOMiniProperties)
+
+get commonDisplayedProperties(){
+	return ['ti', 'dsc']
+}
+get domId(){
+	return this._domid || (this._domid = `carteform-${this.carte.data.id}`)
+}
+
+}
+
+Object.assign(CarteForm.prototype, UniversalHelpersMethods)

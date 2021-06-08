@@ -27,13 +27,12 @@
 						<span class="picto">🔘</span>
 						<span class="titre">Tâches</span>
 					</span>
-					<content data-type-objet="cl">
+					<checklists>
 						<!-- Les check list -->
-					</content>
-					<content data-type-objet="ma">
+					</checklists>
+					<massets>
 						<!-- Les Massets -->
-					</content>
-					
+					</massets>
 				</div>
 
 				<div id="carte-details-div">
@@ -48,9 +47,9 @@
 		<div class="colonne-boutons">
 			
 			<title>Ajouter à la carte</title>
-			<liste_actions>
-				<content data-strict-class="CarteForm.current">
+			<liste_actions class="methods-container for-objets">
 					<!-- 🎯🧩☎️⏱🧹🔎 -->
+				<content>
 					<button data-method="editMembers">👨‍🦰 Membres</button>	
 					<button data-method="editTags">🏷 Étiquettes</button>
 					<button data-method="addChecklist">✔ Check liste</button>
@@ -63,10 +62,10 @@
 			</liste_actions>
 
 			<title>Actions sur la carte</title>
-			<liste_actions data-class="ProcOnCard">
+			<liste_actions class="methods-container for-carte">
 				<content>
 					<button data-method="copy">Copier</button>
-					<button data-method="createModel">🗜 Créer un modèle</button>
+					<button data-method="modelize">🗜 Créer un modèle</button>
 					<button data-method="follow">⛑ Suivre</button>
 					<button data-method="archive">🗄 Archiver</button>
 					<button data-method="destroy">🧨 Détruire</button>

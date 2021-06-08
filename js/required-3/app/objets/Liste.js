@@ -32,4 +32,5 @@ observe(){
 }// class Liste
 
 Object.assign(Liste.prototype, TOMiniMethods)
+Object.assign(Liste.prototype, UniversalHelpersMethods)
 Object.defineProperties(Liste.prototype, TOMiniProperties)
