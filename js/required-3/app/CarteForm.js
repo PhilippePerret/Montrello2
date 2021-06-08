@@ -34,6 +34,10 @@ positionne(){
 	*/
 get ref(){ return this.carte.ref }
 
+
+
+
+
 /** ================================================================
 	*		*** Méthodes répondant aux boutons de la colonne droite
 	*/ 
@@ -75,6 +79,9 @@ set tags(v){this._tags = v}
  * /Fin des méthodes répondant aux boutons de la colonne droite
  * =============================================================== */
 
+
+
+
 /**
 	****************************************************************/
 
@@ -94,7 +101,9 @@ hide(){this.obj.classList.add('hidden')}
  * Pour surclasser la méthode 'set' qui vient de TOMiniMethods
  */
 set(hdata){
-	console.log("-> set()", hdata)
+	console.log("-> CarteForm#set", hdata)
+	this.carte.set(hdata)
+	this.setValues(hdata)
 }
 
 /**
@@ -109,17 +118,26 @@ get(key){
 	*
 	*	On place les valeurs de la carte dans le formulaire de carte
 	*
+	* Note : sert aussi à actualiser l'affichage (appelée par la 
+	* méthode set)
 	*/
-setValues(){
-	this.titreField.innerHTML = this.carte.titre
-	this.descriptionField.innerHTML = this.carte.description || '[Mettre ici la définition de la carte]'
-	// Mettre les tags
-	PickerTags.drawTagsIn(this)
-	// Mettre la date
-	// TODO
-	// Mettre les enfants
-	// Non, ils sont mis à la construction
+setValues(hdata){
+	hdata || (hdata = this.data);
+	if ( hdata.ti ) {
+		this.titreField.innerHTML = hdata.ti
+	}
+	this.descriptionField.innerHTML = hdata.dsc || '[Mettre ici la définition de la carte]'
 
+	if ( hdata.tags ) {
+		// Mettre les tags
+		PickerTags.drawTagsIn(this)
+	}
+
+	if ( hdata.dates ) {
+		var hdate = []
+		var compDate = new ComplexeDate(hdata.dates)
+		this.obj.querySelector('dates').innerHTML = compDate.asComplete
+	}
 }
 
 build_and_observe(){

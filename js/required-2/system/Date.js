@@ -33,6 +33,15 @@ const MOIS = [
 	, {long:'novembre',	 short:'nov'}
 	, {long:'décembre',	 short:'déc'}
 ]
+
+const UNIT2MULTIPLICATEUR = {
+ 	'"': 1,
+ 	'h': 60,
+ 	'j': 24*60,
+ 	'm': 30*24*60,
+ 	'a': 365*24*60,
+}
+
 class ComplexeDate {
 constructor(data){
 	this.data = data
@@ -58,34 +67,51 @@ get asShortString(){
 	return `<span class="${color}">${segs}</span>`
 }
 
+get asComplete(){
+	var segs = ['<span class="picto">🕣</span>']
+	if ( this.dateFrom ) {
+		segs.push(`du ${humanDateFor(this.dateFrom)}`)
+	}
+	if ( this.dateTo ) {
+		segs.push(`au ${humanDateFor(this.dateTo)}`)
+	}
+	if ( this.duree) {
+		segs.push(`(${this.duree.asHumanDuree})`)
+	}
+	segs = segs.join(' ')
+	const color = this.isOutOfDate() ? 'bad' : 'bon'
+	return `<span class="${color}">${segs}</span>`
+}
+
 
 get dateFrom(){
-	if(!this.from) return
-	return this.from.asDate
-}
-get dateTo(){
-	if(!this.to) return
-	return this.to.asDate
-}
-get realDateFin(){
-	if ( this.dateTo ){ 
-		return this.dateTo
-	}	else if ( this.dateFrom && this.duree ) {
-		const dureeS = dureeString2Secondes(this.duree)
-		let d = new Date()
-		d.setTime(this.dateFrom.getTime() + dureeS * 1000)
+	if (this.from) return this.from.asDate
+	else if ( this.to && this.duree ) {
+		var d = new Date()
+		d.setTime( this.to.asDate.getTime() - this.duree.asMillisecondes ) 
 		return d
 	}
-	return 
+}
+get dateTo(){
+	if ( this.to ) return this.to.asDate
+	else if ( this.from && this.duree ) {
+		var d = new Date()
+		d.setTime( this.from.asDate.getTime() + this.duree.asMillisecondes)
+		return d
+	}
 }
 
 
 get from()	{return this.data.fr && (new MDate(this.data.fr))}
 get to()		{return this.data.to && (new MDate(this.data.to))}
-get duree()	{this.data.du}
+get duree()	{return this.data.du && (new MDuree(this.data.du))}
 
 
 }// class ComplexeDate
+
+
+
+
 
 class MDate {
 
@@ -106,6 +132,95 @@ get asHumanShort(){
 }
 
 }// class MDate
+
+
+
+
+
+
+
+/**
+ * Class MDuree
+ * ------------
+ * Pour la gestion d'une durée
+ * 
+ * La durée peut être fournie par '12"', '12 h', '12jr', etc.
+ */
+class MDuree {
+constructor(str){
+	this.init_value = str
+	this.parse(str)
+}
+
+/**
+ * Méthode qui parse la chaine pour obtenir le nombre et l'unité
+ * 
+ */
+parse(str){
+	if ( false == isNaN(str) ) {
+		// <= +str+ ne contient que des chiffres
+		// => C'est une durée envoyée par minutes
+		this._multiplicateur = 1
+		this._unit = '"'
+		this._number = str
+		return
+	}
+	str = str.replace(/ /g, '')
+	var unit = str.substring(str.length - 1, str.length)
+	var mult = UNIT2MULTIPLICATEUR[unit]
+	if ( mult ) {
+		var nombre = parseInt(str.substring(0, str.length - 1), 10)
+		if ( isNaN(nombre) ) {
+			erreur("Il faut donner un nombre de " + unit + " (par exemple 12"+h+")")
+		} else {
+			this._number = Number(nombre)
+			this._unit   = unit
+			this._multiplicateur = mult
+		}
+	} else {
+		erreur("Je ne connais pas l'unité donnée. Choisir \" (minutes), h (heures), j (jours), m (mois) ou a (années).")
+	}
+}
+
+get unit()	{return this._unit}
+get number(){return this._number}
+get multiplicateur(){return this._multiplicateur}
+
+// Retourne la durée en minutes, en secondes ou en millisecondes
+get asMinutes(){ return this.number * this.multiplicateur }
+get asSecondes(){ return this.asMinutes * 60 }
+get asMillisecondes(){return this.asSecondes * 1000}
+
+get asHumanDuree(){
+	var d = this.asMinutes
+	var y = Math.floor(d / UNIT2MULTIPLICATEUR.a)
+	d = d % UNIT2MULTIPLICATEUR.a
+	var m = Math.floor(d / UNIT2MULTIPLICATEUR.m)
+	d = d % UNIT2MULTIPLICATEUR.m
+	var j = Math.floor(d / UNIT2MULTIPLICATEUR.j)
+	d = d % UNIT2MULTIPLICATEUR.j
+	var h = Math.floor(d / 60)
+	d = d % 60
+
+	var dh = []
+	if ( y ) dh.push(`${y} an` + (y>1?'s':''))
+	if ( m ) dh.push(`${m} mois`)
+	if ( j ) dh.push(`${j} jour`+(j>1?'s':''))
+	if ( d ) dh.push(`${d} minute`+(d>1?'s':''))
+	switch(dh.length){
+		case 1: return dh[0];
+		case 2: return dh.join('et')
+		default: 
+			var last = dh.pop()
+			return dh.join(', ') + ' et ' + last
+	}
+}
+}
+
+
+
+
+
 /**
   Retourne le temps en secondes
   @documented
@@ -114,7 +229,8 @@ function humanDateFor(timeSeconds){
   if (undefined === timeSeconds){ timeSeconds = new Date()}
   if ('number' != typeof(timeSeconds)) timeSeconds = parseInt(timeSeconds.getTime() / 1000)
   var d = new Date(timeSeconds * 1000)
-  return `${String(d.getDate()).padStart(2,'0')} ${(String(d.getMonth()+1)).padStart(2,'0')} ${d.getFullYear()}`;
+  return `${String(d.getDate()).padStart(2,'0')} ${MOIS[d.getMonth()].long} ${d.getFullYear()}`;
+  // return `${String(d.getDate()).padStart(2,'0')} ${(String(d.getMonth()+1)).padStart(2,'0')} ${d.getFullYear()}`;
 }
 
 
@@ -139,6 +255,8 @@ function dateString2Date(str){
   */
 const Unity2Secondes = {
   'sc' : 1, 'mn': 60, 'hr':3600, 'jr':24*3600, 'mo':24*3600*31, 'an':365*24*3600
+  // Unités sur une lettre
+  , '"': 60, 'h': 3600, 'j':24*3600, 'm':24*3600*31, 'a':365*24*3600
 }
 function dureeString2Secondes(str){
   const u = str.substring(str.length - 3, str.length)
