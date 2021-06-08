@@ -51,7 +51,7 @@ constructor(data){
 	* Retourne TRUE si la date est dépassée
 	*/
 isOutOfDate(){
-	return this.readDateFin && (new Date() > this.readDateFin)
+	return this.dateTo && (new Date() > this.dateTo)
 }
 
 

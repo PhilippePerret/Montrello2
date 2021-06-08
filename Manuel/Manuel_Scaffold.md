@@ -52,3 +52,9 @@ class MonObjet {
 ~~~
 
 Un des grands avantages de cette méthod, outre le fait que ça simplifie le code, c’est qu’elle permet de voir tout de suite la méthode appelée par le bouton.
+
+
+
+## Gestion des dates
+
+Il existe dans le module `system/Date.js` des classes et des méthodes très pratiques pour gérer les dates facilement.
