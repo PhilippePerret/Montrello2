@@ -39,10 +39,10 @@ get ref(){ return this.carte.ref }
 	*/ 
 
 editMembers(){
-	message("Je dois ajouter un membre")
+	erreur("Je ne sais pas encore comment ajouter un membre")
 }
 addChecklist(bouton){
-	CheckList.createFor(bouton.owner)
+	CheckList.createFor(this)
 }
 
 // Actualisation de la jauge de la carte et de la liste
@@ -79,6 +79,7 @@ set tags(v){this._tags = v}
 	****************************************************************/
 
 afterSet(hdata){
+	console.log("-> CarteForm#afterSet", hdata)
 	this.carte.updateDisplay(hdata)
 	hdata.tags && PickerTags.drawTagsIn(this)
 }
@@ -97,17 +98,27 @@ set(hdata){
 }
 
 /**
+ * Retourne la valeur pour la carte de +key+
+ * 
+ */
+get(key){
+	return this.carte.data[key]
+}
+
+/**
 	*
 	*	On place les valeurs de la carte dans le formulaire de carte
 	*
-	* - le titre (common display property)
-	* - la description (common display property)
-	*
 	*/
 setValues(){
-	this.setCommonDisplayedProperties()
+	this.titreField.innerHTML = this.carte.titre
+	this.descriptionField.innerHTML = this.carte.description || '[Mettre ici la définition de la carte]'
 	// Mettre les tags
 	PickerTags.drawTagsIn(this)
+	// Mettre la date
+	// TODO
+	// Mettre les enfants
+	// Non, ils sont mis à la construction
 
 }
 
@@ -121,16 +132,6 @@ build(){
 	this.buildObjets()
 	document.body.appendChild(this.obj)
 }
-
-/**
- * Quand la carte est détruire, il faut aussi détruire son formulaire
- */
-remove(){
-	this.obj.remove()
-	if ( this.isCurrent ) delete this.constructor.current
-
-}
-
 
 observe(){
 	$(this.obj).draggable()
@@ -147,7 +148,6 @@ observe(){
 	 */
 	const divDescription = DGet('div#carte-description-div div.description', this.obj)
 	divDescription.owner = this
-
 
 }
 
@@ -217,6 +217,15 @@ buildObjets(){
 }
 
 /**
+ * Quand la carte est détruire, il faut aussi détruire son formulaire
+ */
+remove(){
+	this.obj.remove()
+	if ( this.isCurrent ) delete this.constructor.current
+
+}
+
+/**
  * @return TRUE si c'est la carte courante
  * 
  */
@@ -224,9 +233,13 @@ get isCurrent(){
 	return this.constructor.current && this.constructor.current.id == this.id
 }
 
-get commonDisplayedProperties(){
-	return ['ti', 'dsc']
+get titreField(){
+	return this._titfield || (this._titfield = DGet('span.carte-titre',this.obj))
 }
+get descriptionField(){
+	return this._descfield || (this._descfield = DGet('div.carte-description', this.obj))
+}
+
 get domId(){
 	return this._domid || (this._domid = `carteform-${this.carte.data.id}`)
 }

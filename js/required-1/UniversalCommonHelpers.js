@@ -46,8 +46,8 @@ const UniversalHelpersMethods = {
 
   editDates(btn, ev){
     this.pickerdates || (this.pickerdates = PickerDates.new(this))
-    this.pickerdates.displayDates()
     this.pickerdates.positionne(btn)
+    this.pickerdates.displayDates()
   },
 
   setDates(hvalues) { this.set({dates: hvalues}) },

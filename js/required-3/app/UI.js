@@ -83,7 +83,7 @@ Object.assign(UI,{
 				cont.querySelectorAll('*[data-method]').forEach(trigger => {
 					const method = trigger.getAttribute('data-method')
 					if ('function' == typeof cont.owner[method]){
-						trigger.addEventListener('click', cont.owner[method].bind(cont.owner))
+						trigger.addEventListener('click', cont.owner[method].bind(cont.owner, trigger))
 					} else {
 						console.error("Erreur implémentation : la méthode '%s' est inconnu de", method, cont.owner)
 					}
