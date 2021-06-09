@@ -22,14 +22,6 @@ afterCreate(){
 
 // *** Données et propriétés ***
 
-get data(){
-	if (this.childrenContainer) this._data.tasks = this.getTaskListIds()
-	return this._data
-}
-
-set data(v){ this._data = v }
-
-
 /**
  * Modélise la liste, c'est-à-dire la transforme en un modèle
  * qui sera utilisable par d'autres cartes
@@ -102,17 +94,6 @@ removeTask(task){
 	return this.saveAsync()
 }
 
-
-// Retourne la liste des identifiants de tâche dans l'ordre relevé
-// dans la liste affichée
-getTaskListIds(){
-	let idlist = []
-	this.childrenContainer.querySelectorAll('task').forEach(tk => {
-		idlist.push(tk.getAttribute('data-task-id'))
-	})
-	return idlist
-}
-
 /**
  * Cette méthode surclasse la méthode générale car l'inscription de
  * la check list se fait dans le formulaire d'édition des cartes, pas
@@ -137,36 +118,14 @@ addInParent(){
 	}
 }
 
-/**
-	* Appelée quand on termine de trier la liste des tâches
-	*
-	* À la fin du déplacement des tâches, on met en route un compte à 
-	* rebours qui, s'il arrive à son terme, enregistre le nouveau
-	* classement. Sinon, si on commence à déplacer un autre item (cf.
-	* onStartSorting), ça interrompt le compte à rebours (pour ne pas
-	* enregistrer plein de fois si plusieurs changements sont opérés)
-	* 
-	*/
-onStopSorting(){
-	this.timerSave = setTimeout(this.save.bind(this), 2500)
-}
-/**
-	* Appelée quand on commence à trier les tâches
-	*/
-onStartSorting(){
-	if ( this.timerSave ) {
-		clearTimeout(this.timerSave)
-		this.timerSave = null
-	}
-}
 
 observe(){
 	super.observe()
 	// On rend la liste des tâches classable
 	$(this.childrenContainer).sortable({
 			axis:'y'
-		, stop:this.onStopSorting.bind(this)
-		, start:this.onStartSorting.bind(this)
+		, stop: 	this.onStopSortingChildren.bind(this)
+		, start:  this.onStartSortingChildren.bind(this)
 	})
 
 	// 

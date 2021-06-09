@@ -1,6 +1,9 @@
 # Todo liste
 
-* gérer l'ordre 
+
+* Il y a encore plein de bugs dans la gestion de la liste des tableaux (et des MenuFeedable en général ?)
+
+* Ré-implémenter l'enregistrement du classement des enfants, mais le faire dans MontrelloObjet puisque n'importe quel élément peut classer ses enfants (à part les tâches)
   * méthode MontrelloObjet#onChangeChildrenOrder
   * propriété childrenOrder <-> data.co
   * méthode getChildrenOrder qui relève dans l'obj de l'objet l'ordre des éléments dans la balise <children>.

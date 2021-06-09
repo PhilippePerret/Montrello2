@@ -121,19 +121,42 @@ static resetProps(){
  * 	- Chargement de tous les objets 			<<<<<<<
  * 	- Construction de tous les objets
  */
-static loadAllObjets(){
+static async loadAllObjets(){
+	// console.log("this.load_and_dispatch_objet_type('tb')", this.load_and_dispatch_objet_type('tb'/* Tableaux */))
 	return this.load_and_dispatch_objet_type('tb'/* Tableaux */)
-	.then(this.load_and_dispatch_objet_type('ca'/* cartes */))
-	.then(this.load_and_dispatch_objet_type('li'/* listes */))
-	.then(this.load_and_dispatch_objet_type('cl'/* checkLists */))
-	.then(this.load_and_dispatch_objet_type('tk'/* tasks de checkList */))
-	.then(this.load_and_dispatch_objet_type('ma'/* massets */))
-	.then(MontrelloModele.loadAllModeles.bind(MontrelloModele)) // les modèles
+	 .then(this.load_and_dispatch_objet_type.bind(this, 'ca'/* cartes */))
+	 .then(this.load_and_dispatch_objet_type.bind(this, 'li'/* listes */))
+	 .then(this.load_and_dispatch_objet_type.bind(this, 'cl'/* checkLists */))
+	 .then(this.load_and_dispatch_objet_type.bind(this, 'tk'/* tasks de checkList */))
+	 .then(this.load_and_dispatch_objet_type.bind(this, 'ma'/* massets */))
+	 .then(MontrelloModele.loadAllModeles.bind(MontrelloModele)) // les modèles
 }
 
 static load_and_dispatch_objet_type(type){
-	return Ajax.send('load.rb',{type:type})
-	.then(this.dispatch.bind(this, type))
+	// console.log("-> load_and_dispatch_objet_type(type = '%s')", type)
+	return Ajax.send('load.rb',{type:type}).then(this.dispatch_data.bind(this, type))
+}
+
+
+static dispatch_data(type, ret){
+	// console.log("-> dispatch_data(type='%s', ret=)", type, ret)
+	const my = this
+	return new Promise((ok,ko) => {
+		if ( (undefined == ret.data) || (ret.data.length == 0)) return ok()
+		const data = ret.data
+		if ( !type ) { return systemError("[Montrello#dispatch_data] l'argument +type+ doit être défini à l'appel de dispatch_data.") }
+		if ( !data ) { return systemError("[Montrello#dispatch_data] l'argument +data+ doit être défini à l'appel de dispatch_data.") }
+		Object.assign(my.lastIds, {[type]: 0})
+		if ( data.length == 0 ) return ok() // aucun élément
+		const Classe = this.type2class(type)
+		Classe.items = {}
+		data.forEach(hdata => {
+			if (my.lastIds[type] < hdata.id) my.lastIds[type] = Number(hdata.id)
+			const item = new Classe(hdata)
+			Object.assign(Classe.items, {[hdata.id]: item})
+		})
+		ok()
+	})
 }
 
 /**
@@ -152,14 +175,6 @@ static buildAllObjets(){
 	.then(this.buildItemsOf.bind(this, CheckList))
 	.then(this.buildItemsOf.bind(this, CheckListTask))
 	.then(this.buildItemsOf.bind(this, Masset))
-}
-
-static dispatch(type, ret){
-	return new Promise((ok,ko) => {
-		if ( (undefined == ret.data) || (ret.data.length == 0)) ok()
-		this.dispatch_data(ret.data, ret.type)
-		ok()
-	})
 }
 
 static loadConfig(){
@@ -187,30 +202,16 @@ static setConfig(hdata){
 	})
 }
 
-static dispatch_data(data, type){
-	// console.log("dispatch_data(type = %s) with data", type, data)
-	const my = this
-	if ( !type ) { return systemError("[Montrello#dispatch_data] +type+ devrait être défini.") }
-	if ( !data ) { return systemError("[Montrello#dispatch_data] +data+ devrait être défini.") }
-	Object.assign(my.lastIds, {[type]: 0})
-	if ( data.length == 0 ) return // aucun élément
-	const Classe = this.type2class(data[0].ty)
-	Classe.items = {}
-	data.forEach(hdata => {
-		if (my.lastIds[type] < hdata.id) my.lastIds[type] = Number(hdata.id)
-		const item = new Classe(hdata)
-		Object.assign(Classe.items, {[hdata.id]: item})
-	})
-}
-
-static buildItemsOf(classe,ret){
+static buildItemsOf(classe){
+	// console.log("-> buildItemsOf", classe)
 	return new Promise((ok,ko) => {
-		if ( !classe.items ) return ok() ;
-		const items = Object.values(classe.items)
-		if ( items.length == 0 ) return
-		const aItem = items[0]
-		const method = 'function' == typeof(aItem.build_and_observe) ? 'build_and_observe' : 'build'
-		items.forEach(item => item[method]())
+		if ( classe.items ) {		
+			const items = Object.values(classe.items)
+			if ( items.length > 0 ) {
+				// console.log("J'appelle build_and_observe pour", items)
+				items.forEach(item => item.build_and_observe.call(item))
+			}
+		}
 		ok()
 	})
 }

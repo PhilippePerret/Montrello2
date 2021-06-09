@@ -66,7 +66,7 @@ set data(v){this._data = v}
 // *** Construction et observation ***
 
 build(){
-	this.obj = DOM.clone('modeles task', {id: this.domId})
+	if ( false === super.build() ) return false
 	this.obj.object = this
 	const cb_id = `${this.domId}-cb`
 	this.checkbox 	= this.obj.querySelector('span.checkmark')
@@ -74,12 +74,7 @@ build(){
 	this.label = DGet('label[data-prop="ti"]', this.obj)
 	this.label.setAttribute('for', cb_id)
 	this.label.innerHTML = this.data.ti
-
 	this.obj.setAttribute('data-task-id', this.id)
-
-	// On met la tâche dans la liste
-	this.parent.childrenContainer.appendChild(this.obj)
-
 }
 
 /**

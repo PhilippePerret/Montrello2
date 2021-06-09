@@ -281,7 +281,7 @@ async destroyYamlFile(){
  * 
  */
 build_and_observe(){
-  this.build() && this.observe()
+  if ( this.build() !== false ) this.observe()
 }
 
 /**
@@ -295,7 +295,15 @@ build(){
     this.addInParent()
     this.setCommonDisplayedProperties()
   } else {
-    return erreur(`Désolé, mais l'objet ${this.ref} ne définit pas son parent… Nous ne pouvons pas le construire.`)
+    let msg ;
+    msg = `Désolé, l'objet ${this.ref} `
+    if ( this.data.ow ) {
+      msg += `définit le parent #${this.data.ow} mais ce parent n'existe plus`
+    } else {
+      msg += 'ne définit pas son parent (data.ow non défini)'
+    }
+    msg += '. Nous ne pouvons pas le construire.'
+    return erreur(msg)
   }
 }
 /**
@@ -317,9 +325,6 @@ observe(){
   if ( this.btnModelise ) {
     this.btnModelise.addEventListener('click', this.makeModele.bind(this))
   }
-
-  // Les autres éléments éditables
-  UI.setEditableIn(this.obj)
 
 }
 
@@ -411,6 +416,55 @@ forEachChild(fonction){
   this.children.forEach(fonction)
 }
 
+
+
+/**
+  * Appelée quand on termine de trier la liste des enfants de l'objet
+  *
+  * À la fin du déplacement, on met en route un compte à rebours qui, 
+  * s'il arrive à son terme, enregistre le nouveau classement. Sinon, 
+  * si on commence à déplacer un autre item (onStartSortingChildren), 
+  * ça interrompt le compte à rebours (pour ne pas enregistrer plein 
+  * de fois si plusieurs changements sont opérés)
+  * 
+  */
+onStopSortingChildren(){
+  this.timerSave = setTimeout(this.saveChildrenOrder.bind(this), 2500)
+}
+/**
+  * Appelée quand on commence à trier les tâches
+  */
+onStartSortingChildren(){
+  if ( this.timerSave ) {
+    clearTimeout(this.timerSave)
+    this.timerSave = null
+  }
+}
+
+
+/**
+ * Pour enregistrer le nouvel ordre des enfants
+ * quels que soient leur classe
+ * 
+ */
+saveChildrenOrder(){
+  this.save({cho: this.getChildrenListIds()})
+}
+
+// Retourne la liste des identifiants des enfants dans l'ordre relevé
+// dans la liste actuelle
+getChildrenListIds(){
+  let idlist = []
+  this.childrenContainer.querySelectorAll('> *').forEach(ochild => {
+    idlist.push(parseInt(ochild.id.split('-')[1],10))
+  })
+  console.log("Nouvel ordre : ", idList)
+  return idlist
+}
+
+
+
+
 get parent(){
   return this._parent || (this._parent = this.getParent())
 }
@@ -466,7 +520,11 @@ hasChild(child){
 
 
 get childrenContainer(){
-  return this._childcont || (this._childcont = DGet('children', this.obj))
+  if ( this.obj ) {
+    return this._childcont || (this._childcont = DGet('children', this.obj))
+  } else {
+    raise("this.obj n'est pas défini pour la classe ... Impossible de définir son childrenContainer", this)
+  }
 }
 
 /**

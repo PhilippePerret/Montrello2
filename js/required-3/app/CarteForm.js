@@ -171,11 +171,11 @@ build(){
 observe(){
 	$(this.obj).draggable()
 
-
 	// Notamment tous les boutons de la colonne droite
 	this.obj.querySelector('liste_actions.for-objets').owner = this
 	this.obj.querySelector('liste_actions.for-carte').owner = this.carte
 	UI.setEditableIn(this.obj)
+	
 	/**
 	 * On définit que le formulaire de carte est le propriétaire des 
 	 * bouton utiles, par exemple celui qui permet d'édition la 

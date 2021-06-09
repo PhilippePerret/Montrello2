@@ -19,8 +19,6 @@ Object.assign(UI,{
 		* Méthode qui transforme tous les éléments de classe .editable
 		*	en éléments dont on peut éditer le texte directement
 		* 
-		* ATTENTION : si des écoutes sont ajoutées, penser à les retirer
-		* dans unsetEditableIn ci-dessous
 		*/
 	setEditableIn(container){
 		// console.log("-> UI#setEditableIn, dans container :", container)

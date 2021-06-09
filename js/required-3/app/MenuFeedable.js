@@ -1,7 +1,17 @@
 'use strict'
 class FeedableMenu {
 
-static get(menu_id){return this.items[menu_id]}
+static get(menu_id){
+	if ( this.items ) {
+		if ( this.items[menu_id] ) {
+			return this.items[menu_id]
+		} else {
+			return systemError("Le menu #"+menu_id+" est inconnu des FeedableMenu…")
+		}
+	} else {
+		return systemError("Les items de FeedableMenu ne sont pas définis. Impossible de retourner le menu #"+menu_id+".")
+	}
+}
 
 static build(element){
 	const m = new FeedableMenu(element)
