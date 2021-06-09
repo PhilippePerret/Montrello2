@@ -281,8 +281,7 @@ async destroyYamlFile(){
  * 
  */
 build_and_observe(){
-  this.build()
-  this.observe()
+  this.build() && this.observe()
 }
 
 /**
@@ -291,12 +290,13 @@ build_and_observe(){
  * 
  */
 build(){
-  if ( null == this.parent ) {
+  if ( this.parent ) {
+    this.obj = DOM.clone(`modeles ${this.constructor.dataClass.modeleName}`, {id: this.domId})
+    this.addInParent()
+    this.setCommonDisplayedProperties()
+  } else {
     return erreur(`Désolé, mais l'objet ${this.ref} ne définit pas son parent… Nous ne pouvons pas le construire.`)
   }
-  this.obj = DOM.clone(`modeles ${this.constructor.dataClass.modeleName}`, {id: this.domId})
-  this.addInParent()
-  this.setCommonDisplayedProperties()
 }
 /**
  * Observation des éléments communs

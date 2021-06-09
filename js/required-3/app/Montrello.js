@@ -1,24 +1,51 @@
 'use strict'
 
 
-const Montrello = {
+class Montrello {
 
 
-type2class:function(type){
+/**
+ * @return La classe objet du type +type+
+ * 
+ * +type+ {String} Le type sous forme de deux lettres
+ * 
+ */
+static type2class(type){
 	return this.type2dataClass(type).classe
-},
+}
 
-type2dataClass:function(type){
-	this.types2class = this.types2class || {
-			'tb': {classe: Tableau, parentClass:null, childClass: Liste, modeleName:'tableau'}
-		, 'li': {classe: Liste, parentClass:Tableau, childClass:Carte, modeleName:'liste'}
-		, 'ca': {classe: Carte, parentClass:Liste, childClass:CheckList, modeleName:'carte'}
-		, 'cl': {classe: CheckList, parentClass:Carte, childClass:CheckListTask, modeleName:'checklist'}
-		, 'tk': {classe: CheckListTask, parentClass:CheckList, childClass:Masset, modeleName:'task'}
-		, 'ma': {classe: Masset, parentClass:null, childClass: null, modeleName: 'masset'}
-	}
-	return this.types2class[type]
-},
+/**
+ * @return les données du type +type+
+ * 
+ * +type+ {String} Le type sous forme de deux lettres
+ * 
+ */
+static type2dataClass(type){
+	return this.dataObjets[type]
+}
+
+/**
+ * Les données des objets Montrello
+ * 
+ */
+static get dataObjets(){
+	return this._dataObjets || (this._dataObjets = {
+			'tb': {type:'tb', classe: Tableau, parentClass:null, childClass: Liste, modeleName:'tableau'}
+		, 'li': {type:'li', classe: Liste, parentClass:Tableau, childClass:Carte, modeleName:'liste'}
+		, 'ca': {type:'ca', classe: Carte, parentClass:Liste, childClass:CheckList, modeleName:'carte'}
+		, 'cl': {type:'cl', classe: CheckList, parentClass:Carte, childClass:CheckListTask, modeleName:'checklist'}
+		, 'tk': {type:'tk', classe: CheckListTask, parentClass:CheckList, childClass:Masset, modeleName:'task'}
+		, 'ma': {type:'ma', classe: Masset, parentClass:null, childClass: null, modeleName: 'masset'}
+	})
+}
+
+/**
+ * Pour faire tourner la fonction +fonction+ sur toutes les classes
+ * d'objets Montrello
+ */
+static forEachClassObjet(fonction){
+	Object.values(this.dataObjets).forEach(dobjet => fonction(dojet.classe))
+}
 
 /**
  * @return n'importe quel objet de type +type+ et d'identifiant +id+
@@ -27,20 +54,20 @@ type2dataClass:function(type){
  * +id+			Identifiant ou rien (si type est référence)
  * 
  */
-get(type, id) { 
+static get(type, id) { 
 	if ( !id ) [type, id] = type.split('-')
 	return this.type2class(type).get(id) 
-},
+}
 
 /**
 	* Retourne un nouvel identifiant pour le type +type+
 	*/
-getNewId:function(type){
+static getNewId(type){
 	this.lastIds || (this.lastIds = {})
 	this.lastIds[type] || Object.assign(this.lastIds, {[type]: 0})
 	++ this.lastIds[type]
 	return this.lastIds[type]
-},
+}
 
 /**
  * Permet d'actualiser le dernier identifiant d'un type
@@ -49,13 +76,13 @@ getNewId:function(type){
  * employée que pour eux pour le moment.
  * 
  */
-addOrNotLastIdFrom:function(item){
+static addOrNotLastIdFrom(item){
 	this.lastIds || (this.lastIds = {})
 	this.lastIds[item.type] || Object.assign(this.lastIds, {[item.type]: 0})
 	if ( this.lastIds[item.type] < item.id ){
 		this.lastIds[item.type] = item.id
 	}
-},
+}
 
 /**
 	* Initialisation de Montrello (au chargement de l'application)
@@ -68,61 +95,85 @@ addOrNotLastIdFrom:function(item){
 	* un après les autres quand le premier est prêt.
 	*
 	*/
-init:function(){
+static init(){
 	this.resetProps()
-
-	return Ajax.send('load.rb',{type:'config'})
-	.then(this.dispatch.bind(this, 'config'))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'tb' /* Tableau */}))
-	.then(this.dispatch.bind(this, 'tb'))
-	.then(this.buildItemsOf.bind(this, Tableau))
-	.then(this.ensureCurrentTableau.bind(this))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'ma' /* masset */}))	
-	.then(this.dispatch.bind(this, 'ma'))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'tk' /* task de checkList */}))	
-	.then(this.dispatch.bind(this, 'tk'))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'cl' /* checkList */}))	
-	.then(this.dispatch.bind(this, 'cl'))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'li' /* liste */ }))
-	.then(this.dispatch.bind(this, 'li'))
-	.then(this.buildItemsOf.bind(this, Liste))
-	.then(Ajax.send.bind(Ajax,'load.rb',{type:'ca' /* carte */}))	
-	.then(this.dispatch.bind(this, 'ca'))
-	.then(this.buildItemsOf.bind(this, Carte))
-	.then(MontrelloModele.loadAllModeles.bind(MontrelloModele)) // les modèles
+	return this.loadConfig()
+	.then(this.loadAllObjets.bind(this))
+	.then(this.buildAllObjets.bind(this))
 	.then(ret => {
 		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true
 		console.log("Application prête", 5)
-		// console.log("This.lastIds", this.lastIds)
 	})
-	.catch(console.error)
-},
+	.catch(erreur)
+}
 
-resetProps(){
+static resetProps(){
 	this.lastIds = {}
-},
+}
 
-dispatch(type, ret){
-	// console.log("dispatch(type = %s, ret = )", type, ret)
+
+/**
+ * Chargement de tous les objets
+ * 
+ * C'est le premier temps du nouveau fonctionnement :
+ * 
+ * 	- Chargement de tous les objets 			<<<<<<<
+ * 	- Construction de tous les objets
+ */
+static loadAllObjets(){
+	return this.load_and_dispatch_objet_type('tb'/* Tableaux */)
+	.then(this.load_and_dispatch_objet_type('ca'/* cartes */))
+	.then(this.load_and_dispatch_objet_type('li'/* listes */))
+	.then(this.load_and_dispatch_objet_type('cl'/* checkLists */))
+	.then(this.load_and_dispatch_objet_type('tk'/* tasks de checkList */))
+	.then(this.load_and_dispatch_objet_type('ma'/* massets */))
+	.then(MontrelloModele.loadAllModeles.bind(MontrelloModele)) // les modèles
+}
+
+static load_and_dispatch_objet_type(type){
+	return Ajax.send('load.rb',{type:type})
+	.then(this.dispatch.bind(this, type))
+}
+
+/**
+ * Construction de tous les objets
+ * 
+ * Inscrite dans le nouveau fonctionnement :
+ * 
+ * 	- Chargement de tous les objets
+ * 	- Construction de tous les objets 		<<<<<<<
+ */
+static buildAllObjets(){
+	return this.buildItemsOf(Tableau)
+	.then(this.ensureCurrentTableau.bind(this))
+	.then(this.buildItemsOf.bind(this, Liste))
+	.then(this.buildItemsOf.bind(this, Carte))
+	.then(this.buildItemsOf.bind(this, CheckList))
+	.then(this.buildItemsOf.bind(this, CheckListTask))
+	.then(this.buildItemsOf.bind(this, Masset))
+}
+
+static dispatch(type, ret){
 	return new Promise((ok,ko) => {
-		if ( type == 'config' ) {
-			this.dispatch_config(ret.data)
-		} else {
-			if ( (undefined == ret.data) || (ret.data.length == 0)) ok()
-			this.dispatch_data(ret.data, ret.type)
-		}
+		if ( (undefined == ret.data) || (ret.data.length == 0)) ok()
+		this.dispatch_data(ret.data, ret.type)
 		ok()
 	})
-},
+}
 
-dispatch_config(data){
+static loadConfig(){
+	return Ajax.send('load.rb',{type:'config'})
+	.then(this.dispatch_config.bind(this))
+}
+
+static dispatch_config(ret){
 	const my = this
+	const data = ret.data
 	this.config = data || this.default_config
-},
+}
 
-
-setConfig(hdata){
+static setConfig(hdata){
 	Object.assign(this.config, hdata)
 	// console.log("Enregistrement de la configuration : ", this.config)
 	Ajax.send('save.rb', {data: this.config})
@@ -134,10 +185,9 @@ setConfig(hdata){
 		erreur("Impossible d'enregistrer la configuration : " + ret.error + ' (consulter la console')
 		console.error("Données envoyées pour sauvegarde :", this.config)
 	})
-},
+}
 
-
-dispatch_data(data, type){
+static dispatch_data(data, type){
 	// console.log("dispatch_data(type = %s) with data", type, data)
 	const my = this
 	if ( !type ) { return systemError("[Montrello#dispatch_data] +type+ devrait être défini.") }
@@ -151,9 +201,9 @@ dispatch_data(data, type){
 		const item = new Classe(hdata)
 		Object.assign(Classe.items, {[hdata.id]: item})
 	})
-},
+}
 
-buildItemsOf(classe,ret){
+static buildItemsOf(classe,ret){
 	return new Promise((ok,ko) => {
 		if ( !classe.items ) return ok() ;
 		const items = Object.values(classe.items)
@@ -163,14 +213,14 @@ buildItemsOf(classe,ret){
 		items.forEach(item => item[method]())
 		ok()
 	})
-},
+}
 
 /**
 	* Méthode qui s'assure qu'il existe un tableau courant et le crée
 	* si nécessaire.
 	*
 	*/
-ensureCurrentTableau:function(){
+static ensureCurrentTableau(){
 	return new Promise((ok,ko) => {
 		let current ;
 		if ( this.config.current_pannel_id ){
@@ -188,16 +238,13 @@ ensureCurrentTableau:function(){
 		Tableau.updateFeedableMenu()
 		ok()
 	})
-},
+}
 
-}//Montrello
+static get default_config(){
+	return {
+		current_pannel_id: null
+	}
+}
 
-Object.defineProperties(Montrello, {
-	default_config:{
-		enumerable: true,
-		get(){return {
-			current_pannel_id: null
-		}}
-	},
-		
-})
+} // class Montrello
+

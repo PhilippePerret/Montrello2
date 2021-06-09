@@ -107,7 +107,6 @@ function onAjaxSuccess(ret){
 }
 
 function raise(msg){
-  erreur(msg)
   throw new Error(msg)
 }
 

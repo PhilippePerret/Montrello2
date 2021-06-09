@@ -1,4 +1,19 @@
 'use strict'
+/*
+
+	Class DevJauge
+	--------------
+	Elle s'occupe de gérer les jauge de développement qui indiquent
+	l'état d'avancée des tâches (CheckListTask) dans une CheckList.
+
+	Elle peut être appelée soit par la construction de la carte (au
+	démarrage par exemple) soit lors de l'édition de la carte, depuis
+	le formulaire d'édition de la carte (CarteForm).
+
+	Elle fonctionne avec une balise <devjauge> contenant une balise
+	span.done qui est développé au pourcentage des tâches accomplies.
+
+*/
 class DevJauge {
 
 /**
@@ -32,7 +47,6 @@ static setIn(owner){
 	
 	// La seconde jauge est la jauge de la carte
 	if ( owner instanceof CheckList ) {
-		console.log("owner = ", owner)
 		devjauge2 = owner.parent.devjaugeElement
 		spandone2 = devjauge2.querySelector('span.done') 	|| this.createSpanDoneFor(devjauge2)
 	}

@@ -26,7 +26,7 @@ afterDestroy(){
 }
 
 build(){
-	super.build()
+	if ( false === super.build() ) return false
 	// Les tags
 	PickerTags.drawTagsIn(this)
 	// La Jauge d'avancée

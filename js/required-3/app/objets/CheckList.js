@@ -23,7 +23,7 @@ afterCreate(){
 // *** Données et propriétés ***
 
 get data(){
-	if (this.childrenElement) this._data.tasks = this.getTaskListIds()
+	if (this.childrenContainer) this._data.tasks = this.getTaskListIds()
 	return this._data
 }
 
@@ -107,40 +107,34 @@ removeTask(task){
 // dans la liste affichée
 getTaskListIds(){
 	let idlist = []
-	this.childrenElement.querySelectorAll('task').forEach(tk => {
+	this.childrenContainer.querySelectorAll('task').forEach(tk => {
 		idlist.push(tk.getAttribute('data-task-id'))
 	})
 	return idlist
 }
 
-// *** Construction et observation ***
-
 /**
-	*	Construction de la checklist
-	*
-	* C'est un élément complexe de l'interface, avec beaucoup de 
-	* veilleurs d'évènements.
-	*
-	*/
-build(){
-	// this.obj = DOM.clone('modeles checklist', {id: this.domId})
-	this.obj = DOM.clone('modeles checklist')
-	if ( ! this.obj ){
-		raise("Impossible de cloner la checklist…")
-	}
-	// Note : les checklist sont toujours construites dans le formulaire
-	// de carte. Même lorsque ce sont des modèles ou des copies
-	let container;	
-	if (this.parent.constructor.name == 'Carte'){
-		container = this.parent.form
+ * Cette méthode surclasse la méthode générale car l'inscription de
+ * la check list se fait dans le formulaire d'édition des cartes, pas
+ * dans la carte elle-même. Donc, à la construction de la checklist,
+ * il ne faut pas l'ajouter quelque part pour le moment.
+ * Sauf si le formulaire de la carte existe déjà
+ * 
+ */
+addInParent(){
+	if ( this.parent instanceof Carte ){
+
+		if ( this.parent.form ) {
+		
+			this.parent.form.checklistsContainer.appendChild(this.obj)
+		
+		}
+	
 	} else {
-		console.error("Je ne peux pas afficher les checklists en dehors du formulaire de carte.")
-		return
+	
+		return erreur("Je ne peux pas afficher les checklists en dehors du formulaire de carte.")
+	
 	}
-	if ( undefined == container.checklistsContainer ) {
-		return console.error("Le container de la checklist doit retourner l'élément qui contient les checklists. Ce container est :", container)
-	}
-	container.checklistsContainer.appendChild(this.obj)
 }
 
 /**
@@ -183,13 +177,6 @@ observe(){
 
 updateDevJauge(){
 	DevJauge.setIn(this)
-}
-
-/**
- * @return le DOM Element qui contient les tâches
- */
-get childrenElement(){
-	return this._chldel || (this._chldel = DGet('children', this.obj))
 }
 
 }// class CheckList

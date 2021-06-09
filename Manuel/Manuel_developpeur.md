@@ -84,3 +84,23 @@ Les méthodes utiles sont :
 Le parent est consigné dans la propriété `ow` de l’enfant. Sa valeur est une référence (`ref`) à l’objet (donc `<type réduit>-<id>`).
 
 > La propriété `ow` vient de `owner` propriétaire.
+
+
+
+---
+
+<a id="messages"></a>
+
+## Gestion des messages
+
+
+
+### systemError(<message>)
+
+Cette méthode permet de produire une erreur système. Lorsque par exemple l’utilisateur a touché aux fichiers depuis le finder en supprimant des données.
+
+### `erreur(“<message>”[,{<options>}])`
+
+Permet d’afficher un message d’erreur dans l’interface (en rouge en bas de l’écran). 
+
+La méthode met toujours le message complet dans la console.

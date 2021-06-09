@@ -78,7 +78,7 @@ build(){
 	this.obj.setAttribute('data-task-id', this.id)
 
 	// On met la tâche dans la liste
-	this.parent.childrenElement.appendChild(this.obj)
+	this.parent.childrenContainer.appendChild(this.obj)
 
 }
 

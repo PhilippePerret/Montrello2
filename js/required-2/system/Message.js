@@ -4,11 +4,11 @@ function message(msg, options){
   (new Message(msg)).display(options)
 }
 function erreur(msg, options){
-  if (undefined != msg.message){
-    console.error(msg)
-    msg = msg.message
-  }
-  (new Message(msg, 'error').display(options))
+  console.error(msg)
+  msg.message && (msg = msg.message + ' (cf. la console)');
+  new Message(msg, 'error').display(options)
+
+  return false
 }
 function suivi(msg, debugLevel){
   if (DEBUG_LEVEL < debugLevel) return
