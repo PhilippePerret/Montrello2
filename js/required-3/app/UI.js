@@ -128,7 +128,7 @@ Object.assign(UI,{
 	},
 
 	onEditEditable(element, ev){
-		MiniEditor.edit(element, {x: ev.clientX, y: ev.clientY})
+		MiniEditor.edit(element, {x: ev.clientX, y: ev.clientY}, ev)
 	}
 
 })

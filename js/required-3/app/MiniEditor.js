@@ -2,13 +2,15 @@
 
 class MiniEditor {
 
-	// 
-	// = main =
-	// 
-	// Méthode principale appelée par un objet possédant la classe
-	// 'editable'
-	// 
+	/**
+	 * Méthode principale appelée par un objet possédant la classe 
+	 * 'editable'
+	 * 
+	 * C'est la méthode UI.onEditEditable qui appelle cette méthode
+	 * 
+	 */
 	static edit(element, pos, ev){
+		// console.log("-> edit(element, pos, ev)", element, pos, ev, new Error().stack)
 		this.miniEditor || this.buildMiniEditor()
 		this.miniEditor.edit(element, ev)
 	}
@@ -25,9 +27,14 @@ class MiniEditor {
 edit(element, ev){
 	this.element = element
 	this.owner   = element.owner
-	this.forSpan = element.tagName != 'DIV'
-	this.prepare({text: element.innerHTML})	
-	this.show()
+	if (this.owner) {
+		this.forSpan = element.tagName != 'DIV'
+		this.prepare({text: element.innerHTML})	
+		this.show()
+	} else {
+		console.error("[MiniEditor] element = ", element)
+		raise("Le propriétaire de l'élément (cf. console) est indéfini. Impossible de l'éditer.")
+	}
 	return ev && stopEvent(ev)
 }
 

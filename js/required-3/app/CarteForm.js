@@ -136,7 +136,6 @@ get(key){
 	*/
 setValues(hdata){
 	hdata || (hdata = this.data);
-	console.log("CarteForm#setValues(hdata =)", hdata)
 	
 	hdata.ti && this.writeTitre(hdata.ti)
 	this.writeDescription(hdata.dsc || '[Mettre ici la définition de la carte]')	
@@ -171,10 +170,16 @@ build(){
 observe(){
 	$(this.obj).draggable()
 
+	// Le propriétaire des champs éditables (pour UI.setEditable)
+	this.obj.querySelectorAll('.editable').forEach(o => o.owner = this)
+
 	// Notamment tous les boutons de la colonne droite
 	this.obj.querySelector('liste_actions.for-objets').owner = this
 	this.obj.querySelector('liste_actions.for-carte').owner = this.carte
 	UI.setEditableIn(this.obj)
+
+	// Bouton pour fermer
+	this.obj.querySelector('header .close-btn').addEventListener('click', this.hide.bind(this))
 	
 	/**
 	 * On définit que le formulaire de carte est le propriétaire des 

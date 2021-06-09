@@ -315,6 +315,12 @@ build(){
  */
 observe(){
   this.obj.owner = this
+  // On essaie aussi de définir le propriétaire de tous les éléments
+  // éditables. Noter que ça ne peut pas toucher les enfants puis-
+  // que eux aussi appelleront cette méthode et rectifieront donc le
+  // owner.
+  // this.obj.querySelectorAll('*.editable').forEach(o => o.owner = this)
+  UI.setEditableIn(this.obj)
 
   this.btnKill.addEventListener('click', this.destroy.bind(this))
 
