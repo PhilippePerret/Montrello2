@@ -12,11 +12,25 @@ static newItemDataFor(owner){
 	return this.defaultItemData("Nouvelle tâche à exécuter", owner)
 }
 
+/**
+ * @return liste des instances de tâches trouvées dans le 
+ * container +container+
+ * 
+ */
+static getIn(container){
+	var l = []
+	container.querySelectorAll('task').forEach(otask => {
+		l.push(otask.object)
+	})
+	return l
+}
+
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
 
 constructor(data){
-	super()
-	data.owner && (this.checklist = data.owner)
-	this._data = data /** Cf. l'explication dans CheckList */
+	super(data)
 }
 
 /**
@@ -45,38 +59,37 @@ async makeCopy(){
 // *** Propriétés ***
 
 get data(){
-	this.ti && (this._data.ti = this.lab.innerHTML)
 	return this._data
 }
+set data(v){this._data = v}
 
 // *** Construction et observation ***
 
 build(){
-	const o 	= DOM.clone('modeles task', {id: this.domId})
-	const cb 	= o.querySelector('span.checkmark')
-	const lab = o.querySelector('label')
-	
+	this.obj = DOM.clone('modeles task', {id: this.domId})
+	this.obj.object = this
 	const cb_id = `${this.domId}-cb`
+	this.checkbox 	= this.obj.querySelector('span.checkmark')
+	this.checkbox.id = cb_id
+	this.label = DGet('label[data-prop="ti"]', this.obj)
+	this.label.setAttribute('for', cb_id)
+	this.label.innerHTML = this.data.ti
 
-	o.setAttribute('data-task-id', this.id)
-	o.classList.remove('hidden')
-	cb.id = cb_id
-	lab.setAttribute('for', cb_id)
-	lab.innerHTML = this._data.ti
+	this.obj.setAttribute('data-task-id', this.id)
 
 	// On met la tâche dans la liste
-	this.checklist.ul.appendChild(o)
+	this.parent.childrenElement.appendChild(this.obj)
 
-	// [1] Sert pour la méthode set() générale
-	this.li = this.obj /* [1] */ = o
-	this.lab 			= lab
-	this.cb 			= cb
+}
 
-	// On règle l'état
-	this.setState()
-
-}//build
-
+/**
+ * Après la création de la tâche, il faut tout de suite la mettre
+ * en édition.
+ */
+afterCreate(){
+	// console.log("-> afterCreate", this)
+	this.edit()
+}
 
 /**
 	* Pour observer la tâche
@@ -84,10 +97,11 @@ build(){
 	*/
 observe(){
 	super.observe()
-	this.cb.addEventListener('click', this.onClickCheckTask.bind(this))
-	this.lab.addEventListener('click', this.onClickCheckTask.bind(this))
+	this.setState()
+	this.checkbox.addEventListener('click', this.onClickCheckTask.bind(this))
+	this.label.addEventListener('click', this.onClickCheckTask.bind(this))
 	// Pour le label (éditable), il faut en plus indiquer le propriétaire
-	this.lab.owner = this
+	this.label.owner = this
 }
 
 onClickCheckTask(ev){
@@ -99,18 +113,19 @@ onClickCheckTask(ev){
 		const chk = !this.data.on
 		this.setState(chk)
 		this.set({on: chk})
-		this.checklist.updateDevJauge()
+		this.parent.updateDevJauge()
 	}
 }
 
 setState(chk){
 	if (undefined == chk) chk = this.data.on
-	this.cb.classList[chk?'add':'remove']('checked')
-	this.li.classList[chk?'add':'remove']('checked')
+	this.checkbox.classList[chk?'add':'remove']('checked')
+	// this.li.classList[chk?'add':'remove']('checked')
+	this.obj.classList[chk?'add':'remove']('checked')
 }
 
 edit(){
-	MiniEditor.edit(this.lab)
+	MiniEditor.edit(this.label)
 }
 
 /**

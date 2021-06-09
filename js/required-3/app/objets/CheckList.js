@@ -5,23 +5,11 @@ static get dimType(){ return 'cl' }
 
 
 static newItemDataFor(owner){
-	var d = this.defaultItemData("Nouvelle Checklist")
-	Object.assign(d, {tasks:[]})
-	return d
+	return this.defaultItemData("Nouvelle Checklist", owner)
 }
 
 constructor(data){
-	super(null) /** formule pour ne pas définir this.data dans 
-								* MontrelloObjet
-								*/
-	// console.log("Instanciation CheckList avec :", data)
-	this._data = data /** Quand une donnée doit être modifiée dans les
-											* données avant enregistrement, comme ici la
-											* liste des tâches, on passe par cette formule
-											* au lieu de this.data = data et on crée la
-											* méthode get data(){...} qui retournera _data
-											* modifié
-											*/
+	super(data)
 }
 
 /**
@@ -30,15 +18,16 @@ constructor(data){
  */
 afterCreate(){
 	this.createTask()
-	this.owner.carte.addObjet(this)
 }
 
 // *** Données et propriétés ***
 
 get data(){
-	if (this.ul) this._data.tasks = this.getTaskListIds()
+	if (this.childrenElement) this._data.tasks = this.getTaskListIds()
 	return this._data
 }
+
+set data(v){ this._data = v }
 
 
 /**
@@ -83,8 +72,16 @@ async makeCopy(owner){
 	*
 	*/
 createTask(){
-	CheckListTask.createFor(this)
+	CheckListTask.createItemFor(this)
 	this.updateDevJauge()
+}
+
+/**
+ * @return la liste des tâches du checklist
+ * 
+ */
+get tasks(){
+	return this.data.cho || []
 }
 
 /**
@@ -100,7 +97,7 @@ removeTask(task){
 	if (idx < 0) {
 		return erreur("La tâche d'identifiant "+task.id+" est introuvable dans la liste "+this.tasks.join(', ')+"… Je dois renoncer à la suppression.")
 	}
-	this._data_tasks.splice(idx,1)
+	this.data.cho.splice(idx,1)
 	this.updateDevJauge()
 	return this.saveAsync()
 }
@@ -110,7 +107,7 @@ removeTask(task){
 // dans la liste affichée
 getTaskListIds(){
 	let idlist = []
-	this.ul.querySelectorAll('task').forEach(tk => {
+	this.childrenElement.querySelectorAll('task').forEach(tk => {
 		idlist.push(tk.getAttribute('data-task-id'))
 	})
 	return idlist
@@ -126,27 +123,24 @@ getTaskListIds(){
 	*
 	*/
 build(){
-	const o = DOM.clone('modeles checklist', {id: this.domId})
-	this.obj = o
-
-	/** Le conteneur de la liste de tâche
-		* ---------------------------------
-	 	* Pour le moment, je fonctionne comme ça : si this.owner.obj existe
-	 	* (i.e. si on appelle la création depuis une édition d'une carte)
-	 	* alors on prend cet objet, sinon (i.e. on appelle la construction
-	 	* depuis l'instanciation de l'application) alors on construit les
-	 	* éléments dans le document. NON, pour le mmoment, on ne les
-	 	* ajoute pas.
-	 	* 
-	 	* Note : maintenant, ici, +owner+ est une Carte. Il faut tester 
-	 	* sa propriété @form pour savoir si elle est éditée
-	 	*/
-	if (this.owner && this.owner.form && this.owner.form.obj){ 
-		this.owner.form.obj.querySelector('div#carte-taches-div > content').appendChild(o)
-		o.classList.remove('hidden')
-	} else {
-		document.body.appendChild(o)
+	// this.obj = DOM.clone('modeles checklist', {id: this.domId})
+	this.obj = DOM.clone('modeles checklist')
+	if ( ! this.obj ){
+		raise("Impossible de cloner la checklist…")
 	}
+	// Note : les checklist sont toujours construites dans le formulaire
+	// de carte. Même lorsque ce sont des modèles ou des copies
+	let container;	
+	if (this.parent.constructor.name == 'Carte'){
+		container = this.parent.form
+	} else {
+		console.error("Je ne peux pas afficher les checklists en dehors du formulaire de carte.")
+		return
+	}
+	if ( undefined == container.checklistsContainer ) {
+		return console.error("Le container de la checklist doit retourner l'élément qui contient les checklists. Ce container est :", container)
+	}
+	container.checklistsContainer.appendChild(this.obj)
 }
 
 /**
@@ -171,10 +165,7 @@ onStartSorting(){
 		this.timerSave = null
 	}
 }
-/**
-	* Place les observeur d'évènement (de click principalement)
-	*
-	*/
+
 observe(){
 	super.observe()
 	// On rend la liste des tâches classable
@@ -191,11 +182,15 @@ observe(){
 }
 
 updateDevJauge(){
-	return // pour le moment ça ne va pas TODO à régler ensuite
 	DevJauge.setIn(this)
-	this.owner.form && DevJauge.setIn(this.owner.form)
 }
 
+/**
+ * @return le DOM Element qui contient les tâches
+ */
+get childrenElement(){
+	return this._chldel || (this._chldel = DGet('children', this.obj))
+}
 
 }// class CheckList
 

@@ -45,14 +45,21 @@ get ref(){ return this.carte.ref }
 editMembers(){
 	erreur("Je ne sais pas encore comment ajouter un membre")
 }
+
+/**
+ * Appelée quand on clique sur le bouton pour ajouter une nouvelle
+ * checklist à la carte (le formulaire de carte, exactement)
+ * 
+ */
 addChecklist(bouton){
-	CheckList.createFor(this)
+	const newChecklist = CheckList.createItemFor(this)
+	this.carte.addChildItem(newChecklist)
 }
 
-// Actualisation de la jauge de la carte et de la liste
-updateDevJauge(checklist){
-	DevJauge.setIn(this.carte)
-}
+// // Actualisation de la jauge de la carte et de la liste
+// updateDevJauge(checklist){
+// 		DevJauge.setIn(this.carte)
+// }
 
 addLien(btn, ev){
 	Masset.create('url', this, btn)
@@ -267,7 +274,9 @@ get titreField(){
 get descriptionField(){
 	return this._descfield || (this._descfield = DGet('div.carte-description', this.obj))
 }
-
+get checklistsContainer(){
+	return this._clcont || (this._clcont = DGet('checklists', this.obj))
+}
 get domId(){
 	return this._domid || (this._domid = `carteform-${this.carte.data.id}`)
 }

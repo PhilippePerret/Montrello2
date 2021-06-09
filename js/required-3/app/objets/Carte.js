@@ -69,25 +69,22 @@ edit(){
 	* 
 	*/
 updateDisplay(hdata){
-	hdata.ti && this.setTitre(hdata.ti)
-	hdata.tags &&	PickerTags.drawTagsIn(this)
+	hdata.ti 		&& this.setTitre(hdata.ti)
+	hdata.tags 	&&	PickerTags.drawTagsIn(this)
 }
 
 /**
-	* Retourne toutes les tâches de la carte
-	* Attention : ici, il s'agit des instances CheckListTask
-	*/
-get tasks(){return this._tasks || (this._tasks = this.getAllTasks())}
-
-getAllTasks(){
-	if ( this.children.length == 0 ) return []
-	let ts = []
-	this.forEachChild(child => {
-		ts += child.children
-	})
-	return ts
+ * Méthode appelée après avoir créé une checklist à la carte
+ * Il faut s'assurer que la jauge existe dans la carte.
+ */
+afterAddChild(){
+	DevJauge.setIn(this)
 }
 
+
+get devjaugeElement(){
+	return this._devjaug || (this._devjaug = DGet('devjauge', this.obj))
+}
 
 /**
  * ===============================================================

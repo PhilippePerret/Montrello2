@@ -71,8 +71,7 @@ static onChooseItem(item){
 // ========================== INSTANCE =============================
 
 constructor(data){
-	super()
-	this.data = data
+	super(data)
 }
 
 afterSet(hdata){

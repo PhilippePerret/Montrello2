@@ -47,6 +47,7 @@ static defaultItemData(titre, owner){
     , ty: this.dimType
     , id: Montrello.getNewId(this.dimType)
     , ow: (owner && owner.ref)
+    , cho: null // pour l'ordre des enfants
   }
 }
 
@@ -157,13 +158,25 @@ static getLastItem(){ return this.get(this.last_item_id) }
 /**
  * Instanciation dans la classe abstraite
  * 
- * [1]  On doit faire cette vérification pour les classes, comme 
- *      Carte, qui ne définissent pas this.data mais this._data (cf.
- *      pourquoi dans la classe)
- * 
  */
 constructor(data){
-  data && (this.data = data) // [1]
+  try {
+    this.data = data
+  } catch(error) {
+    erreur("Erreur systémique (consulter la console)")
+    console.error("Problème avec l'objet", this)
+    console.error(error)
+    return
+  }
+  if ( !data ) {
+    erreur("ERREUR. Consulter la console.")
+    console.error("Il faut absoluement des data pour définir ", this)
+    return 
+  } 
+  /**
+   * Les valeurs qu'on peut définir tout de suite
+   */
+  this.domId    = `${this.constructor.dimType}-${data.id}`
   this.children = []
 }
 
@@ -369,12 +382,20 @@ get massets(){
  * 
  * Appelée par le bouton 'Ajouter'
  * 
+ * Cette méthode n'est pas à confondre avec la méthode 'addChildItem'
+ * qui permet d'ajouter un enfant à l'aide de son instance, comme
+ * c'est le cas par exemple lorsqu'on ajoute une checkliste à une
+ * carte.
+ * 
  */
 async addChild(ev){
-  console.log("-> addChild in", this)
   const child = (await this.childClass.createItemFor(this));
-  console.log("child = ", child)
+  this.addChildItem(child)
+}
+
+async addChildItem(child){
   this.children.push(child)
+  this.afterAddChild && this.afterAddChild()
 }
 
 /**

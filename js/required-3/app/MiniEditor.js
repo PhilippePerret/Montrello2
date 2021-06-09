@@ -89,11 +89,6 @@ onKeyDown(ev){
 }
 
 onClickSave(ev){
-	// this.element.innerHTML = this.value
-	// console.log("this.element = ", this.element)
-	console.log("this.element.owner = ", this.element.owner)
-	// console.log("this.property = ", this.element.getAttribute('data-prop'))
-	// Il faut aller plus loin = modifier la propriété dans l'objet
 	this.owner.set({[this.element.getAttribute('data-prop')]: this.value})
 	this.stopEdition()
 }

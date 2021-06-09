@@ -106,11 +106,6 @@ const TOMiniProperties = {
 		// Note : la CarteForm possède sa propre liste
 	},
 
-	domId:{
-		enumerable: true,
-		get(){return this._domid || (this._domid = `${this.constname}-${this.id}`)}
-	},
-
 	ty:{
 		enumerable: true,
 		get(){return this.data.ty}
@@ -188,11 +183,6 @@ const TOMiniProperties = {
 		enumerable:true,
 		get(){return this._container || (this.container = this.ct && document.querySelector(this.ct))},
 		set(v){this._container = v}
-	},
-	ct:{ // Selector du container
-		enumerable:true,
-		get(){return this.data.ct},
-		set(v){ this.data.ct = v }
 	},
 
 	btnSave:{

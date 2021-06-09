@@ -1,5 +1,10 @@
 # Todo liste
 
+* gérer l'ordre 
+  * méthode MontrelloObjet#onChangeChildrenOrder
+  * propriété childrenOrder <-> data.co
+  * méthode getChildrenOrder qui relève dans l'obj de l'objet l'ordre des éléments dans la balise <children>.
+
 * Pour la destruction, "rassembler" d'abord tous les objets à détruire et faire un seul appel Ajax pour détruire tous les objets d'un coup (faire un backup lorsqu'il y en a un certain nombre)
 
 * Reprendre complètement l'édition d'une carte par le formulaire de carte, en l'isolant complètement, c'est-à-dire sans le faire hériter des méthodes TOMiniMethods.
