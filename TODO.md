@@ -1,9 +1,8 @@
 # Todo liste
 
-
-* DESTRUCTION
-  * Il semble que certains objets ne sont pas détruits (peut-être ne sont-ils pas enregistrés dans leur parent. Oui, c'est le cas des checklists dans les cartes.
-
+* Menufeedable
+  * gérer le classement des items
+  
 * Gérer les modèles
   - création d'un modèle à partir d'un élément
   - adaptation d'un élément à un modèle (une checklist, une carte)

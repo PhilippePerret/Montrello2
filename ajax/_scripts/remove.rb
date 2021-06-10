@@ -32,10 +32,8 @@ elsif Ajax.param(:refs)
 	# le tableau d'identifiant 4
 	objets_detruits = []
 	Ajax.param(:refs).each do |ref|
-		log("Traitement de la référence #{ref.inspect}")
 		objet = Objet.new(ref)
 		next if not objet.exist?
-		log("Destruction de l'objet #{ref}")
 		objet.delete
 		objets_detruits << ref
 	end
