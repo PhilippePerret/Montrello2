@@ -66,7 +66,10 @@ set data(v){this._data = v}
 // *** Construction et observation ***
 
 build(){
-	if ( false === super.build() ) return false
+	if ( false === super.build() ){
+		console.log("super.build() a renvoyé false pour", this)
+		return false
+	}
 	this.obj.object = this
 	const cb_id = `${this.domId}-cb`
 	this.checkbox 	= this.obj.querySelector('span.checkmark')
@@ -75,6 +78,10 @@ build(){
 	this.label.setAttribute('for', cb_id)
 	this.label.innerHTML = this.data.ti
 	this.obj.setAttribute('data-task-id', this.id)
+	console.log("Je dois mettre l'objet de ... dans ...", this.obj, this.parent.childrenContainer)
+	this.parent.childrenContainer.appendChild(this.obj)
+
+	return true
 }
 
 /**

@@ -53,9 +53,20 @@ observe(){
 	this.obj.addEventListener('click', this.edit.bind(this))
 }
 
+/**
+ * Pour éditer la carte
+ * 
+ * On place les checklists (children) dans le formulaire si elles
+ * ne s'y trouvent pas déjà.
+ */
 edit(){
 	this.form || (this.form = new CarteForm(this))
 	this.form.open()
+	if ( this.childrenContainer.children.length ) {
+		Array.from(this.childrenContainer.children).forEach(cl => {
+			this.form.checklistsContainer.appendChild(cl)
+		})
+	}
 }
 
 /**

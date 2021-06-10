@@ -71,17 +71,24 @@ ensurePosition(){
 	* (par exemple un titre à une liste de titres)
 	*/
 add(item){
-	const cr = item.constructor
-	// console.log("ajout d'un item au feedable menu (item, owner =)", item, cr)
-	cr.items || (cr.items = {})
-	if (cr.items[item.id]){
-		// On ne reconstruit pas un item qui existe déjà
-		// Ça n'arrive que pendant les mini-tests, normalement
-		return false
-	}
-	Object.assign(cr.items, {[item.id]: item})
 	this.ul || this.prepare()
 	this.ul.appendChild((new FeedableMenuItem(this, item)).obj)
+	this.onChangeOrder()
+}
+
+/**
+ * Supprime un item
+ * 
+ */
+remove(item){
+	this.ul || this.prepare()
+	const liItem = this.ul.querySelector(`li[data-id="${item.id}"]`)
+	if ( liItem ) {
+		liItem.remove()
+		this.onChangeOrder()
+	} else {
+		console.log("Bizarrement, l'élément suivant n'a pas été trouvé dans le menu", item)
+	}
 }
 
 prepare(orderedIds){
@@ -147,6 +154,10 @@ setBoutonsUpAndDown(){
 /**
  * Méthode appelée quand on change l'ordre des éléments du menu
  * 
+ * Attention : cette méthode peut être appelée :
+ * 	- depuis un item quand on le déplace
+ * 	- depuis la méthode 'add' qui ajoute un item
+ * 	- depuis la méthode 'remove' qui retire un item
  */
 onChangeOrder(){
 	if ( this.timerSave ) {
@@ -158,7 +169,7 @@ onChangeOrder(){
 	this.setBoutonsUpAndDown()
 }
 saveOrder(){
-	console.log("-> saveOrder")
+	// console.log("-> saveOrder")
 	clearTimeout(this.timerSave)
 	delete this.timerSave
 	var orderedIds = []

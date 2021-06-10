@@ -1,7 +1,5 @@
 # Todo liste
 
-* Création d'un nouveau tableau : il faut l'ajouter dans le menu feedable
-
 * Gérer les modèles
   - création d'un modèle à partir d'un élément
   - adaptation d'un élément à un modèle (une checklist, une carte)
@@ -12,6 +10,12 @@
   -> C'est une règle automatique placée sur l'étique rouge
   * Étudier la possibilité de faire DES RÈGLES (mais ça me semble un peu compliqué, si je me réfère à Trello…)
 
+* OBJETS
+  * possibilité de verrouiller un objet, c'est-à-dire impossibilité de le modifier ou de le supprimer
+
+* Étiquettes (tags)
+  - Il faut supprimer la case à cocher qui apparait maintenant
+  
 * CARTES
   * Possibilité de cocher la date pour indiquer que la tâche est finie
   * Méthode 'displayUpdate' pour la carte. Appelée :

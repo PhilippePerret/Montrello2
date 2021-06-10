@@ -233,22 +233,19 @@ removeObjets(objet){
 /**
 	* Construction des objets de la carte
 	*
-	* Les « objets », ici, sont les checklist (children) et les
-	* Massets
+	* Les « objets », ici, sont les Massets
+	* 
+	* Rappel : maintenant, les checklists (children de la carte) sont
+	* simplement déplacés.
 	* 
 	*/
 buildObjets(){
 	
 	const my = this
 
-	this.carte.forEachChild(child => {
-		console.log("Je dois construire le child :", child)
-		child.build_and_observe_for(my)
-	})
-	
 	this.carte.forEachMasset(masset => {
 		console.log("Je dois construire le Masset : ", masset)
-		masset.build_and_observe_for(my)
+		masset.build_and_observe(my)
 		masset.obj.querySelectorAll('button').forEach(b => b.owner = my)
 	})
 

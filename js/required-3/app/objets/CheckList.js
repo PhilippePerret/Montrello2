@@ -95,27 +95,6 @@ removeTask(task){
 }
 
 /**
- * Cette méthode surclasse la méthode générale car l'inscription de
- * la check list se fait dans le formulaire d'édition des cartes, pas
- * dans la carte elle-même. Donc, à la construction de la checklist,
- * il ne faut pas l'ajouter quelque part pour le moment.
- * Sauf si le formulaire de la carte existe déjà
- * 
- */
-addInParent(){
-	if ( this.parent instanceof Carte ){
-
-	  this.parent.addChildItem(this)
-		this.parent.form && this.parent.form.checklistsContainer.appendChild(this.obj)
-	
-	} else {
-	
-		return erreur("Je ne peux pas afficher les checklists en dehors du formulaire de carte.")
-	
-	}
-}
-
-/**
  * Pour actualiser la jauge
  */
 updateDevJauge(){

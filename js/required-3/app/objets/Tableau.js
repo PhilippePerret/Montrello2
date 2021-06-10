@@ -34,7 +34,7 @@ static create(element){
 	this.current.save()
 	this.current.editTitle()
 	this.addItem(this.current)
-	this.afterCreate(this.current)
+	this.current.afterCreate()
 }
 
 static createNewItemWith(element){
@@ -44,10 +44,6 @@ static createNewItemWith(element){
 		,	ti: pannel_name
 		, id: Montrello.getNewId('tb')
 	})
-}
-
-static afterCreate(tableau){
-	FeedableMenu.get('menu-tableaux').add(tableau)	
 }
 
 /**
@@ -118,13 +114,25 @@ build(){
 }
 
 /**
+ * Méthode appelée après la création du tableau
+ * 
+ */
+afterCreate(){
+	FeedableMenu.get('menu-tableaux').add(this)	
+	// Cette méthode enregistre automatiquement le nouvel ordre des
+	// éléments.
+}
+
+/**
  * Méthode appelée après la destruction du tableau
  * 
- * On doit le supprimer du menu des tableaux
+ * On doit le supprimer du menu des tableaux et de l'ordre enregistré
  * 
  */
 afterDestroy(){
-
+	FeedableMenu.get('menu-tableaux').remove(this)
+	// Cette méthode enregistre automatiquement le nouvel ordre des
+	// éléments.
 }
 
 }
