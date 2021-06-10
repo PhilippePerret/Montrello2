@@ -61,7 +61,7 @@ static editPrefsCurrent(){
 // Actualise la liste des tableaux
 static updateFeedableMenu(){
 	const fmenu = FeedableMenu.get('menu-tableaux')
-	fmenu.prepare()
+	fmenu.update()
 }
 // (pour la feedable menu)
 static onChooseItem(item){
@@ -109,14 +109,13 @@ build(){
 }
 
 /**
-	* Méthode pour détruire le tableau
-	* 
-	* Contrairement aux autres éléments, on demande confirmation, pour 
-	* les tableaux (car il y aura beaucoup d'éléments détruits)
-	*/
-destroy(){
-	if(!confirm("Voulez-vous vraiment détruire ce tableau ET TOUTES SES LISTES ?")) return
-	super.destroy()
+ * Méthode appelée après la destruction du tableau
+ * 
+ * On doit le supprimer du menu des tableaux
+ * 
+ */
+afterDestroy(){
+
 }
 
 }

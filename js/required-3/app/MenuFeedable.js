@@ -72,23 +72,32 @@ add(item){
 }
 
 prepare(){
-	if(this.isPrepared) return
 	if ( !this.owner.items || Object.keys(this.owner.items).length == 0) {
 		// return console.log("Pas d'items, je ne peux pas prépare le menu feedable de %s", this.owner.name)
 		return
 	}
-	this.ul = document.createElement('UL')
-	this.ul.style.zIndex = 2000
-	this.ul.classList.add('feeded-menu')
+	this.buildMenuUL()
+	this.peuple()
+}
+buildMenuUL(){
+	this.ul = DCreate('UL', {class:'feeded-menu', style:'z-index:2000;'})
+	this.element.classList.add('closed')
+	this.content.appendChild(this.ul)
+	this.element.addEventListener('click', this.toggle.bind(this))
+}
+update(){
+	if ( this.ul ) {
+		this.ul.innerHTML = ""
+		this.peuple()
+	} else {
+		this.prepare()
+	}
+}
+peuple(){
 	for(var item_id in this.owner.items){
 		const menuItem = new FeedableMenuItem(this, this.owner.items[item_id])
 		this.ul.appendChild(menuItem.obj)
 	}
-	this.element.classList.add('closed')
-	this.content.appendChild(this.ul)
-	this.element.addEventListener('click', this.toggle.bind(this))
-
-	this.isPrepared = true
 }
 
 get content(){return this._content || (this._content = DGet('content',this.element))}

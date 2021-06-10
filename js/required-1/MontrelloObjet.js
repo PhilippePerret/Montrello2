@@ -268,21 +268,59 @@ save(params = {}){
  * 
  */
 async destroy(ev){
-  this.obj.remove()
-  this.constructor.removeItem(this)
-  await this.destroyYamlFile()
-  this.forEachChild(async (child) => { await child.destroy() })
-  this.afterDestroy && this.afterDestroy()
+  let impactedObjets = [this]
+  impactedObjets = this.collectChildrenIn(impactedObjets)
+
+  if ( impactedObjets.length > 5 ) {
+    let msg = `${impactedObjets.length} objets vont être détruits (tu peux les voir en console). Dois-je vraiment procéder à cette opération ?`
+    console.log("Objets détruits avec la destruction de %s", this.ref, impactedObjets)
+    if (false == confirm(msg)) return
+  }
+  
+  /**
+   * On détruit chaque objet…
+   *  - en tant qu'objet DOM
+   *  - dans sa classe parent (items)
+   *  - on appelle la méthode afterDestroy si elle existe
+   *  - dans son fichier (mais ici, on ne prend que sa référence)
+   */
+  let references = []
+  impactedObjets.reverse().forEach( objet => {
+    references.push(objet.ref)
+    objet.obj.remove()
+    objet.constructor.removeItem(objet)
+    objet.afterDestroy && objet.afterDestroy.call(objet)
+  })
+
+  // On procède à la destruction de tous les fichiers d'objet
+  console.log("Références à détruire", references)
+  await Ajax.send('remove.rb', {refs: references})
+
+  // Retire l'objet de son parent, et surtout de sa liste data.cho
+  // (ordre des enfants, if any)
+  this.removeFromParent()
+
+  // Et on termine en actualisant les nombres
+  PanelInfos.update()
+
+  return true
 }
 
 /**
- * @async
+ * Récupère tous les enfants et les enfants des enfants en
+ * les plaçant dans la liste +liste+ qui est retournée.
  * 
- * Pour détruire le fichier yaml
+ * La méthode sert pour la destruction.
+ * 
+ * @return liste actualisée
  * 
  */
-async destroyYamlFile(){
-  await Ajax.send('remove.rb', {ref:{ty:this.type, id:this.id}})
+collectChildrenIn(liste){
+  this.forEachChild(child => {
+    liste.push(child)
+    child.collectChildrenIn(liste)
+  })
+  return liste
 }
 
 
@@ -374,9 +412,10 @@ make_children_sortable_if_exist(){
       // , items: '> liste'
     }
     $(this.childrenContainer).sortable(dataSortable)
-  } else {
-    console.log("Cet élément n'a pas de liste enfant : ", this)
-  }
+  } 
+  // else {
+  //   console.log("Cet élément n'a pas de liste enfant : ", this)
+  // }
 }
 /**
  * Méthode permettant de transformer l'objet en modèle
@@ -454,16 +493,54 @@ async addChildItem(child){
 }
 
 /**
+ * Méthode d'enfant qui retirer l'objet de son parent
+ * 
+ */
+removeFromParent(){
+  this.parent && this.parent.removeChildItem(this)
+}
+
+/**
+ * Méthode de parent qui supprime l'enfant +child+ de sa liste
+ * d'objets ainsi que de sa liste de classement si l'objet est
+ * classé.
+ * 
+ * +child+  Instance (héritée de {MontrelloObjet}) de l'enfant à
+ *          détruire.
+ *
+ * Noter que lorsque cette méthode est invoquée, depuis le 'destroy'
+ * de l'objet, l'objet a déjà été détruit entièrement.
+ * 
+ */
+removeChildItem(child){
+  var newChildren = []
+  this.forEachChild(enf => {
+    if ( child.id == enf.id ) return
+      newChildren.push(enf)
+  })
+  this.children = newChildren
+
+  var idxChild = this.data.cho && this.data.cho.indexOf(child.id)
+  console.log("this.data.cho avant suppression", JSON.stringify(this.data.cho))
+  if ( idxChild && idxChild > -1 ) {
+    this.data.cho.splice(idxChild, 1)
+    this.save()
+    console.log("this.data.cho APRÈS suppression", JSON.stringify(this.data.cho))
+  }
+}
+
+/**
  * Ajoute l'objet dans le container enfants de son parent, dans le 
  * DOM
  * 
  */
 addInParent(){
   this.parent.childrenContainer.appendChild(this.obj)
+  this.parent.addChildItem(this)
 }
 
 forEachChild(fonction){
-  this.children.forEach(fonction)
+  this.children && this.children.forEach(fonction)
 }
 
 
@@ -501,10 +578,16 @@ sortChildren(){
       , currChild
       , prevChild;
     for(var i = 1, len = sortList.length; i < len; ++i){
-      currChild = this.childClass.get(sortList[i])
-      prevChild = this.childClass.get(sortList[i - 1])
-      prevChild.obj.before(currChild.obj)
-      // console.log("L'enfant ... doit être placé avant l'enfant ...", currChild, prevChild)
+      currChild = this.childClass.get(sortList[i]) || raise(`L'enfant #${sortList[i]} n'existe plus dans ${this.ref}`)
+      prevChild = this.childClass.get(sortList[i - 1]) || raise(`L'enfant #${sortList[i - 1]} n'existe plus dans ${this.ref}`)
+      if ( currChild.obj && prevChild.obj ) {
+        // console.log("L'enfant ... doit être placé avant l'enfant ...", currChild, prevChild)
+        prevChild.obj.before(currChild.obj)
+      } else {
+        console.error("Problème de classement pour", this)
+        console.error("currChild ... ou prevChild ... n'a pas d'obj", currChild, prevChild)
+        erreur("Problème de classement (cf. la console)")
+      }
     }
   }// else {
     // console.log("L'élément ne possède pas de classement d'enfants :", this)
@@ -523,12 +606,10 @@ saveChildrenOrder(){
 // Retourne la liste des identifiants des enfants dans l'ordre relevé
 // dans la liste actuelle
 getChildrenListIds(){
-  console.log("Ordre des enfants au départ : ", JSON.stringify(this.data.cho))
   let idlist = []
   Array.from(this.childrenContainer.children).forEach(ochild => {
     idlist.push(parseInt(ochild.id.split('-')[1],10))
   })
-  console.log("Nouvel ordre des enfants : ", JSON.stringify(idlist))
   return idlist
 }
 

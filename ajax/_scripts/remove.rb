@@ -7,11 +7,42 @@
 =end
 require_relative 'lib/Objet'
 
-objet = Objet.new(Ajax.param(:ref).to_sym)
+if Ajax.param(:ref)
 
-if objet.exist?
-	File.delete(objet.path)
-	Ajax << {message: "Objet #{objet.ref} détruit avec succès."}
+	# 
+	# Destruction d'un seul objet
+	# 
+
+	objet = Objet.new(Ajax.param(:ref))
+	if objet.exist?
+		objet.delete
+		Ajax << {message: "Objet #{objet.ref} détruit avec succès."}
+	else
+		Ajax << {error: "L'objet #{objet.path} est introuvable."}
+	end
+
+elsif Ajax.param(:refs)
+
+	# 
+	# Destruction d'un ensemble d'objets
+	# 
+
+	# Note : ici, contrairement à l'utilisation avec un seul objet, 
+	# c'est une référence String qui est envoyée, comme "tb-4" pour
+	# le tableau d'identifiant 4
+	objets_detruits = []
+	Ajax.param(:refs).each do |ref|
+		log("Traitement de la référence #{ref.inspect}")
+		objet = Objet.new(ref)
+		next if not objet.exist?
+		log("Destruction de l'objet #{ref}")
+		objet.delete
+		objets_detruits << ref
+	end
+	Ajax << {message: "#{objets_detruits.count} objets détruits (#{objets_detruits.inspect})"}
+
 else
-	Ajax << {error: "L'objet #{objet.path} est introuvable."}
+	
+	Ajax << {error: "Je ne sais pas quoi détruire…"}
+
 end

@@ -105,11 +105,8 @@ removeTask(task){
 addInParent(){
 	if ( this.parent instanceof Carte ){
 
-		if ( this.parent.form ) {
-		
-			this.parent.form.checklistsContainer.appendChild(this.obj)
-		
-		}
+	  this.parent.addChildItem(this)
+		this.parent.form && this.parent.form.checklistsContainer.appendChild(this.obj)
 	
 	} else {
 	
@@ -118,9 +115,13 @@ addInParent(){
 	}
 }
 
-// updateDevJauge(){
-// 	DevJauge.setIn(this)
-// }
+/**
+ * Pour actualiser la jauge
+ */
+updateDevJauge(){
+	DevJauge.setIn(this)
+}
+
 
 }// class CheckList
 

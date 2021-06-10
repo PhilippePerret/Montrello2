@@ -11,7 +11,23 @@
 
 class Objet
 attr_reader :data
+
+# Instanciation
+# 
+# +data+
+#   Soit un Hash contenant les données (limitées parfois à {'id', 'ty'})
+#   Soit un String définissant la référence "<type>-<id>"
 def initialize(data)
+  data_ini = data.freeze
+  case data
+  when Hash
+    data = data.to_sym
+  when String
+    data = data.split('-')
+    data = {id: data[1].to_i, ty: data[0]}
+  else
+    raise "Impossible d'instancier un objet avec #{data_ini}"
+  end
   @data = data
 end
 
@@ -31,6 +47,11 @@ def save
   File.delete(path) if File.exist?(path)
   File.open(path,'wb'){|f|f.write(YAML.dump(data))}
 end
+
+def delete
+  File.delete(path)
+end
+
 def path
   @path ||= File.join(folder, "#{id}.yaml")
 end

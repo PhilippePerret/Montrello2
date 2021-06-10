@@ -1,8 +1,8 @@
 # Todo liste
 
-* [BUG] Il y a encore plein de bugs dans la gestion de la liste des tableaux (et des MenuFeedable en général ?)
 
-* Pour la destruction, "rassembler" d'abord tous les objets à détruire et faire un seul appel Ajax pour détruire tous les objets d'un coup (faire un backup lorsqu'il y en a un certain nombre)
+* DESTRUCTION
+  * Il semble que certains objets ne sont pas détruits (peut-être ne sont-ils pas enregistrés dans leur parent. Oui, c'est le cas des checklists dans les cartes.
 
 * Gérer les modèles
   - création d'un modèle à partir d'un élément
@@ -12,7 +12,7 @@
 
 * Gérer les tâches/carte en cours, les mettre dans une partie dédiée dans le tableau de bord
   -> C'est une règle automatique placée sur l'étique rouge
-  * Étudier la possibilité de faire des règles (mais ça me semble un peu compliqué…)
+  * Étudier la possibilité de faire DES RÈGLES (mais ça me semble un peu compliqué, si je me réfère à Trello…)
 
 * CARTES
   * Possibilité de cocher la date pour indiquer que la tâche est finie
@@ -25,8 +25,9 @@
 * Changer chaque fois de couleur de fond
   * Une donnée couleur doit être complexe, c'est un jeu de couleur + possibilité d'une image de fond
 
-* Implémenter les préférences
+* PRÉFÉRENCES
   * CB changer de fond à chaque utilisation
+  * CB Détruire automatiquement les objets orphelin (sinon, donner l'alerte comme c'est le cas maintenant)
 
 ## Tests à faire
 
