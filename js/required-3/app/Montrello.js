@@ -100,6 +100,7 @@ static init(){
 	return this.loadConfig()
 	.then(this.loadAllObjets.bind(this))
 	.then(this.buildAllObjets.bind(this))
+	.then(this.sortAllChildren.bind(this))
 	.then(ret => {
 		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true
@@ -175,6 +176,17 @@ static buildAllObjets(){
 	.then(this.buildItemsOf.bind(this, CheckList))
 	.then(this.buildItemsOf.bind(this, CheckListTask))
 	.then(this.buildItemsOf.bind(this, Masset))
+}
+
+/**
+ * Après la construction de tous les éléments, classe
+ * leurs enfants s'il y en a.
+ * QUESTION : faut-il renvoyer une promesse ?
+ */
+static sortAllChildren(){
+	Object.values(this.dataObjets).forEach(dclass => {
+		dclass.classe.forEachItem(item => item.sortChildren.call(item))
+	})
 }
 
 static loadConfig(){

@@ -2,12 +2,6 @@
 
 * [BUG] Il y a encore plein de bugs dans la gestion de la liste des tableaux (et des MenuFeedable en général ?)
 
-* Ré-implémenter l'enregistrement du classement des enfants, mais le faire dans MontrelloObjet puisque n'importe quel élément peut classer ses enfants (à part les tâches)
-  * Traiter l'ordre des enfants
-  * méthode MontrelloObjet#onChangeChildrenOrder
-  * propriété childrenOrder <-> data.co
-  * méthode getChildrenOrder qui relève dans l'obj de l'objet l'ordre des éléments dans la balise <children>.
-
 * Pour la destruction, "rassembler" d'abord tous les objets à détruire et faire un seul appel Ajax pour détruire tous les objets d'un coup (faire un backup lorsqu'il y en a un certain nombre)
 
 * Gérer les modèles
@@ -33,3 +27,10 @@
 
 * Implémenter les préférences
   * CB changer de fond à chaque utilisation
+
+## Tests à faire
+
+* Test d'enfants classés
+  * on classe une liste d'enfants
+  * on ajoute un enfant
+  * => il ne doit pas encore être dans la liste classée, mais il doit s'afficher au bon endroit

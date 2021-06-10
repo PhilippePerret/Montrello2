@@ -93,9 +93,15 @@ afterCreate(){
 observe(){
 	super.observe()
 	this.setState()
+	this.observe_case_a_cocher()
+	this.observe_label_editable()	
+}
+
+observe_case_a_cocher(){
 	this.checkbox.addEventListener('click', this.onClickCheckTask.bind(this))
+}
+observe_label_editable(){
 	this.label.addEventListener('click', this.onClickCheckTask.bind(this))
-	// Pour le label (éditable), il faut en plus indiquer le propriétaire
 	this.label.owner = this
 }
 

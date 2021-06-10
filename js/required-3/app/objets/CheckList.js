@@ -118,25 +118,9 @@ addInParent(){
 	}
 }
 
-
-observe(){
-	super.observe()
-	// On rend la liste des tâches classable
-	$(this.childrenContainer).sortable({
-			axis:'y'
-		, stop: 	this.onStopSortingChildren.bind(this)
-		, start:  this.onStartSortingChildren.bind(this)
-	})
-
-	// 
-	// Bouton pour transformer la liste en modèle de liste
-	// 
-	this.btn_mod
-}
-
-updateDevJauge(){
-	DevJauge.setIn(this)
-}
+// updateDevJauge(){
+// 	DevJauge.setIn(this)
+// }
 
 }// class CheckList
 

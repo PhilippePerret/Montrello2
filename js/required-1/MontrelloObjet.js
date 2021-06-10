@@ -17,6 +17,17 @@ class MontrelloObjet {
 static get dataClass(){ return Montrello.type2dataClass(this.dimType)}
 static get childClass(){  return this.dataClass.childClass}
 static get parentClass(){ return this.dataClass.parentClass}
+
+/**
+ * Boucle une fonction sur tous les éléments
+ * 
+ */
+static forEachItem(fonction){
+  if ( this.items ) {
+    Object.values(this.items).forEach( item => fonction(item))
+  }
+}
+
 /**
  * @return Nombre d'items de la classe
  * 
@@ -315,6 +326,7 @@ build(){
  */
 observe(){
   this.obj.owner = this
+
   // On essaie aussi de définir le propriétaire de tous les éléments
   // éditables. Noter que ça ne peut pas toucher les enfants puis-
   // que eux aussi appelleront cette méthode et rectifieront donc le
@@ -322,18 +334,50 @@ observe(){
   // this.obj.querySelectorAll('*.editable').forEach(o => o.owner = this)
   UI.setEditableIn(this.obj)
 
-  this.btnKill.addEventListener('click', this.destroy.bind(this))
+  this.observe_bouton_destroy()
 
-  if ( this.btnAddChild ) {
-    this.btnAddChild.addEventListener('click', this.addChild.bind(this))
-  }
+  this.observe_bouton_ajoute_enfant_si_existe()
 
-  if ( this.btnModelise ) {
-    this.btnModelise.addEventListener('click', this.makeModele.bind(this))
-  }
+  this.observe_bouton_modelise_si_existe()
+
+  this.make_children_sortable_if_exist()
 
 }
 
+observe_bouton_destroy(){
+  this.btnKill.addEventListener('click', this.destroy.bind(this))  
+}
+observe_bouton_ajoute_enfant_si_existe(){
+  if ( this.btnAddChild ) {
+    this.btnAddChild.addEventListener('click', this.addChild.bind(this))
+  }  
+}
+observe_bouton_modelise_si_existe(){
+  if ( this.btnModelise ) {
+    this.btnModelise.addEventListener('click', this.makeModele.bind(this))
+  }
+}
+/**
+ * Pour rendre la liste des enfants classable et appeler les bonnes 
+ * méthodes pour l'enregistrer
+ * 
+ */
+make_children_sortable_if_exist(){
+  if ( this.childrenContainer ) {
+    const dataSortable = {
+        axis:       (this instanceof Tableau ? 'x' : 'y')
+      , stop:       this.onStopSortingChildren.bind(this)
+      , start:      this.onStartSortingChildren.bind(this)
+      , activate:   function(ev,ui){ui.helper.addClass('moved')}
+      , deactivate: function(ev,ui){ui.item.removeClass('moved')}
+      // Les instances de tableau comportaient aussi :
+      // , items: '> liste'
+    }
+    $(this.childrenContainer).sortable(dataSortable)
+  } else {
+    console.log("Cet élément n'a pas de liste enfant : ", this)
+  }
+}
 /**
  * Méthode permettant de transformer l'objet en modèle
  * 
@@ -447,6 +491,25 @@ onStartSortingChildren(){
   }
 }
 
+/**
+ * Méthode pour classer les enfants après leur construction
+ * 
+ */
+sortChildren(){
+  if ( this.data.cho ) {
+    let sortList = [...this.data.cho].reverse()
+      , currChild
+      , prevChild;
+    for(var i = 1, len = sortList.length; i < len; ++i){
+      currChild = this.childClass.get(sortList[i])
+      prevChild = this.childClass.get(sortList[i - 1])
+      prevChild.obj.before(currChild.obj)
+      // console.log("L'enfant ... doit être placé avant l'enfant ...", currChild, prevChild)
+    }
+  }// else {
+    // console.log("L'élément ne possède pas de classement d'enfants :", this)
+  //}
+}
 
 /**
  * Pour enregistrer le nouvel ordre des enfants
@@ -454,17 +517,18 @@ onStartSortingChildren(){
  * 
  */
 saveChildrenOrder(){
-  this.save({cho: this.getChildrenListIds()})
+  this.set({cho: this.getChildrenListIds()})
 }
 
 // Retourne la liste des identifiants des enfants dans l'ordre relevé
 // dans la liste actuelle
 getChildrenListIds(){
+  console.log("Ordre des enfants au départ : ", JSON.stringify(this.data.cho))
   let idlist = []
-  this.childrenContainer.querySelectorAll('> *').forEach(ochild => {
+  Array.from(this.childrenContainer.children).forEach(ochild => {
     idlist.push(parseInt(ochild.id.split('-')[1],10))
   })
-  console.log("Nouvel ordre : ", idList)
+  console.log("Nouvel ordre des enfants : ", JSON.stringify(idlist))
   return idlist
 }
 

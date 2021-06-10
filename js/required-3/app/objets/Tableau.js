@@ -99,11 +99,6 @@ get spanName(){
 show(){ this.obj.classList.remove('hidden')}
 hide(){ this.obj.classList.add('hidden')}
 
-// build_and_observe(){
-// 	this.build()
-// 	this.observe()
-// }
-
 /**
 	* Construction du tableau (masqué, par défaut)
 	*/
@@ -114,27 +109,10 @@ build(){
 }
 
 /**
-	* Observe
-	*/
-observe(){
-
-	// Les écouteurs hérités (bouton pour détruire, ajouter un enfant,
-	// etc.)
-	super.observe()
-
-	/**	
-	 	* La liste des listes doit être sortable
-	 	*/
-	$(this.childrenContainer).sortable({
-			axis:'x'
-		, items: '> liste'
-		, activate: function(ev,ui){ui.helper.addClass('moved')}
-		, deactivate: function(ev,ui){ui.item.removeClass('moved')}
-	})
-}
-
-/**
 	* Méthode pour détruire le tableau
+	* 
+	* Contrairement aux autres éléments, on demande confirmation, pour 
+	* les tableaux (car il y aura beaucoup d'éléments détruits)
 	*/
 destroy(){
 	if(!confirm("Voulez-vous vraiment détruire ce tableau ET TOUTES SES LISTES ?")) return

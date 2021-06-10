@@ -22,13 +22,6 @@ afterCreate(){
   this.editTitle()
 }
 
-observe(){
-	super.observe()
-	// On doit pouvoir trier les cartes
-	$(this.childrenContainer).sortable({axis:'y'})
-}
-
-
 }// class Liste
 
 Object.assign(Liste.prototype, TOMiniMethods)
