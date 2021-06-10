@@ -1,8 +1,7 @@
 # Todo liste
 
-* Menufeedable
-  * gérer le classement des items
-  
+* Création d'un nouveau tableau : il faut l'ajouter dans le menu feedable
+
 * Gérer les modèles
   - création d'un modèle à partir d'un élément
   - adaptation d'un élément à un modèle (une checklist, une carte)

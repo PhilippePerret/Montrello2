@@ -1,4 +1,17 @@
 'use strict'
+/*
+	Les objects qui utilisent les FeedableMenu doivent définir les 
+	méthodes :
+
+		static onChooseItem(<instance object>)
+
+				Pour agir quand on choisit un élément de la liste
+		
+		static saveOrder([<orderedIds>])
+
+				Pour enregistrer le nouvel ordre des éléments
+
+*/
 class FeedableMenu {
 
 static get(menu_id){
@@ -71,36 +84,96 @@ add(item){
 	this.ul.appendChild((new FeedableMenuItem(this, item)).obj)
 }
 
-prepare(){
+prepare(orderedIds){
 	if ( !this.owner.items || Object.keys(this.owner.items).length == 0) {
 		// return console.log("Pas d'items, je ne peux pas prépare le menu feedable de %s", this.owner.name)
 		return
 	}
 	this.buildMenuUL()
-	this.peuple()
+	this.peuple(orderedIds)
 }
 buildMenuUL(){
 	this.ul = DCreate('UL', {class:'feeded-menu', style:'z-index:2000;'})
 	this.element.classList.add('closed')
-	this.content.appendChild(this.ul)
+	this.content.insertBefore(this.ul, this.btnNouveau)
 	this.element.addEventListener('click', this.toggle.bind(this))
 }
-update(){
+update(orderedIds){
 	if ( this.ul ) {
 		this.ul.innerHTML = ""
-		this.peuple()
+		this.peuple(orderedIds)
 	} else {
-		this.prepare()
+		this.prepare(orderedIds)
 	}
 }
-peuple(){
-	for(var item_id in this.owner.items){
-		const menuItem = new FeedableMenuItem(this, this.owner.items[item_id])
+peuple(orderedIds){
+	var items ;
+	if ( orderedIds && orderedIds.length ) {
+		items = []
+		orderedIds.forEach(id => items.push(this.owner.get(id)))
+	} else {
+		items = Object.values(this.owner.items)
+	}
+	items.forEach(item => {
+		const menuItem = new FeedableMenuItem(this, item)
 		this.ul.appendChild(menuItem.obj)
+	})
+	this.setBoutonsUpAndDown()
+}
+
+/**
+ * Méthode pour régler les boutons Up et Down
+ * 
+ */
+setBoutonsUpAndDown(){
+	const children = this.ul.children
+	let btnU, btnD
+	for (var i = 0, len = children.length; i < len; ++ i) {
+		btnU = children.item(i).querySelector('.boutons .btn-up')
+		btnD = children.item(i).querySelector('.boutons .btn-down')
+		if ( i == 0 ) {
+			btnU.classList.add('invisible')
+			btnD.classList.remove('invisible')
+		} else if ( i == len - 1 ) {
+			btnU.classList.remove('invisible')
+			btnD.classList.add('invisible')
+		} else {
+			btnD.classList.remove('invisible')
+			btnU.classList.remove('invisible')
+		}
 	}
 }
 
+/**
+ * Méthode appelée quand on change l'ordre des éléments du menu
+ * 
+ */
+onChangeOrder(){
+	if ( this.timerSave ) {
+		clearTimeout(this.timerSave)
+		delete this.timerSave
+		console.log("this.timerSave", this.timerSave)
+	}
+	this.timerSave = setTimeout(this.saveOrder.bind(this), 3000)
+	this.setBoutonsUpAndDown()
+}
+saveOrder(){
+	console.log("-> saveOrder")
+	clearTimeout(this.timerSave)
+	delete this.timerSave
+	var orderedIds = []
+	Array.from(this.ul.children).forEach(li => {
+		orderedIds.push(parseInt(li.getAttribute('data-id'),10))
+	})
+	this.owner.saveOrder(orderedIds)
+	message("J'ai enregistré le nouvel ordre.")
+}
+
 get content(){return this._content || (this._content = DGet('content',this.element))}
+
+get btnNouveau(){
+	return this._btnnew || (this._btnnew = DGet('button.btn-add', this.content))
+}
 
 }//class FeedableMenu
 
@@ -113,13 +186,44 @@ constructor(menu, item){
 get obj(){return this._obj || (this._obj = this.build() )}
 
 build(){
-	const o = document.createElement('LI')
+	const o = DCreate('LI', {class:`${this.owner.ref}-name`, 'data-id':this.owner.id})
 	o.setAttribute('data-owner-ref', this.owner.ref)
-	o.classList.add(`${this.owner.ref}-name`) // pour changer la valeur facilement
-	o.innerHTML = this.owner.titre
 	o.addEventListener('click', this.onClick.bind(this))
+
+	const text = DCreate('SPAN', {text: this.owner.titre})
+
+	// On ajoute au bout des flèches pour monter et descendre l'élément
+	const boutons = DCreate('DIV',{class:'boutons'})
+	const btnUp = DCreate('SPAN', {class:'btn-up', text:'↑'})
+	const btnDown = DCreate('SPAN', {class:'btn-down', text:'↓'})
+	btnUp.addEventListener('click', this.onClickBtnUp.bind(this))
+	btnDown.addEventListener('click', this.onClickBtnDown.bind(this))
+	boutons.appendChild(btnUp)
+	boutons.appendChild(btnDown)
+	o.appendChild(boutons)
+	o.appendChild(text)
 	this._obj = o
+
 	return o
+}
+
+onClickBtnUp(ev){
+	if ( this.obj.previousSibling ) {
+		this.obj.parentNode.insertBefore(this.obj, this.obj.previousSibling)
+		this.menu.onChangeOrder()
+	} else {
+		message("L'élément est le plus haut…")
+	}
+	return stopEvent(ev)
+}
+onClickBtnDown(ev){
+	if ( this.obj.nextSibling) {
+		this.obj.parentNode.insertBefore(this.obj, this.obj.nextSibling.nextSibling)
+		this.menu.onChangeOrder()
+	} else {
+		message("L'élément est le plus bas…")
+	}
+	return stopEvent(ev)
 }
 
 onClick(ev){

@@ -34,7 +34,7 @@ static create(element){
 	this.current.save()
 	this.current.editTitle()
 	this.addItem(this.current)
-	FeedableMenu.get('menu-tableaux').add(this.current)
+	this.afterCreate(this.current)
 }
 
 static createNewItemWith(element){
@@ -45,6 +45,11 @@ static createNewItemWith(element){
 		, id: Montrello.getNewId('tb')
 	})
 }
+
+static afterCreate(tableau){
+	FeedableMenu.get('menu-tableaux').add(tableau)	
+}
+
 /**
 	* Le container <tableaux> contenant tous les tableaux
 	*/
@@ -60,12 +65,16 @@ static editPrefsCurrent(){
 
 // Actualise la liste des tableaux
 static updateFeedableMenu(){
-	const fmenu = FeedableMenu.get('menu-tableaux')
-	fmenu.update()
+	FeedableMenu.get('menu-tableaux').update(Montrello.config.tableaux_order)
 }
-// (pour la feedable menu)
+// (pour le feedable menu)
 static onChooseItem(item){
 	this.current = item // ça fait tout
+}
+
+// (pour le feedable menu)
+static saveOrder(orderedIds){
+	Montrello.setConfig({tableaux_order: orderedIds})
 }
 
 // ========================== INSTANCE =============================

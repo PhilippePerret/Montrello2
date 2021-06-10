@@ -104,7 +104,7 @@ static init(){
 	.then(ret => {
 		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true
-		console.log("Application prête", 5)
+		log("Application prête", 1)
 	})
 	.catch(erreur)
 }
@@ -255,7 +255,8 @@ static ensureCurrentTableau(){
 
 static get default_config(){
 	return {
-		current_pannel_id: null
+		current_pannel_id: null,
+		tableaux_order: []
 	}
 }
 

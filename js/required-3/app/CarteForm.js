@@ -104,7 +104,7 @@ hide(){this.obj.classList.add('hidden')}
  * Pour surclasser la méthode 'set' qui vient de TOMiniMethods
  */
 set(hdata){
-	console.log("-> CarteForm#set", hdata)
+	// console.log("-> CarteForm#set", hdata)
 	this.carte.set(hdata)
 	this.afterSet(hdata)
 }
@@ -114,7 +114,7 @@ set(hdata){
  * je préfère distinguer les deux parties/temps
  */
 afterSet(hdata){
-	console.log("-> CarteForm#afterSet", hdata)
+	// console.log("-> CarteForm#afterSet", hdata)
 	this.setValues(hdata)
 	this.carte.updateDisplay(hdata)
 }
