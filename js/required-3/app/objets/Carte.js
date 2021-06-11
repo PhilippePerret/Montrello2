@@ -102,10 +102,7 @@ get devjaugeElement(){
  * Méthodes répondant aux boutons du formulaire de carte
  */
 
- modelize(){
- 	erreur("Je ne sais pas encore modéliser une carte.")
- }
-
+ 
 copy(){
 	erreur("Je ne sais pas encore copier la carte")
 }

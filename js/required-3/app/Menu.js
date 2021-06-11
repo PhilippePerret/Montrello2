@@ -13,12 +13,3 @@ class Menu_Outils {
 class Menu_Preferences {
 	static define(){alert("Je dois définir les préférences")}
 }
-
-
-class Menu_ProcOnCard {
-	static copy(){}
-	static createModel(){}
-	static follow(){}
-	static archive(){}
-	static destroy(){}
-}

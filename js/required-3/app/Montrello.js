@@ -36,6 +36,9 @@ static get dataObjets(){
 		, 'cl': {type:'cl', classe: CheckList, parentClass:Carte, childClass:CheckListTask, modeleName:'checklist'}
 		, 'tk': {type:'tk', classe: CheckListTask, parentClass:CheckList, childClass:Masset, modeleName:'task'}
 		, 'ma': {type:'ma', classe: Masset, parentClass:null, childClass: null, modeleName: 'masset'}
+		, 'm-li': {type:'m-li', classe: MontModele, parentClass:null, childClass:null, modeleName:null}
+		, 'm-ca': {type:'m-ca', classe: MontModele, parentClass:null, childClass:null, modeleName:null}
+		, 'm-cl': {type:'m-cl', classe: MontModele, parentClass:null, childClass:null, modeleName:null}
 	})
 }
 
@@ -130,7 +133,9 @@ static async loadAllObjets(){
 	 .then(this.load_and_dispatch_objet_type.bind(this, 'cl'/* checkLists */))
 	 .then(this.load_and_dispatch_objet_type.bind(this, 'tk'/* tasks de checkList */))
 	 .then(this.load_and_dispatch_objet_type.bind(this, 'ma'/* massets */))
-	 .then(MontrelloModele.loadAllModeles.bind(MontrelloModele)) // les modèles
+	 .then(this.load_and_dispatch_objet_type.bind(this, 'm-ca'/* modèles de cartes */))
+	 .then(this.load_and_dispatch_objet_type.bind(this, 'm-li'/* modèles de listes */))
+	 .then(this.load_and_dispatch_objet_type.bind(this, 'm-cl'/* modèles de checkLists */))
 }
 
 static load_and_dispatch_objet_type(type){

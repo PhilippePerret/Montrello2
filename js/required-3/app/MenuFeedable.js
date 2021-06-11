@@ -27,27 +27,48 @@ static get(menu_id){
 }
 
 static build(element){
+	// console.log("Construction du menu de ", element)
 	const m = new FeedableMenu(element)
 	m.prepare()
 	if (!this.items)this.items = {}
 	Object.assign(this.items, {[element.id]: m})
 }
 
+
+
+
 /**
 	* +element+ 	Span principal devant tout contenir
 	*/
 constructor(element){
 	this.element 	= element
-	this.owner 		= eval(element.getAttribute('data-class'))
+	this.owner 		= element.owner || raise("Il faut absolument un propriétaire de menu")
 }
 
 // Ouvre et ferme le menu
 toggle(){
 	this.element.classList.toggle('closed')
 	this.element.classList.toggle('opened')
-	this.ensurePosition()
+	this.isOpened = this.element.classList.contains('opened')
+	if ( this.isOpened ) {
+		// À l'ouverture, on s'assure que la position soit la bonne et
+		// que la liste des éléments soit à jour. Sinon, on replace la
+		// fenêtre et on actualise la liste
+		this.ensureItems()
+		this.ensurePosition()
+	}
 }
 
+/**
+ * S'assure, à l'ouverture du menu, que le nombre d'items soit
+ * le bon
+ * 
+ */
+ensureItems(){
+	if (this.ul.children.length == this.owner.count) return
+	console.log("Le nombre d'items a changé => Il faut actualiser la liste")
+	this.update(this.owner.orderedIds)
+}
 /**
 	* S'assure, à l'ouverture que le menu soit bien placé
 	*/
@@ -60,9 +81,11 @@ ensurePosition(){
 	// Comme le content se place par rapport à l'élément, il faut mettre
 	// son left à :
 	// 	- p.x + 10 => 10 - p.x
-	if ( r.top < 10 ) o.style.top = px(10 - p.y)
-	else if ( r.left < 10) o.style.left = px(10 - p.x)
+	if ( r.top < 10 ){ 
+		o.style.top = px(10 - p.y)
+	}
 	else if ( r.bottom > Window.bottom ) o.style.bottom = px(Window.bottom - p.y)
+	if ( r.left < 10) o.style.left = px(10 - p.x)
 	else if ( r.right > Window.right) o.style.right = px(Window.bottom - p.x)
 }
 
@@ -92,10 +115,6 @@ remove(item){
 }
 
 prepare(orderedIds){
-	if ( !this.owner.items || Object.keys(this.owner.items).length == 0) {
-		// return console.log("Pas d'items, je ne peux pas prépare le menu feedable de %s", this.owner.name)
-		return
-	}
 	this.buildMenuUL()
 	this.peuple(orderedIds)
 }
@@ -114,11 +133,10 @@ update(orderedIds){
 	}
 }
 peuple(orderedIds){
-	var items ;
+	var items = [] ;
 	if ( orderedIds && orderedIds.length ) {
-		items = []
 		orderedIds.forEach(id => items.push(this.owner.get(id)))
-	} else {
+	} else if (this.owner.items) {
 		items = Object.values(this.owner.items)
 	}
 	items.forEach(item => {

@@ -79,6 +79,11 @@ static defaultItemData(titre, owner){
 static async createItemFor(owner){
   // console.log("-> createItemFor(", owner)
   const newItem = this.newItemFor(owner)
+  await this.createItem(newItem)
+  return newItem
+}
+
+static async createItem(newItem){
   // console.log("new item = ", newItem)
   // console.log("newItem:", newItem)
   newItem.build_and_observe()
@@ -86,26 +91,6 @@ static async createItemFor(owner){
   this.addItem(newItem)
   newItem.afterCreate && newItem.afterCreate.call(newItem)
   this.last_item_id = 0 + newItem.id // pour les tests
-  return newItem
-}
-
-/**
- * @async
- * 
- * Création d'un nouvel item à partir des données +hdata+
- * Utile à la gestion des modèles (pour produire les copies)
- * 
- * Note : contrairement à la méthode createItemFor, seule l'instance
- * est produit ici, mais l'objet n'est pas créé ni observé.
- * 
- * @return L'instance créé
- */
-static async duplicateItemWith(hdata){
-  hdata.id || Object.assign(hdata, {id: Montrello.getNewId(hdata.ty)})
-  const newItem = new this(hdata)
-  this.addItem(newItem)
-  await newItem.saveAsync()
-  return newItem
 }
 
 /**
@@ -365,11 +350,8 @@ build(){
 observe(){
   this.obj.owner = this
 
-  // On essaie aussi de définir le propriétaire de tous les éléments
-  // éditables. Noter que ça ne peut pas toucher les enfants puis-
-  // que eux aussi appelleront cette méthode et rectifieront donc le
-  // owner.
-  // this.obj.querySelectorAll('*.editable').forEach(o => o.owner = this)
+  this.obj.querySelectorAll('.methods-container').forEach(o => o.owner = this)
+
   UI.setEditableIn(this.obj)
 
   this.observe_bouton_destroy()
@@ -420,21 +402,14 @@ make_children_sortable_if_exist(){
 /**
  * Méthode permettant de transformer l'objet en modèle
  * 
+ * Transformer un objet en modèle consiste simplement à changer son 
+ * type en 'm-<type>', à prendre sa référence et à demander un nom
+ * pour le spécifier.
+ * On obtient donc une données :
+ *  {ti: "Le titre du modèle", ty:'m-<type>', ow:'<référence>'}
  */
-makeModele(ev){
-  console.error("Je ne sais pas encore transformer l'objet en modèle")
-  return
-    message("Je dois faire un modèle de cette liste")
-  // QUESTION Quid de si c'est déjà un modèle
-  // On doit demander le nom du modèle
-  // On doit enregistrer la checklist comme un modèle
-  // Note : les modèles s'enregistrent comme les autres objets, avec un type ty, mais avec
-  // le préfixe 'm-'
-  // Donc 'm-cl' pour un modèle checklist
-  const modele = MontrelloModele.createFrom(this)
-  message("Modèle créé avec succès. Tu pourras l'utiliser avec la prochaine Checklist.")
-  message("Cette liste a été associée à ce modèle")
-
+modelize(ev){
+  MontModele.createItemFor(this)
 }
 
 

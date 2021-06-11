@@ -4,6 +4,8 @@
  * -------------
  * Gestion des sorties en console, notamment pour les messages en couleur
  * 
+ * Gère aussi le champ de saisi #console s'il existe
+ * 
  */
 function logRed(msg){Console.output(msg,{color:'red'})}
 function logRouge(msg){return logRed(msg)}
@@ -56,5 +58,28 @@ static output(msg, style){
 
 static get isModeTest(){
   return this._is_mode_test || (this._is_mode_test = 'undefined' != typeof(MiniTest))
+}
+
+static init(){
+  this.console = document.querySelector('#console')
+  this.console.addEventListener('keypress', this.onKeypress.bind(this))
+}
+
+static onKeypress(ev){
+  if ( ev.key == 'Enter' ) {
+    this.evaluate()
+    return stopEvent(ev)
+  }
+}
+
+static evaluate(){
+  const code = this.console.value
+  try {
+    console.log("Évaluation de '%s'", code)
+    var res = eval(code)
+    console.log("Résultat de l'évaluation :", res)
+  } catch (err) {
+    console.error(err)
+  }
 }
 }

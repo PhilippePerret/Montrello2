@@ -52,6 +52,7 @@ editMembers(){
  * 
  */
 addChecklist(bouton){
+	console.log("-> CarteForm#addChecklist (bouton =)", bouton)
 	const newChecklist = CheckList.createItemFor(this)
 	this.carte.addChildItem(newChecklist)
 }
@@ -176,6 +177,8 @@ observe(){
 	// Notamment tous les boutons de la colonne droite
 	this.obj.querySelector('liste_actions.for-objets').owner = this
 	this.obj.querySelector('liste_actions.for-carte').owner = this.carte
+	this.obj.querySelector('carte_form menu.modeles-checklists').owner = this.instanceModelesChecklist
+
 	UI.setEditableIn(this.obj)
 
 	// Bouton pour fermer
@@ -189,6 +192,15 @@ observe(){
 	const divDescription = DGet('div#carte-description-div div.description', this.obj)
 	divDescription.owner = this
 
+}
+
+/**
+ * Retourne une instance ModelesChecklist qui permet d'ajouter une
+ * checklist d'après un modèle à la carte de ce formulaire de
+ * carte.
+ */
+get instanceModelesChecklist(){
+	return this.iCLModeles || (this.iCLModeles = new ModelesChecklist({carteform: this}))
 }
 
 /**

@@ -37,7 +37,7 @@ carte_form
 		div.colonne-boutons
 			grid-row: 1
 			grid-column: 2
-			text-align: center
+			text-align: left // important pour ajouter menu modèle
 			// border: 1px dashed blue
 			title
 				display: block
@@ -47,8 +47,10 @@ carte_form
 				display: block
 				content
 					display: block
+					width: 160px
 					button
 						clear: both
 						margin-top: 10px
+						// Voir aussi _Menu.sass
 					button + button
 						margin-left: 0!important

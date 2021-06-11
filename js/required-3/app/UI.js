@@ -3,8 +3,13 @@
 Object.assign(UI,{
 	init(){
 		Menu.init()
+		// On place quelques owners sur les éléments qui en ont besoin
+		document.querySelector('header menu#menu-tableaux').owner = Tableau
+		document.querySelector('menu.modeles-checklists').owner = ModelesChecklist
 		// Tous les éléments textuels éditables doivent l'être
 		this.setEditableIn(document)
+		// Pour la console
+		Console.init()
 	},
 
 	/**
@@ -87,7 +92,7 @@ Object.assign(UI,{
 					}
 				})
 			} else {
-				// C'est normal si c'est un modèle (comme le modèle de carte)
+				// C'est normal si c'est un clone (comme le clone de carte)
 				var p = cont
 				var isModele = false
 				while (p = p.parentNode){

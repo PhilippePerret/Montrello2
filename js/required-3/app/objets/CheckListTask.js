@@ -38,21 +38,23 @@ constructor(data){
  * 
  * Produit une copie de la tâche (en l'enregistrant, mais sans
  * la construire -- c'est le propriétaire qui le fera)
+ * Note : on ne peut pas la construire car le propriétaire n'existe
+ * peut-être pas encore.
  * 
  * Note : cette méthode sert à la gestion des modèles
  * 
  * @return L'instance de la tâche produite
  * 
  */
-async makeCopy(){
-	var d = {}
-	Object.assign(d, this._data)
-	delete d.id
-	Object.assign(d, {
-			on: 		false
-		, ow: 		undefined
+async duplicateWith(hdata){
+	var newData = Object.assign({}, this.data)
+	Object.assign(newData, hdata)
+	Object.assign(newData, {
+			id: Montrello.getNewId('tk')
+		, on: false
 	})
-	const newTask = await this.constructor.createNewItemWith(d)
+	const newTask = new CheckListTask(newData)
+	await newTask.save()
 	return newTask
 }
 
@@ -78,7 +80,6 @@ build(){
 	this.label.setAttribute('for', cb_id)
 	this.label.innerHTML = this.data.ti
 	this.obj.setAttribute('data-task-id', this.id)
-	console.log("Je dois mettre l'objet de ... dans ...", this.obj, this.parent.childrenContainer)
 	this.parent.childrenContainer.appendChild(this.obj)
 
 	return true

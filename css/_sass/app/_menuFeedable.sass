@@ -14,6 +14,7 @@ menu.feedable
 	// Content (hérite de la propriété dans _Menu.sass)
 	content
 		background-color: white
+		position: absolute
 		top: 20px
 		left: -200px
 		width: 200px
@@ -22,8 +23,11 @@ menu.feedable
 			margin-bottom: 1em
 			li
 				cursor: pointer
-				margin-top: 8px
+				padding: 4px 12px
 				div.boutons
 					float: right
 					> span
 						padding: 0 4px
+				&:hover
+					background-color: #008acf
+					color: #a6ffa2
