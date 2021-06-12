@@ -510,6 +510,10 @@ removeChildItem(child){
  * 
  */
 addInParent(){
+  console.log("Dans addInParent, le parent est : ", this.parent)
+  stack()
+  // Noter que si, pour les checklists, le parent était la carte, il serait
+  // inutile d'addChildItem l'item puisqu'on l'appelle déjà
   this.parent.childrenContainer.appendChild(this.obj)
   this.parent.addChildItem(this)
 }
@@ -622,16 +626,23 @@ get childClass(){return this.constructor.childClass}
 
 /**
  * @return true si l'instance contient l'enfant +child+
+ *          ou true si child n'est pas donné et que des enfants 
+ *          existent (pour un test comme if (objet.hasChild()) then…)
  * 
  * +child+ Instance de l'enfant qui doit appartenir au sujet
  */
 hasChild(child){
   if ( null == this.children ) return false
-  var enf
-  for(enf of this.children ) {
-    if ( enf.id == child.id ) return true
+
+  if ( child ) {
+    var enf
+    for(enf of this.children ) {
+      if ( enf.id == child.id ) return true
+    }
+    return false
+  } else {
+    return this.children.length > 0
   }
-  return false
 }
 
 /**

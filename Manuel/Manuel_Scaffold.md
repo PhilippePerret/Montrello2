@@ -53,8 +53,36 @@ class MonObjet {
 
 Un des grands avantages de cette méthod, outre le fait que ça simplifie le code, c’est qu’elle permet de voir tout de suite la méthode appelée par le bouton.
 
+---
 
+<a id="backtrace"></a>
+
+### Backtrace
+
+Grâce à la méthode `stack()`, qu'on peut placer telle quelle où on veut, on peut avoir un backtrace de l'endroit où est placé cet appel. La méthode sort en console le backtrace bien formaté.
+
+~~~javascript
+...
+
+stack()
+
+...
+~~~
+
+
+
+---
+
+<a id="gestion-erreurs"></a>
 
 ## Gestion des dates
 
 Il existe dans le module `system/Date.js` des classes et des méthodes très pratiques pour gérer les dates facilement.
+
+---
+
+<a id="gestion-erreurs"></a>
+
+## Gestion des erreurs
+
+Voir aussi  le [backtrace](#backtrace).

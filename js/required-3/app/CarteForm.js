@@ -52,7 +52,7 @@ editMembers(){
  * 
  */
 addChecklist(bouton){
-	console.log("-> CarteForm#addChecklist (bouton =)", bouton)
+	// console.log("-> CarteForm#addChecklist (bouton =)", bouton)
 	const newChecklist = CheckList.createItemFor(this)
 	this.carte.addChildItem(newChecklist)
 }

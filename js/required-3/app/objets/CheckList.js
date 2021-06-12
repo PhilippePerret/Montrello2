@@ -17,7 +17,7 @@ constructor(data){
  * pas déjà des enfants (créée à partir d'un modèle)
  */
 afterCreate(){
-	(this.children && this.children.length) || this.createTask()
+	this.hasChild() || this.createTask()
 }
 
 // *** Données et propriétés ***
