@@ -28,6 +28,7 @@ class DevJauge {
 	* 	actualiser.
 	*/
 static setIn(owner){
+	// console.log("-> DevJauge#setIn(owner=)", owner)
 	// +owner+ est toujours une checklist pour le moment
 	// On obtient sa carte par owner.parent
 	let devjauge, spandone, devjauge2, spandone2 ;
@@ -45,21 +46,23 @@ static setIn(owner){
 	 */
 	spandone 	= devjauge.querySelector('span.done') || this.createSpanDoneFor(devjauge)
 	
+	let tasks ;
 	// La seconde jauge est la jauge de la carte
 	if ( owner instanceof CheckList ) {
 		devjauge2 = owner.parent.devjaugeElement
 		spandone2 = devjauge2.querySelector('span.done') 	|| this.createSpanDoneFor(devjauge2)
-	}
-	
-	// Récolte des tâches
-	const tasks = CheckListTask.getIn(owner.obj)
+		tasks = owner.children
+	} else {
+		// Quand le propriétaire est une carte
+		tasks = owner.tasks
+	}	
 	// console.log("tasks = ", tasks)
 
 	const taskCount = tasks.length
 	var taskDone = 0
 	taskCount && tasks.forEach(task => task.checked && (++ taskDone))
-	this.setJauge(devjauge, 	spandone, 	taskCount, taskDone)
-	devjauge2 && this.setJauge(devjauge2, 	spandone2, 	taskCount, taskDone)
+	this.setJauge(devjauge, spandone, taskCount, taskDone)
+	devjauge2 && this.setJauge(devjauge2, spandone2, taskCount, taskDone)
 	// console.log("Ratio = ", ratio)
 }
 

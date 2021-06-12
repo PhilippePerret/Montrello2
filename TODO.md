@@ -1,14 +1,12 @@
 # Todo liste
 
-* [BUG] Au chargement, régler la jauge pour toutes les cartes (qui ont des enfants)
-* [BUG] Je ne peux plus dupliquer une checklist
 * [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
 * [BUG] Il faut supprimer la case à cocher qui apparait maintenant sur les tags (édition)
-
 
 * Dans la liste des modèles, indiquer la référence (trouvable) au modèle d'origine, pour pouvoir le modifier. Le mettre dans le title, comme ça il pourra être long
 
 * "indicateur" (lumières rondes) récapilant l'état général du tableau. SI premier est tableau de bord, on les affiche toutes
+  On pourrait mettre sous cet indicateur une minijauge (genre 32px max) qui indiquerait le niveau de développement.
 
 * Contrôleurs
   - contrôleur de cartes courantes (est-ce que ce n'est pas une règle pluôt ?)

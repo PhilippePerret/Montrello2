@@ -104,6 +104,7 @@ static init(){
 	.then(this.loadAllObjets.bind(this))
 	.then(this.buildAllObjets.bind(this))
 	.then(this.sortAllChildren.bind(this))
+	.then(this.setJaugesInCarte.bind(this))
 	.then(ret => {
 		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true
@@ -189,8 +190,23 @@ static buildAllObjets(){
  * QUESTION : faut-il renvoyer une promesse ?
  */
 static sortAllChildren(){
+	console.log("-> sortAllChildren")
 	Object.values(this.dataObjets).forEach(dclass => {
 		dclass.classe.forEachItem(item => item.sortChildren.call(item))
+	})
+	console.log("<- sortAllChildren")
+}
+
+
+/**
+ * Les jauges des cartes ne peuvent être réglées que lorsque toutes
+ * les tâches sont chargées et dispatchées dans les chekclists
+ * 
+ */
+static setJaugesInCarte(){
+	Carte.forEachItem(carte => {
+		console.log("Dessiner la jauge dans", carte, carte.children)
+		carte.draw_jauge_if_necessary()
 	})
 }
 

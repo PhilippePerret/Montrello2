@@ -27,17 +27,28 @@ afterDestroy(){
 
 build(){
 	if ( false === super.build() ) return false
-	// Les tags
-	PickerTags.drawTagsIn(this)
-	// La Jauge d'avancée
-	DevJauge.setIn(this)
-	// Les dates
+	
+	this.draw_tags_if_necessary()
+	
+	// Non, ça ne sert à rien, puisque les enfants des enfants (i.e.
+	// les tâches des checklists ne sont pas encore définis)
+	// On le laisse au cas où la méthode est utilisée pour recons-
+	// truire la carte.
+	this.draw_jauge_if_necessary()
+	
 	if ( this.dates ) {
 		var compDate = new ComplexeDate(this.dates)
 		this.obj.querySelector('infosdate').innerHTML = compDate.asShortString
 	}
 	// Les Massets
 	this.obj.querySelector('pictosmassets').innerHTML = this.massets.getPictos()
+}
+
+draw_tags_if_necessary(){
+	PickerTags.drawTagsIn(this)
+}
+draw_jauge_if_necessary(){
+	DevJauge.setIn(this)
 }
 
 /**
@@ -81,12 +92,14 @@ edit(){
 	*/
 updateDisplay(hdata){
 	hdata.ti 		&& this.setTitre(hdata.ti)
-	hdata.tags 	&&	PickerTags.drawTagsIn(this)
+	hdata.tags 	&&	this.draw_tags_if_necessary()
 }
 
 /**
- * Méthode appelée après avoir créé une checklist à la carte
- * Il faut s'assurer que la jauge existe dans la carte.
+ * Méthode appelée après :
+ *  - avoir créé une checklist à la carte
+ *  - avoir chargé la cheklist et l'avoir ajoutée à la carte
+ * 
  */
 afterAddChild(){
 	DevJauge.setIn(this)
@@ -95,6 +108,19 @@ afterAddChild(){
 
 get devjaugeElement(){
 	return this._devjaug || (this._devjaug = DGet('devjauge', this.obj))
+}
+
+/**
+ * @return La liste de toutes les tâches de la carte, c'est-à-dire la
+ * liste de toutes les tâches de toutes ses checklists.
+ * 
+ */
+get tasks(){
+	var tasks = []
+	this.forEachChild(child => {
+		tasks.push(...(child.children||[]))
+	})
+	return tasks
 }
 
 /**
