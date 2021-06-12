@@ -129,21 +129,10 @@ get tasks(){
  */
 
  
-copy(){
-	erreur("Je ne sais pas encore copier la carte")
-}
-
 follow(){
 	erreur("Je ne sais pas encore suivre une carte")
 }
 
-archive(){
-	erreur("Je ne sais pas encore archiver une carte")
-}
-
-lock(){
-	erreur("Je ne sais pas encore verrouiller une carte")
-}
 
 /**
  * /Fin des méthodes répondant aux boutons du formulaire de carte

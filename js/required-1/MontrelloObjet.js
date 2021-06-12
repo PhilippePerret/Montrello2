@@ -415,13 +415,15 @@ make_children_sortable_if_exist(){
  * On obtient donc une données :
  *  {ti: "Le titre du modèle", ty:'m-<type>', ow:'<référence>'}
  */
-modelize(ev){
+modelize(button, ev){
   MontModele.createItemFor(this)
+  return stopEvent(ev)
 }
 
-lock(){
+lock(button, ev){
   this.set({lck: this.isLocked?0:1})
   this.setLock()
+  return stopEvent(ev)
 }
 /**
  * Réglage du verrou de l'objet
@@ -433,12 +435,14 @@ setLock(){
   btnLock && (btnLock.innerHTML = `${this.isLocked ? '🔓 Dév':'🔒 V'}errouiller`)
 }
 
-archive(){
+archive(button, ev){
   console.warn("Je dois archiver", this)
+  return stopEvent(ev)
 }
 
-copy(){
+copy(button, ev){
   console.warn("Je dois copier", this)
+  return stopEvent(ev)
 }
 
 /**

@@ -1,7 +1,19 @@
 <carte id="modele-carte">
 	<header>
-		<span class="btn-self-remove close-btn"></span>
+
+		<action_buttons class="methods-container">
+			<opener>...</opener>
+			<buttons>
+				<button data-method="lock">🔒 Verrouiller</button>
+				<button data-method="archive">🗄 Archiver</button>
+				<button data-method="destroy">🗑 Détruire</button>
+				<button data-method="modelize">📐 Modéliser</button>
+				<button data-method="copy">📝 Copier</button>
+			</buttons>
+		</action_buttons>
+
 		<title class="editable" data-prop="ti">Titre de la carte</title>
+
 	</header>
 	<content>
 		<tags class="normal"><!-- les tags seront placés ici --></tags>
