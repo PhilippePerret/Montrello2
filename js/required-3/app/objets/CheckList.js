@@ -12,6 +12,16 @@ constructor(data){
 	super(data)
 }
 
+build(){
+  super.build()
+  if ( this.isModele ) {
+    const cloche = this.obj.querySelector('buttons .cloche-modele')
+    cloche.classList.remove('hidden')
+    cloche.addEventListener('click', function(){message("Cette liste est un modèle.")})
+    this.obj.querySelector('buttons button.btn-modelise').style.opacity = '0.2'
+  } 
+}
+
 /**
  * Surclasse la méthode abstraite car pour les checklists, le parent
  * est la carte mais il faut l'afficher dans le formulaire d'édition

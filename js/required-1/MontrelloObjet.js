@@ -416,8 +416,12 @@ make_children_sortable_if_exist(){
  *  {ti: "Le titre du modèle", ty:'m-<type>', ow:'<référence>'}
  */
 modelize(button, ev){
-  MontModele.createItemFor(this)
-  return stopEvent(ev)
+  if ( this.isModele ) {
+    return erreur("Cet élément est déjà un modèle…")
+  } else {
+    MontModele.createItemFor(this)
+    return stopEvent(ev)
+  }
 }
 
 lock(button, ev){

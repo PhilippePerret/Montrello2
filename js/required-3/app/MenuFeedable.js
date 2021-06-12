@@ -229,14 +229,12 @@ build(){
 	// Si une méthode existe pour construire le span contenant le titre
 	// on l'utilise, sinon, on en fait un tout simple
 	let text ;
-	console.log("this.owner", this.owner)
 	if ( this.owner.spanForFeedableMenu ) {
 		text = this.owner.spanForFeedableMenu(this.menu)
 	} else {
 		text = DCreate('SPAN', {text: this.owner.titre})
 		if ( this.owner.data.ow ) {
 			var referent = Montrello.get(this.owner.data.ow)
-			console.log("referent (this.referent instanceof CheckList)", referent, referent instanceof CheckList)
 			var referent_ref = `${referent.titre}`
 			if ( referent instanceof CheckList ) {
 				referent_ref += ` de la carte “${referent.parent.titre}” de la liste “${referent.parent.parent.titre}”`

@@ -160,6 +160,10 @@ static dispatch_data(type, ret){
 		data.forEach(hdata => {
 			if (my.lastIds[type] < hdata.id) my.lastIds[type] = Number(hdata.id)
 			const item = new Classe(hdata)
+			if ( item instanceof MontModele ) {
+				// Si l'item est un modèle, on le précise sur le référent
+				item.parent.isModele = true
+			}
 			Object.assign(Classe.items, {[hdata.id]: item})
 		})
 		ok()
