@@ -72,6 +72,10 @@ Object.assign(MontModele.prototype, UniversalHelpersMethods)
 Object.defineProperties(MontModele.prototype, TOMiniProperties)
 
 
+
+
+
+
 /**
  * Pour gérer les modèles de checklist au niveau du formulaire de carte
  * 
@@ -93,10 +97,10 @@ get items(){
   return itemsCL
 }
 onChooseItem(montModele){
-  // console.log("[Instance] Le modèle de checklist suivant a été choisi pour ...", this.carteform, montModele)
+  console.log("[Instance] Le modèle de checklist suivant a été choisi pour ...", montModele, this.carteform)
   this.duplicateFor(montModele, this.carteform.carte)
   .then(newInstance => {
-    // console.log("newInstance reçue : ", newInstance)
+    console.log("newInstance reçue (ajoutée à la carte ...) : ", newInstance, this.carteform.carte)
     this.carteform.carte.addChildItem(newInstance)
   })
 }
@@ -139,11 +143,13 @@ async duplicateFor(montmodele, carte){
   data.cho = []
   let promises = [] // pour mettre les promesses
   var child, newChild;
+  var newChildren = [] // pour simplifier l'ajout plus bas
   oldCho.forEach(async child_id => {
     return new Promise(async (ok,ko) => {
       child = dataClasse.childClass.get(child_id)
       // console.log("Enfant à dupliquer", child);
       newChild = await child.duplicateWith({ow:`${data.ty}-${data.id}`})
+      newChildren.push(newChild)
       // console.log("Enfant duplicata:", newChild);
       data.cho.push(newChild.id)
       ok()
@@ -156,9 +162,13 @@ async duplicateFor(montmodele, carte){
   // Ici data.cho est bien renseigné
   // console.log("Data ajustée", data)
 
+  // On instancie la checklist
   const newInstance = new CheckList(data)
+
   // On crée vraiment l'instance (en l'enregistrant et en la construisant)
   await newInstance.constructor.createItem(newInstance)
+  // On lui ajoute ses enfants
+  newChildren.forEach(child => child.build_and_observe())
 
   return newInstance
 }

@@ -6,6 +6,8 @@
 * [BUG] Il faut supprimer la case à cocher qui apparait maintenant sur les tags (édition)
 
 
+* Dans la liste des modèles, indiquer la référence (trouvable) au modèle d'origine, pour pouvoir le modifier. Le mettre dans le title, comme ça il pourra être long
+
 * "indicateur" (lumières rondes) récapilant l'état général du tableau. SI premier est tableau de bord, on les affiche toutes
 
 * Contrôleurs

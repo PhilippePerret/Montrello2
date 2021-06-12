@@ -13,14 +13,6 @@ constructor(data){
 }
 
 /**
- * Appelée après la création de la liste, mais seulement si elle n'a
- * pas déjà des enfants (créée à partir d'un modèle)
- */
-afterCreate(){
-	this.hasChild() || this.createTask()
-}
-
-/**
  * Surclasse la méthode abstraite car pour les checklists, le parent
  * est la carte mais il faut l'afficher dans le formulaire d'édition
  * de la carte
@@ -34,9 +26,9 @@ addInParent(){
 // *** Données et propriétés ***
 
 /**
-	* Pour ajouter une tâche à la liste
-	*
-	*/
+ * Pour ajouter une tâche à la liste
+ *
+ */
 createTask(){
 	CheckListTask.createItemFor(this)
 	this.updateDevJauge()
