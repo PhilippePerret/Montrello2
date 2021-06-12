@@ -1,0 +1,35 @@
+action_buttons
+  float: right
+  display: inline-block
+  position: relative
+  opener
+    padding: 0 4pt 10pt
+    font-size: 20pt
+    position: absolute
+    left: -20px
+    top: -10px
+    &:hover
+      border: 1px dashed
+  buttons
+    position: absolute
+    z-index: 2000
+    background-color: #DDD
+    // padding: 4px 12px
+    display: none
+    width: 160px
+    left: -150px
+    box-shadow: 8px 8px 15px -4px #DDD
+    button
+      all: unset
+      display: block
+      width: calc(100% - 16px)
+      margin-left: 0!important
+      padding: 2px 8px
+      opacity: 0.6
+      &:hover
+        background-color: white
+        color: #333
+        opacity: 1
+  &:hover
+    buttons
+      display: inline-block

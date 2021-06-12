@@ -368,7 +368,9 @@ observe(){
 }
 
 observe_bouton_destroy(){
-  this.btnKill.addEventListener('click', this.destroy.bind(this))  
+  if ( this.btnKill ) {
+    this.btnKill.addEventListener('click', this.destroy.bind(this))  
+  }
 }
 observe_bouton_ajoute_enfant_si_existe(){
   if ( this.btnAddChild ) {
@@ -415,6 +417,17 @@ modelize(ev){
   MontModele.createItemFor(this)
 }
 
+lock(){
+  console.warn("Je dois verrouiller", this)
+}
+
+archive(){
+  console.warn("Je dois archiver", this)
+}
+
+copy(){
+  console.warn("Je dois copier", this)
+}
 
 /**
  * ============================================================

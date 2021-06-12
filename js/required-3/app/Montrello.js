@@ -190,11 +190,9 @@ static buildAllObjets(){
  * QUESTION : faut-il renvoyer une promesse ?
  */
 static sortAllChildren(){
-	console.log("-> sortAllChildren")
 	Object.values(this.dataObjets).forEach(dclass => {
 		dclass.classe.forEachItem(item => item.sortChildren.call(item))
 	})
-	console.log("<- sortAllChildren")
 }
 
 
@@ -204,10 +202,7 @@ static sortAllChildren(){
  * 
  */
 static setJaugesInCarte(){
-	Carte.forEachItem(carte => {
-		console.log("Dessiner la jauge dans", carte, carte.children)
-		carte.draw_jauge_if_necessary()
-	})
+	Carte.forEachItem(carte => { carte.draw_jauge_if_necessary() })
 }
 
 static loadConfig(){
