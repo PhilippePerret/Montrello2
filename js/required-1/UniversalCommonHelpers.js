@@ -12,7 +12,7 @@ const UniversalHelpersMethods = {
     * Pour régler la jauge de développement que peut posséder l'objet
     */
   setJaugeDev(){
-    console.log("Je dois régler la jauge dans ", this)
+    DevJauge.setIn(this)
   },
 
   /**

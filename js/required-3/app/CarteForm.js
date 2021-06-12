@@ -144,6 +144,8 @@ setValues(hdata){
 	hdata.tags 	&& this.drawTags(hdata.tags)
 	hdata.dates && this.writeDates(hdata.dates)
 
+	this.setJaugeDev()
+
 }
 
 writeTitre(titre){ this.titreField.innerHTML = titre }
@@ -278,6 +280,8 @@ remove(){
 	if ( this.isCurrent ) delete this.constructor.current
 
 }
+
+get tasks(){return this.carte.tasks}
 
 /**
  * @return TRUE si c'est la carte courante

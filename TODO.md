@@ -1,6 +1,5 @@
 # Todo liste
 
-* [BUG] La jauge du formulaire de carte doit se régler à l'ouverture/construction
 * [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
 
 * Dans la liste des modèles, indiquer la référence (trouvable) au modèle d'origine, pour pouvoir le modifier. Le mettre dans le title, comme ça il pourra être long
