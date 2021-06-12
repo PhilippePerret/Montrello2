@@ -174,6 +174,9 @@ constructor(data){
    */
   this.domId    = `${this.constructor.dimType}-${data.id}`
   this.children = []
+  // Pour la conservation des identifiants des enfants, pour éviter
+  // les doublons.
+  this.childrenKeyList = {}
 }
 
 /**
@@ -446,7 +449,7 @@ get massets(){
 
 
 /**
- * Méthode principale appelée quand on doit ajouter un enfant à 
+ * Méthode principale appelée quand on doit créer un enfant pour
  * l'objet.
  * 
  * Appelée par le bouton 'Ajouter'
@@ -462,7 +465,17 @@ async addChild(ev){
   this.addChildItem(child)
 }
 
-async addChildItem(child){
+
+/**
+ * Méthode ajoutant l'enfant à la liste de son parent, que ce soit
+ * à sa création ou à son chargement et sa construction
+ * 
+ * La méthode tient à jour une liste des clés pour ne pas ajouter
+ * deux fois le même enfant
+ */
+addChildItem(child){
+  if ( this.childrenKeyList[child.id] ) return // l'enfant est déjà consigné
+  Object.assign(this.childrenKeyList, {[child.id]: true})
   this.children.push(child)
   this.afterAddChild && this.afterAddChild()
 }
@@ -507,22 +520,22 @@ removeChildItem(child){
 /**
  * Ajoute l'objet dans le container enfants de son parent, dans le 
  * DOM
+ *  - Ajoute dans le DOM
+ *  - Ajoute à la liste des enfants 
+ * 
+ * Ce qu'il faut comprendre ici, c'est que l'enfant n'est relié à son
+ * parent qu'au chargement ou à la création de l'enfant.
  * 
  */
 addInParent(){
-  console.log("Dans addInParent, le parent est : ", this.parent)
-  stack()
-  // Noter que si, pour les checklists, le parent était la carte, il serait
-  // inutile d'addChildItem l'item puisqu'on l'appelle déjà
   this.parent.childrenContainer.appendChild(this.obj)
   this.parent.addChildItem(this)
 }
 
+
 forEachChild(fonction){
   this.children && this.children.forEach(fonction)
 }
-
-
 
 /**
   * Appelée quand on termine de trier la liste des enfants de l'objet
@@ -591,8 +604,6 @@ getChildrenListIds(){
   })
   return idlist
 }
-
-
 
 
 get parent(){

@@ -203,6 +203,34 @@ get instanceModelesChecklist(){
 	return this.iCLModeles || (this.iCLModeles = new ModelesChecklist({carteform: this}))
 }
 
+
+/**
+	* Construction des objets de la carte
+	*
+	* Les « objets », ici, sont les Massets
+	* 
+	* Rappel : maintenant, les checklists (children de la carte) sont
+	* simplement déplacés.
+	* 
+	*/
+buildObjets(){
+	
+	const my = this
+
+	this.carte.forEachChild(chklist => {
+		this.checklistsContainer.appendChild(chklist.obj)
+	})
+
+	this.carte.forEachMasset(masset => {
+		console.log("Je dois construire le Masset : ", masset)
+		masset.build_and_observe(my)
+		masset.obj.querySelectorAll('button').forEach(b => b.owner = my)
+	})
+
+	// La ligne ci-dessous servait pour l'ancienne façon de faire
+  // const conteneur = this.obj.querySelector(`content[data-type-objet="${otype}"]`)
+}
+
 /**
 	* Destruction de l'objet +objet+ qui peut être une checklist,
 	* un Masset, etc.
@@ -240,29 +268,6 @@ removeObjets(objet){
 		console.error(ret.error)
 		return erreur("Une erreur s'est produite. Consultez l'inspecteur.")
 	})
-}
-
-/**
-	* Construction des objets de la carte
-	*
-	* Les « objets », ici, sont les Massets
-	* 
-	* Rappel : maintenant, les checklists (children de la carte) sont
-	* simplement déplacés.
-	* 
-	*/
-buildObjets(){
-	
-	const my = this
-
-	this.carte.forEachMasset(masset => {
-		console.log("Je dois construire le Masset : ", masset)
-		masset.build_and_observe(my)
-		masset.obj.querySelectorAll('button').forEach(b => b.owner = my)
-	})
-
-	// La ligne ci-dessous servait pour l'ancienne façon de faire
-  // const conteneur = this.obj.querySelector(`content[data-type-objet="${otype}"]`)
 }
 
 /**

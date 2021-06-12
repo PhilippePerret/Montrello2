@@ -1,5 +1,10 @@
 # Todo liste
 
+* [BUG] Au chargement, régler la jauge pour toutes les cartes (qui ont des enfants)
+* [BUG] Je ne peux plus dupliquer une checklist
+* [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
+* [BUG] Il faut supprimer la case à cocher qui apparait maintenant sur les tags (édition)
+
 
 * "indicateur" (lumières rondes) récapilant l'état général du tableau. SI premier est tableau de bord, on les affiche toutes
 
@@ -9,10 +14,6 @@
   - contrôleur de boutons de carte (ce sont les boutons qui permettent de modéliser, d'archiver, de détruire etc. les cartes, dans le formulaire d'édition de la carte). Il faut pouvoir les "détacher" pour les utiliser sans ouvrir la carte, dans un menu qui apparaitra en cliquant sur un bouton "..." en haut à droite de la carte.
   - contrôleur de boutons de liste (idem que pour carte), le bouton en haut à droite qui gèrera les listes. Il s'ouvrira avec un bouton "...". Comme pour la carte, il remplacera le bouton "x" de destruction (qui pour le moment a trop d'importance.
     => les trois contrôleurs de tableau, de carte et de liste doivent être une même classe de contrôleur qui fonctionneront de la même manière, à partir d'un bouton "..." et d'un propriétaire.
-
-* [BUG] Au chargement, régler la jauge pour toutes les cartes (qui ont des enfants)
-* [BUG] Je ne peux plus dupliquer une checklist
-* [BUG] Encore un bug à la première création. Le formulaire pour demander le nom de la première tâche s'écrit n'importe où (l'ul de la liste doit se créer dans la carte, il faudrait tout de suite le déplacer dans le formulaire — ou le déplacer dans le formulaire directement puisque c'est uniquement là qu'on le lit et l'édite)
 
 * Gérer les modèles
   * La duplication des checklists se passe presque bien sauf que :
@@ -24,17 +25,14 @@
   * Remplacer "modèles" par "template" soit pour parler de ces modèles, soit pour parler
     des modèles de carte, etc. dans la balise <modeles>
 
-* Checklist
-
 * Gérer les tâches/carte en cours, les mettre dans une partie dédiée dans le tableau de bord
-  -> C'est une règle automatique placée sur l'étique rouge
+  -> C'est une règle automatique placée sur l'étiquette rouge
   * Étudier la possibilité de faire DES RÈGLES (mais ça me semble un peu compliqué, si je me réfère à Trello…)
 
 * OBJETS
   * possibilité de verrouiller un objet, c'est-à-dire impossibilité de le modifier ou de le supprimer
+    => Le mettre dans la liste des ses outils (contrôleur d'outils d'objet)
 
-* Étiquettes (tags)
-  - Il faut supprimer la case à cocher qui apparait maintenant
   
 * CARTES
   * Possibilité de cocher la date pour indiquer que la tâche est finie

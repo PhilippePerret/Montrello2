@@ -20,6 +20,17 @@ afterCreate(){
 	this.hasChild() || this.createTask()
 }
 
+/**
+ * Surclasse la méthode abstraite car pour les checklists, le parent
+ * est la carte mais il faut l'afficher dans le formulaire d'édition
+ * de la carte
+ */
+addInParent(){
+  this.parent.form && this.parent.form.checklistsContainer.appendChild(this.obj)
+  this.parent.addChildItem(this)
+}
+
+
 // *** Données et propriétés ***
 
 /**
