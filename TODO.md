@@ -1,5 +1,6 @@
 # Todo liste
 
+* [BUG] La jauge du formulaire de carte doit se régler à l'ouverture/construction
 * [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
 
 * Dans la liste des modèles, indiquer la référence (trouvable) au modèle d'origine, pour pouvoir le modifier. Le mettre dans le title, comme ça il pourra être long
@@ -8,7 +9,7 @@
   On pourrait mettre sous cet indicateur une minijauge (genre 32px max) qui indiquerait le niveau de développement.
 
 * Contrôleurs
-  - contrôleur de cartes courantes (est-ce que ce n'est pas une règle pluôt ?)
+  - contrôleur de cartes courantes (est-ce que ce n'est pas une règle plutôt ?)
   - contrôleur d'indicateur (lumières d'état StateLight)
   - contrôleur de boutons de carte (ce sont les boutons qui permettent de modéliser, d'archiver, de détruire etc. les cartes, dans le formulaire d'édition de la carte). Il faut pouvoir les "détacher" pour les utiliser sans ouvrir la carte, dans un menu qui apparaitra en cliquant sur un bouton "..." en haut à droite de la carte.
   - contrôleur de boutons de liste (idem que pour carte), le bouton en haut à droite qui gèrera les listes. Il s'ouvrira avec un bouton "...". Comme pour la carte, il remplacera le bouton "x" de destruction (qui pour le moment a trop d'importance.
@@ -55,3 +56,8 @@
   * on classe une liste d'enfants
   * on ajoute un enfant
   * => il ne doit pas encore être dans la liste classée, mais il doit s'afficher au bon endroit
+
+* Quand une liste est un modèle :
+  - isModele de la checklist doit être true
+  - son formulaire doit comporter une cloche à côté de son bouton 'modèle'
+  - ce bouton doit être désactivé

@@ -67,7 +67,6 @@ updateDevJauge(){
 	DevJauge.setIn(this)
 }
 
-
 }// class CheckList
 
 Object.assign(CheckList.prototype, TOMiniMethods)

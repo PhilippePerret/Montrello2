@@ -11,6 +11,12 @@
 
 				Pour enregistrer le nouvel ordre des éléments
 
+		Par défaut, le span construit se fait juste avec le titre de 
+		l'élément de référence. Si on a besoin d'un span personnalisé
+		on peut utiliser la méthode d'instance :
+
+		spanForFeedableMenu(<menu feedable>)
+
 */
 class FeedableMenu {
 
@@ -33,9 +39,6 @@ static build(element){
 	if (!this.items)this.items = {}
 	Object.assign(this.items, {[element.id]: m})
 }
-
-
-
 
 /**
 	* +element+ 	Span principal devant tout contenir
@@ -69,6 +72,7 @@ ensureItems(){
 	console.log("Le nombre d'items a changé => Il faut actualiser la liste")
 	this.update(this.owner.orderedIds)
 }
+
 /**
 	* S'assure, à l'ouverture que le menu soit bien placé
 	*/
@@ -118,12 +122,14 @@ prepare(orderedIds){
 	this.buildMenuUL()
 	this.peuple(orderedIds)
 }
+
 buildMenuUL(){
 	this.ul = DCreate('UL', {class:'feeded-menu', style:'z-index:2000;'})
 	this.element.classList.add('closed')
 	this.content.insertBefore(this.ul, this.btnNouveau)
 	this.element.addEventListener('click', this.toggle.bind(this))
 }
+
 update(orderedIds){
 	if ( this.ul ) {
 		this.ul.innerHTML = ""
@@ -132,6 +138,7 @@ update(orderedIds){
 		this.prepare(orderedIds)
 	}
 }
+
 peuple(orderedIds){
 	var items = [] ;
 	if ( orderedIds && orderedIds.length ) {
@@ -219,7 +226,25 @@ build(){
 	o.setAttribute('data-owner-ref', this.owner.ref)
 	o.addEventListener('click', this.onClick.bind(this))
 
-	const text = DCreate('SPAN', {text: this.owner.titre})
+	// Si une méthode existe pour construire le span contenant le titre
+	// on l'utilise, sinon, on en fait un tout simple
+	let text ;
+	console.log("this.owner", this.owner)
+	if ( this.owner.spanForFeedableMenu ) {
+		text = this.owner.spanForFeedableMenu(this.menu)
+	} else {
+		text = DCreate('SPAN', {text: this.owner.titre})
+		if ( this.owner.data.ow ) {
+			var referent = Montrello.get(this.owner.data.ow)
+			console.log("referent (this.referent instanceof CheckList)", referent, referent instanceof CheckList)
+			var referent_ref = `${referent.titre}`
+			if ( referent instanceof CheckList ) {
+				referent_ref += ` de la carte “${referent.parent.titre}” de la liste “${referent.parent.parent.titre}”`
+			}
+			text.setAttribute('title', `Originale ${this.owner.data.ow} ${referent_ref}`)
+		}
+
+	}
 
 	// On ajoute au bout des flèches pour monter et descendre l'élément
 	const boutons = DCreate('DIV',{class:'boutons'})
