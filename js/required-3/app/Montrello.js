@@ -105,6 +105,7 @@ static init(){
 	.then(this.buildAllObjets.bind(this))
 	.then(this.sortAllChildren.bind(this))
 	.then(this.setJaugesInCarte.bind(this))
+	.then(MRules.exec.bind(MRules))
 	.then(ret => {
 		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true

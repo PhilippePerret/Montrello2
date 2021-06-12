@@ -2,8 +2,6 @@
 
 * [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
 
-* Dans la liste des modèles, indiquer la référence (trouvable) au modèle d'origine, pour pouvoir le modifier. Le mettre dans le title, comme ça il pourra être long
-
 * "indicateur" (lumières rondes) récapilant l'état général du tableau. SI premier est tableau de bord, on les affiche toutes
   On pourrait mettre sous cet indicateur une minijauge (genre 32px max) qui indiquerait le niveau de développement.
 
