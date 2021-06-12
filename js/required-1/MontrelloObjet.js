@@ -256,6 +256,7 @@ save(params = {}){
  * 
  */
 async destroy(ev){
+  if ( this.isLocked ) return noModifWhenLocked()
   let impactedObjets = [this]
   impactedObjets = this.collectChildrenIn(impactedObjets)
 
@@ -331,6 +332,7 @@ build(){
     this.obj = DOM.clone(`modeles ${this.constructor.dataClass.modeleName}`, {id: this.domId})
     this.addInParent()
     this.setCommonDisplayedProperties()
+    this.setLock()
   } else {
     let msg ;
     msg = `Désolé, l'objet ${this.ref} `
@@ -418,7 +420,17 @@ modelize(ev){
 }
 
 lock(){
-  console.warn("Je dois verrouiller", this)
+  this.set({lck: this.isLocked?0:1})
+  this.setLock()
+}
+/**
+ * Réglage du verrou de l'objet
+ **/
+setLock(){
+  var contTit = this.obj.querySelector('*[data-prop="ti"]')
+  contTit && ( contTit.innerHTML = `${this.isLocked?'🔒 ':''}${this.data.ti}` )
+  var btnLock = this.obj.querySelector('button[data-method="lock"]')
+  btnLock && (btnLock.innerHTML = `${this.isLocked ? '🔓 Dév':'🔒 V'}errouiller`)
 }
 
 archive(){
@@ -474,6 +486,7 @@ get massets(){
  * 
  */
 async addChild(ev){
+  if ( this.isLocked ) return noModifWhenLocked()
   const child = (await this.childClass.createItemFor(this));
   this.addChildItem(child)
 }
@@ -673,6 +686,17 @@ hasChild(child){
  * / Fin des méthodes d'instance utiles aux tests
  * ============================================================== */
 
+
+/**
+ * ==============================================================
+ * Méthodes d'état
+ */
+
+get isLocked(){return this.data.lck === 1 }
+
+/**
+ * / Fin des méthodes d'état
+ * ============================================================== */
 
 /**
  * ==============================================================

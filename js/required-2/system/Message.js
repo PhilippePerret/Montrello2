@@ -19,6 +19,11 @@ function systemError(msg){
   console.error("SYSTEM ERROR : ", msg)
 }
 
+
+function noModifWhenLocked(){
+  return erreur("Cet élément est verrouillé. Toute modification est interdite.")
+}
+
 window.error = window.erreur.bind(window)
 
 class Message {
