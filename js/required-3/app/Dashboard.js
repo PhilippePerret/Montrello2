@@ -20,9 +20,11 @@ static prepareNewDashboard(){
 
 show(){
   this.obj.classList.remove('hidden')
+  Header.setSpanTableau(false)
 }
 hide(){
   this.obj.classList.add('hidden')
+  Header.setSpanTableau(true)
 }
 get isOpened(){return false == this.obj.classList.contains('hidden')}
 
