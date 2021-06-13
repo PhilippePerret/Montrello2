@@ -8,10 +8,12 @@ $(document).ready(function(){
   .then(UI.insert.bind(UI, 	'modele_task', 	 		'modeles'))
   .then(UI.insert.bind(UI,  'modele_checklist', 'modeles'))
   .then(UI.insert.bind(UI,  'modele_massets',   'modeles'))
+  .then(UI.insert.bind(UI,  'modele_cur_card',  'modeles'))
   .then(UI.insert.bind(UI,  'picker_tags',      'modeles'))
   .then(UI.insert.bind(UI,  'picker_dates',     'modeles'))
   .then(UI.insert.bind(UI, 	'carte_form', 			'modeles'))
   .then(UI.insert.bind(UI,	'footer', 					'body'))
+  .then(UI.insert.bind(UI,  'dashboard',        'body'))
   /**
    * Si on veut lancer les tests plutôt que l'application, on décommente la ligne
    * suivante et on commente les deux lignes d'après.

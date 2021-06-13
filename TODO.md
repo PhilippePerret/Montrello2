@@ -1,7 +1,17 @@
 # Todo liste
 
+* [BUG] Quand on détruit un tableau, il faut mettre le premier en tableau courant
 * [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
 
+TABLEAU DE BORD
+  * Une balise <dashboard> pour lui
+  * affiche les cartes aux dates dépassées
+  * affiche les cartes courantes
+  * affiche sous forme de lumière l'état général
+  * affiche peut-être tous les tableaux
+  * affiche (masqué) les préférences (configuration)
+
+* Dans le formulaire de carte, mettre le titre de la liste aussi, au-dessus, pour la clarté  
 * "indicateur" (lumières rondes) récapilant l'état général du tableau. SI premier est tableau de bord, on les affiche toutes
   On pourrait mettre sous cet indicateur une minijauge (genre 32px max) qui indiquerait le niveau de développement.
 
@@ -45,9 +55,14 @@
 * PRÉFÉRENCES
   * CB changer de fond à chaque utilisation
   * CB Détruire automatiquement les objets orphelin (sinon, donner l'alerte comme c'est le cas maintenant)
-  * CB Le première tableau est un tableau de bord
+  * CB afficher le tableau de bord à l'ouverture (sinon dernier tableau)
 
 ## Tests à faire
+
+* Tableaux
+  * Quand on le détruit :
+    * le premier est mis en courant s'il existe
+    * un nouveau tableau est créé s'il en n'existe pas
 
 * Test d'enfants classés
   * on classe une liste d'enfants

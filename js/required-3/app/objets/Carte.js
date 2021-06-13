@@ -139,6 +139,11 @@ follow(){
  * =============================================================== */
 
 
+get tableauId(){
+	return this.tableau.id
+}
+get tableau(){return this.parent.parent}
+
 }// class Carte
 Object.assign(Carte.prototype, TOMiniMethods)
 Object.assign(Carte.prototype, UniversalHelpersMethods)

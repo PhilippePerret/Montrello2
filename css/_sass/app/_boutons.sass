@@ -1,12 +1,10 @@
 button
   &.btn, &.btn-close
     all: unset
-    // cursor: pointer // sera détruit par all:unset
   &.text, &.link, &.btn-close
     all: unset
     font-size: 11pt
     font-family: Arial
-    cursor: pointer
 
   // Bouton comme des liens
   &.link
@@ -15,12 +13,10 @@ button
   // Bouton pour ajouter ou supprimer
   &.btn-add, &.btn-sup, &.common, &.btn-modelise, &.btn-save, &.btn-btn
     all: unset
-    cursor: pointer
     background-color: #c8bfbf
     color: white
     padding: 0.2em 0.8em
     transition: 0.2s
-    cursor: pointer
     &:hover, &.opac
       background-color: #392c2c
       transition: 0.5s
@@ -28,7 +24,6 @@ button
     float: right
     &:after
       content: "✕"
-      cursor: pointer
   &.btn-add
     &:before
       content: "+ "
@@ -69,3 +64,7 @@ button.fright + button.fright
 
 button.nobackground
   background-color: transparent !important
+
+// Les propriétés qu'on remet toujours
+button
+  cursor: pointer!important

@@ -6,6 +6,13 @@ static get dimType(){ return 'tb' }
 static get current(){ return this._current }
 
 /**
+ * Les deux méthodes permettant de masquer tous les tableaux ou de
+ * ré-afficher le courant, utile pour le tableau de bord
+ * 
+ */
+static hideCurrent(){this.current.hide()}
+static showCurrent(){this.current.show()}
+/**
  * Mettre le tableau +t+ en tableau courant
  * 
  * Note : cette procédure, contrairement à #setCurrent, enregistre
@@ -14,6 +21,7 @@ static get current(){ return this._current }
  * 
  */
 static set current(t){
+	Dashboard.current.hide() // toujours
 	if ( this._current ) this._current.hide()
 	Montrello.setConfig({current_pannel_id: t.id})
 	this.setCurrent(t)
