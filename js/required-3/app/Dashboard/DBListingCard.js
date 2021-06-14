@@ -30,6 +30,10 @@ addCard(carte){
   this.tableauCardContainerFor(carte).appendChild(curcard.obj)
 }
 
+cleanUp(){
+  this.cardsContainer.innerHTML = ''
+}
+
 /**
  * Méthode retournant le container de tableau pour le tableau d'id
  * +tableau_id+ (qui contiendra toutes les cartes de ce tableau)

@@ -1,22 +1,19 @@
 # Todo liste
 
+* [BUG] Quand on définit deux massets (dossier par exemple), le second ne s'enregistre pas
 * [BUG] Quand on détruit un tableau, il faut mettre le premier en tableau courant
 * [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
+* [BUG] Quand on transforme une checklist en modèle, il faut opacifier son bouton modèle et faire apparaitre la cloche indiquant que c'est un modèle
 
 TABLEAU DE BORD
-  * Une balise <dashboard> pour lui
-  * affiche les cartes aux dates dépassées
-  * affiche les cartes courantes
+  * on peut l'ouvrir par défaut au lancement de l'application
   * affiche sous forme de lumière l'état général
-  * affiche peut-être tous les tableaux
   * affiche (masqué) les préférences (configuration)
 
-* Dans le formulaire de carte, mettre le titre de la liste aussi, au-dessus, pour la clarté  
 * "indicateur" (lumières rondes) récapilant l'état général du tableau. SI premier est tableau de bord, on les affiche toutes
   On pourrait mettre sous cet indicateur une minijauge (genre 32px max) qui indiquerait le niveau de développement.
 
 * Contrôleurs
-  - contrôleur de cartes courantes (est-ce que ce n'est pas une règle plutôt ?)
   - contrôleur d'indicateur (lumières d'état StateLight)
   - contrôleur de boutons de carte (ce sont les boutons qui permettent de modéliser, d'archiver, de détruire etc. les cartes, dans le formulaire d'édition de la carte). Il faut pouvoir les "détacher" pour les utiliser sans ouvrir la carte, dans un menu qui apparaitra en cliquant sur un bouton "..." en haut à droite de la carte.
   - contrôleur de boutons de liste (idem que pour carte), le bouton en haut à droite qui gèrera les listes. Il s'ouvrira avec un bouton "...". Comme pour la carte, il remplacera le bouton "x" de destruction (qui pour le moment a trop d'importance.

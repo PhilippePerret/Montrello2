@@ -59,7 +59,7 @@ let TOMiniMethods = {
 		*/
 	addObjet(obj){
 		const otype = obj.ty
-		console.log("Je dois ajouter un élément de type %s à ", otype, this, obj)
+		// console.log("Je dois ajouter un élément de type %s à ", otype, this, obj)
 		this.objs || (this.objs = {})
 		this.objs[otype] || Object.assign(this.objs, {[otype]: []})
 		if ( this.objs[otype].indexOf(obj.id) < 0 ) {

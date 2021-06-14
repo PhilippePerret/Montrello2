@@ -8,20 +8,17 @@
 class Dashboard {
 
 static toggle(button, ev){
-  this.current || this.prepareNewDashboard()
+  this.current || (this.current = new this())
   const closeIt = this.current.isOpened
   this.current[closeIt?'hide':'show']()
   Tableau[`${closeIt?'show':'hide'}Current`]()
   return ev && stopEvent(ev)
 }
-static prepareNewDashboard(){
-  this.current = new this()
-  this.current.prepare()
-}
 
 
 show(){
   this.obj.classList.remove('hidden')
+  this.update()
   Header.setSpanTableau(false)
 }
 hide(){
@@ -30,7 +27,11 @@ hide(){
 }
 get isOpened(){return false == this.obj.classList.contains('hidden')}
 
-prepare(){
+update(){
+
+  this.listingRunningCards.cleanUp()
+  this.listingOutOfDateCards.cleanUp()
+  this.listingCloseToDateCards.cleanUp()
 
   // On teste l'état de chaque carte existante pour mettre de côté
   // celles qui sont en cours, en dépassement d'échéance ou à 
