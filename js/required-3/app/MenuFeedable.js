@@ -69,7 +69,6 @@ toggle(){
  */
 ensureItems(){
 	if (this.ul.children.length == this.owner.count) return
-	console.log("Le nombre d'items a changé => Il faut actualiser la liste")
 	this.update(this.owner.orderedIds)
 }
 

@@ -97,10 +97,10 @@ get items(){
   return itemsCL
 }
 onChooseItem(montModele){
-  console.log("[Instance] Le modèle de checklist suivant a été choisi pour ...", montModele, this.carteform)
+  // console.log("[Instance] Le modèle de checklist suivant a été choisi pour ...", montModele, this.carteform)
   this.duplicateFor(montModele, this.carteform.carte)
   .then(newInstance => {
-    console.log("newInstance reçue (ajoutée à la carte ...) : ", newInstance, this.carteform.carte)
+    // console.log("newInstance reçue (ajoutée à la carte ...) : ", newInstance, this.carteform.carte)
     this.carteform.carte.addChildItem(newInstance)
   })
 }
@@ -115,7 +115,7 @@ async duplicateFor(montmodele, carte){
   const referent = montmodele.parent
   // console.log("Le référent (et ses données) : ", referent, referent.data)
   const data = Object.assign({}, referent.data)
-  console.log("Data au départ", JSON.stringify(data))
+  // console.log("Data au départ", JSON.stringify(data))
   data.id = Montrello.getNewId(data.ty)
   data.ti = `Checklist pour la carte “${carte.titre}”`
   data.ow = carte.ref
