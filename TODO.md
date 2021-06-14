@@ -1,6 +1,5 @@
 # Todo liste
 
-* [BUG] quand on utilise les boutons actions pour la carte, elle s'édite au lieu de le jouer (stopevent)
 * [BUG] Quand on détruit un tableau, il faut mettre le premier en tableau courant
 * [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
 

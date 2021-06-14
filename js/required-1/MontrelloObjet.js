@@ -255,7 +255,8 @@ save(params = {}){
  * d'appeler cette méthode-ci.
  * 
  */
-async destroy(ev){
+async destroy(button, ev){
+  ev && stopEvent(ev)
   if ( this.isLocked ) return noModifWhenLocked()
   let impactedObjets = [this]
   impactedObjets = this.collectChildrenIn(impactedObjets)
@@ -282,7 +283,7 @@ async destroy(ev){
   })
 
   // On procède à la destruction de tous les fichiers d'objet
-  console.log("Références à détruire", references)
+  // console.log("Références à détruire", references)
   await Ajax.send('remove.rb', {refs: references})
 
   // Retire l'objet de son parent, et surtout de sa liste data.cho
@@ -292,7 +293,7 @@ async destroy(ev){
   // Et on termine en actualisant les nombres
   PanelInfos.update()
 
-  return true
+  return false
 }
 
 /**
@@ -544,11 +545,11 @@ removeChildItem(child){
   this.children = newChildren
 
   var idxChild = this.data.cho && this.data.cho.indexOf(child.id)
-  console.log("this.data.cho avant suppression", JSON.stringify(this.data.cho))
+  // console.log("this.data.cho avant suppression", JSON.stringify(this.data.cho))
   if ( idxChild && idxChild > -1 ) {
     this.data.cho.splice(idxChild, 1)
     this.save()
-    console.log("this.data.cho APRÈS suppression", JSON.stringify(this.data.cho))
+    // console.log("this.data.cho APRÈS suppression", JSON.stringify(this.data.cho))
   }
 }
 
