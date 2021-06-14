@@ -224,7 +224,6 @@ buildObjets(){
 	})
 
 	this.carte.forEachMasset(masset => {
-		console.log("Je dois construire le Masset : ", masset)
 		masset.build_and_observe(my)
 		masset.obj.querySelectorAll('button').forEach(b => b.owner = my)
 	})

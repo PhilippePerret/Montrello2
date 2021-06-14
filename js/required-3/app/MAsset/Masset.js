@@ -48,7 +48,6 @@ exec(ev){
 		message("Exécution de l'opération, merci de patienter…")
 		Ajax.send('exec_masset.rb', { data:this.data })
 		.then(ret => {
-			console.log("Résultat de l'opération:", ret.resultat)
 			message("Opération exécutée avec succès, merci.", {keep: false})
 		})
 		.catch(ret => {console.error(ret); return erreur("Une erreur est survenue (consulter l'inspecteur)")})
@@ -74,7 +73,7 @@ execAsUrl(){
 	*
 	*/
 edit(btn){
-	btn && btn.owner && (this.owner = btn.owner)
+	btn && btn.owner && (this.parent = btn.owner)
 	this.objEdit || this.buildAndObserveForEdit()
 	this.positionne(btn)
 	this.showEdit()
@@ -91,7 +90,7 @@ save(){
 	const content = stringOrNull(this.contentField.value)
 	if ( content ) {
 		this.data.co = content
-		this.data.ow = this.owner.ref
+		this.data.ow = this.parent.ref
 		this.id || (this.data.id = Montrello.getNewId('ma'))
 		Ajax.send('save.rb', {data: this.data}).then(ret => {
 			/** Soit le masset n'existe pas encore et il faut 
@@ -103,7 +102,7 @@ save(){
 			if ( omasset ) {
 				omasset.querySelector('label.masset-content').innerHTML = this.formatedContent
 			} else {
-				this.owner.addMasset(this)
+				this.parent.addMasset(this)
 				this.build_and_observe()
 			}
 			this.hideEdit()		
@@ -152,29 +151,37 @@ observeForEdit(){
 
 build_and_observe(){this.build();this.observe()}
 build(){
+
+	/**
+	 * Pour construire le masset, il faut que le formulaire de la carte
+	 * soit déjà créé. Sinon, on ne fait rien (il y aura juste un picto
+	 * du masset dans la carte réduite, mais pas mis par cette fonction
+	 * mais par ???)
+	 */
+	let conteneur
+	if ( this.parent && this.parent.form ) {
+		conteneur = DGet('massets', this.parent.form.obj)
+	} else {
+		return
+	}
+
 	const o = DOM.clone('modeles masset')
 	o.id = this.domId
 	this.obj = o
 
-	// On essaie de trouver le conteneur
-	// this.obj.querySelector()
-	let conteneur
-	if ( this.owner ) {
-		console.log("owner.obj", this.owner.obj)
-		conteneur = DGet('content[data-type-objet="ma"]', this.owner.obj)
-	} else {
-		conteneur = document.body
-	}
 	conteneur.appendChild(o)
 	o.querySelector('picto.masset-picto').innerHTML = this.dataType.picto
 	o.querySelector('button.btn-exec').innerHTML = this.dataType.command
 	// Le contenu affiché
 	this.spanField.innerHTML = this.formatedContent
 }
+
 observe(){
+	// L'objet n'a peut-être pas été fabriqué
+	if ( null == this.obj ) return
 	this.obj.owner = this
 	UI.setOwnerMethodsIn(this.obj, this)
-	DGet('button.btn-edit', this.obj).owner = this.owner
+	DGet('button.btn-edit', this.obj).owner = this.parent
 }
 positionne(btn){
 	const pos = btn.getBoundingClientRect()
@@ -212,4 +219,4 @@ get membre(){			return this.data.me && Member.get(this.data.me)}
 get checklist(){	return this.data.cl && Checklist.get(this.data.cl)}
 get state(){			return this.data.st }
 
-}
+} // class Masset
