@@ -77,7 +77,7 @@ static defaultItemData(titre, owner){
  * 
  */
 static async createItemFor(owner){
-  // console.log("-> createItemFor(", owner)
+  // console.log("-> createItemFor(owner =", owner)
   const newItem = this.newItemFor(owner)
   await this.createItem(newItem)
   return newItem
@@ -330,6 +330,7 @@ build_and_observe(){
 build(){
   if ( this.parent ) {
     this.obj = DOM.clone(`modeles ${this.constructor.dataClass.modeleName}`, {id: this.domId})
+    this.obj.owner = this
     this.addInParent()
     this.setCommonDisplayedProperties()
     this.setLock()
@@ -494,8 +495,8 @@ get massets(){
  * 
  */
 async addChild(ev){
-  if ( this.isLocked ) return noModifWhenLocked()
-  const child = (await this.childClass.createItemFor(this));
+  if ( this.isLocked ) return noModifWhenLocked();
+  const child = await this.childClass.createItemFor(this);
   this.addChildItem(child)
 }
 

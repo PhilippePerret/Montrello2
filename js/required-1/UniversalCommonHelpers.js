@@ -12,7 +12,7 @@ const UniversalHelpersMethods = {
     * Pour régler la jauge de développement que peut posséder l'objet
     */
   setJaugeDev(){
-    DevJauge.setIn(this)
+    DGet('devjauge', this.obj) && DevJauge.setIn(this)
   },
 
   /**
