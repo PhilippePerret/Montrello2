@@ -20,6 +20,9 @@ $(document).ready(function(){
    */
   // .then(MiniTest.run.bind(MiniTest))
   .then(App.init.bind(App))
+  .then(ret => {
+    Dashboard.toggle()
+  })
   .catch(console.error)
   
 

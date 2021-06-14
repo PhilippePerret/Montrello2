@@ -125,6 +125,44 @@ get tasks(){
 
 /**
  * ===============================================================
+ * Méthodes d'état
+ */
+
+/**
+ * @return TRUE si c'est une carte courante, c'est-à-dire qu'elle 
+ * possède le premier tag
+ * 
+ */
+get isRunning(){
+	return this.tags && this.tags.indexOf(1) > -1
+}
+/**
+ * @return TRUE si la date de la carte est définie et qu'elle est
+ * dépassée.
+ * 
+ */
+get isOutOfDate(){
+	return this.date && this.date.isOutOfDate()
+}
+
+/**
+ * @return TRUE si la date de la carte est définie et qu'elle est
+ * proche (mais pas dépassé).
+ * 
+ */
+get isCloseToDate(){
+	return this.date && this.date.isCloseToDate(`${Montrello.getConfig('days_for_close_date')}j`)
+}
+
+
+/**
+ * /Fin des méthodes d'état
+ * =============================================================== */
+
+
+
+/**
+ * ===============================================================
  * Méthodes répondant aux boutons du formulaire de carte
  */
 
@@ -138,11 +176,24 @@ follow(){
  * /Fin des méthodes répondant aux boutons du formulaire de carte
  * =============================================================== */
 
+get date(){
+	return this._date || ( this._date = this.getDate() )
+}
+
+getDate(){
+	if ( this.data.dates && this.data.dates.to ) {
+		const d = new MDate(this.data.dates.to).asDate
+		console.log("La date : ", d)
+		return d
+	}
+}
 
 get tableauId(){
 	return this.tableau.id
 }
 get tableau(){return this.parent.parent}
+
+
 
 }// class Carte
 Object.assign(Carte.prototype, TOMiniMethods)

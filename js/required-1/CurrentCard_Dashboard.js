@@ -1,7 +1,11 @@
 'use strict'
 /*
 
+  Classe abstraite CurrentCard
+  ----------------------------
   Une carte courante dans le dashboard
+  C'est une classe abstraite dont vont hériter, normalement, les 
+  classe RunningCard, OutOfDateCard et CloseToDateCard
 
 */
 class CurrentCard {

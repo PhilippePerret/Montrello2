@@ -235,6 +235,10 @@ static setConfig(hdata){
 	})
 }
 
+static getConfig(key){
+	return this.config[key] || this.default_config[key]
+}
+
 static buildItemsOf(classe){
 	// console.log("-> buildItemsOf", classe)
 	return new Promise((ok,ko) => {
@@ -277,7 +281,8 @@ static ensureCurrentTableau(){
 static get default_config(){
 	return {
 		current_pannel_id: null,
-		tableaux_order: []
+		tableaux_order: [],
+		days_for_close_date: 2
 	}
 }
 

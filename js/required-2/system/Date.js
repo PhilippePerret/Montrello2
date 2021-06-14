@@ -259,13 +259,39 @@ const Unity2Secondes = {
   , '"': 60, 'h': 3600, 'j':24*3600, 'm':24*3600*31, 'a':365*24*3600
 }
 function dureeString2Secondes(str){
-  const u = str.substring(str.length - 3, str.length)
-  let n = str.substring(0, str.length - 3)
-  console.log("n = ", n)
+	let len = 3
+  let u = str.substring(str.length - len, str.length)
+
+  if ( null == Unity2Secondes[u] ) {
+  	len = 1
+  	u = str.substring(str.length - len, str.length)
+  }
+  let n = str.substring(0, str.length - len)
+
+
+  console.log("str = '%s', len = %i, n = ", str, len, n)
   n = parseInt(n, 10) 
   if ( Unity2Secondes[u] ) {
     return n * Unity2Secondes[u]
   } else {
     erreur("Impossible de calculer la durée " + str + " (les unités possibles sont : 'sc', 'mn', 'hr', 'jr', 'mo', 'an'")
   }
+}
+
+Date.prototype.isOutOfDate = function(){
+	return this < new Date()
+}
+
+/**
+ * @return true si la date est proche à interval de +interval+ qui
+ * est une durée exprimée en string (p.e. "2j")
+ * 
+ * Par défaut, l'intervalle est de 1 jour
+ */
+Date.prototype.isCloseToDate = function(interval =  "1j" /* durée string */){
+	interval = dureeString2Secondes(interval) * 1000
+	const now = new Date()
+	const dif = this.getTime() - now.getTime()
+	// console.log({inverval: interval, now: now, dif: dif})
+	return dif > 0 && dif < interval
 }

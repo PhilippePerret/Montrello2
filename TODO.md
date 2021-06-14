@@ -56,6 +56,7 @@ TABLEAU DE BORD
   * CB changer de fond à chaque utilisation
   * CB Détruire automatiquement les objets orphelin (sinon, donner l'alerte comme c'est le cas maintenant)
   * CB afficher le tableau de bord à l'ouverture (sinon dernier tableau)
+  * Menu pour donner le nombre de jours pour considérer la date proche
 
 ## Tests à faire
 
