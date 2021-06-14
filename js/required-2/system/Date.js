@@ -269,7 +269,6 @@ function dureeString2Secondes(str){
   let n = str.substring(0, str.length - len)
 
 
-  console.log("str = '%s', len = %i, n = ", str, len, n)
   n = parseInt(n, 10) 
   if ( Unity2Secondes[u] ) {
     return n * Unity2Secondes[u]

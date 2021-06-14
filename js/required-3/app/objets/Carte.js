@@ -182,9 +182,7 @@ get date(){
 
 getDate(){
 	if ( this.data.dates && this.data.dates.to ) {
-		const d = new MDate(this.data.dates.to).asDate
-		console.log("La date : ", d)
-		return d
+		return new MDate(this.data.dates.to).asDate
 	}
 }
 

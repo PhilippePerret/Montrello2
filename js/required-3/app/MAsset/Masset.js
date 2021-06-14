@@ -24,15 +24,13 @@ static get dimType(){ return 'ma' }
 	*/
 static create(mtype, owner, btn){
 	// console.log("Je dois créer un masset de mtype %s pour", mtype, owner)
-	const masset = new Masset({ty:'ma', mty: mtype, ow:owner.ref}, owner)
+	const masset = new Masset({ty:'ma', mty: mtype, ow:owner.ref})
 	masset.edit(btn)
 	this.addItem(masset)
 }
 
-constructor(data, owner){
+constructor(data){
 	super(data)
-	owner && (this.owner = owner)
-	// console.log("this.owner = ", this.owner)
 }
 
 /**
@@ -202,8 +200,6 @@ showEdit(){this.objEdit.classList.remove('hidden')}
 hideEdit(){this.objEdit.classList.add('hidden')}
 
 get dataType(){return MASSET_TYPES[this.mtype]}
-
-get domId(){return this._domid || (this._domid = `ma-${this.id}`)}
 
 get id(){					return this.data.id }
 get type(){				return this.data.ty }
