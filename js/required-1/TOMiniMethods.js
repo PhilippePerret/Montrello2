@@ -87,7 +87,7 @@ let TOMiniMethods = {
 		if ( this.constname == 'tableau' ){
 			return document.body.querySelector('span.pannel_name')
 		} else {
-			return this.obj.querySelector('title.editable')
+			return this.obj.querySelector('title.editable') || this.obj.querySelector('titre.editable')
 		}
 	},
 

@@ -12,6 +12,7 @@ class MiniEditor {
 	static edit(element, pos, ev){
 		// console.log("-> edit(element, pos, ev)", element, pos, ev, new Error().stack)
 		this.miniEditor || this.buildMiniEditor()
+		console.log("element.owner", element.owner)
 		this.miniEditor.edit(element, ev)
 	}
 

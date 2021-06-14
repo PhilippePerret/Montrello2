@@ -40,6 +40,7 @@ build(){
 		var compDate = new ComplexeDate(this.dates)
 		this.obj.querySelector('infosdate').innerHTML = compDate.asShortString
 	}
+
 	// Les Massets
 	this.obj.querySelector('pictosmassets').innerHTML = this.massets.getPictos()
 }
@@ -60,6 +61,8 @@ observe(){
 		return
 	}
 	super.observe()
+
+	
 	// Quand on clique sur la carte (n'importe où, on l'édite)
 	this.obj.addEventListener('click', this.edit.bind(this))
 }
