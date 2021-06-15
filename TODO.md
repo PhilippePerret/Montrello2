@@ -1,5 +1,37 @@
 # Todo liste
 
+* Poursuivre les encore-nouveaux tests que je vais peut-être appeler 'GestureTest'. Le principe est de glisser le chargement du test avant le chargement complet des données Montrello.
+  
+  - chaque test se trouve dans un dossier qui contient
+    - l'état voulu de data/montrello (ou le gel à utiliser)
+    - le script .js du test
+  - les résultats s'affichent dans une autre fenêtre, ce qui permet de traiter les différents tests simplement en rechargeant la page
+
+  - pour voir s'il y a un test à jouer, on appelle en ajax 
+    au début de App.init()
+    On appelle INTest (ajax/\_scripts/INTest/runner.rb)
+    Tout le reste se trouve dans data/INTest
+    Et notamment : data/INTest/config.yaml qui va définir s'il faut jouer des tests
+
+  C'est géré dans App.init(). Pour le moment, si GEL_FOR_TEST est défini, on lance le test 
+  Pour la suite :
+    En fait, on fait des dossiers contenant :
+      1) le gel à utiliser (c'est-à-dire l'état de départ)
+      2) le script du test (en javascript, qui sera chargé)
+  On doit utiliser une fonction qui va écrire sur la page, en visible (avec une opacité faible quand même) ce qu'on fait
+  D'abord on présente le test ("Ce test va tester la création d'un nouveau tableau")
+  Ensuite on donne la démarche. Cette démarche peut être la base du test :
+    "Je clique sur le bouton tatata"
+    "=> un menu s'ouvre avec tatata"
+    "Je clique sur le sous-menu tatata"
+    etc.
+
+  - On pourra même imaginer un moyen de lancer les tests les un après les autres, simplement en conservant sur le disque (plutôt que dans le stockage local) l'état des tests. Par exemple avec le nom du dernier test joué.
+    On définira une liste de tests : test1, test2, test3 (correspondant chacun à un dossier)
+    L'application jouera le premier test
+    Arrivée à la fin, elle se rechargera et chargera automatiquement le test suivant
+
+
 * [BUG] À la création d'ue liste d'après un modèle, comme si toutes les tâches ne se créaient pas.
   Après la création de la duplication il faudrait la vérifier (vérifier si )
   Essayer avec la liste de fabrication d'un livre

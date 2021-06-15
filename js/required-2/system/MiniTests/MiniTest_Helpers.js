@@ -77,7 +77,7 @@ function escapeRegExp(string){
 // }
 async function degel(gel_name){
   await Ajax.send('MiniTest/degel.rb',{gel_name:gel_name})
-  document.location.reload()
+  // document.location.reload()
 }
 
 function gel(gel_name, gel_description){

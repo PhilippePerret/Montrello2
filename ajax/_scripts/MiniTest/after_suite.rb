@@ -22,4 +22,4 @@ if Ajax.param(:data_tests)
   msg << "Les données du test ont été enregistrées dans #{path_data_tests}"
 end
 
-Ajax << { message: msg.join("<br/>")}
+Ajax << { message: msg.join("\n")}

@@ -14,13 +14,7 @@ $(document).ready(function(){
   .then(UI.insert.bind(UI, 	'carte_form', 			'modeles'))
   .then(UI.insert.bind(UI,	'footer', 					'body'))
   .then(UI.insert.bind(UI,  'dashboard',        'body'))
-  /**
-   * Si on veut lancer les tests plutôt que l'application, on décommente la ligne
-   * suivante et on commente les deux lignes d'après.
-   * Et il faut régler les tests à jouer dans ./js/MiniTests/_config.js
-   */
-  .then(MiniTest.run.bind(MiniTest))
-  // .then(App.init.bind(App))
+  .then(App.init.bind(App))
   // .then(ret => {Dashboard.toggle()}) // plutôt dans les préférences
   .catch(console.error)
   

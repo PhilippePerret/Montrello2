@@ -4,6 +4,7 @@
 /data/montrello/
 /data/secret/
 /data/MiniTest/
+/data/INTests/
 /data/backups/
 
 *.gem

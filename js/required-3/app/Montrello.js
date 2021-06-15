@@ -221,18 +221,16 @@ static dispatch_config(ret){
 	this.config = data || this.default_config
 }
 
-static setConfig(hdata){
+static async setConfig(hdata){
 	Object.assign(this.config, hdata)
 	// console.log("Enregistrement de la configuration : ", this.config)
-	Ajax.send('save.rb', {data: this.config})
-	.then(ret => {
-		if (ret.error) return erreur(ret.error)
-		// console.log("Configuration enregistrée avec succès.")
-	})
-	.catch(ret => {
-		erreur("Impossible d'enregistrer la configuration : " + ret.error + ' (consulter la console')
+	try {
+		var ret = await Ajax.send('save.rb', {data: this.config})
+		if (ret.error) throw ret.error
+	} catch(err) {
+		erreur("Impossible d'enregistrer la configuration : " + err + ' (consulter la console')
 		console.error("Données envoyées pour sauvegarde :", this.config)
-	})
+	}
 }
 
 static getConfig(key){

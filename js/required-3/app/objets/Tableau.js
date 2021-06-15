@@ -24,8 +24,7 @@ static set current(t){
 	t instanceof Tableau || raise("Il faut une instance Tableau pour définir le tableau courant (set tableau::current")
 	Dashboard.current.hide() // toujours
 	if ( this._current ) this._current.hide()
-	Montrello.setConfig({current_pannel_id: t.id})
-	this.setCurrent(t)
+	Montrello.setConfig({current_pannel_id: t.id}).then(this.setCurrent.bind(this, t))
 }
 
 static setCurrent(t){

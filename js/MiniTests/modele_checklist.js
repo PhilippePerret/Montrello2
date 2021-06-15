@@ -64,16 +64,15 @@ MiniTest.add("On peut créer un modèle de liste à partir d'une checklist", asy
 
 //*/
 MiniTest.add("On peut créer une checklist à partir d'un modèle", async function(){
-  
-  // await degel('encours')
+
 
   log("Je vais dégeler", 0)
   await degel('encours')
   log("J'ai dégelé", 0)
 
 
-  // this.suivi("On met le tableau courant aux éditions Icare (#4)")
-  // Tableau.current = Tableau.get(4)
+  this.suivi("On met le tableau courant aux éditions Icare (#4)")
+  Tableau.current = await Tableau.get(4)
 
   // this.suivi("On édite la carte du Parc (#23)")
   // const carteParc = DGet('carte#ca-23')

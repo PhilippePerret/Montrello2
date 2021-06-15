@@ -10,6 +10,8 @@
 function logRed(msg){Console.output(msg,{color:'red'})}
 function logRouge(msg){return logRed(msg)}
 function logGreen(msg){Console.output(msg,{color:'green'})}
+function logBleu(msg){Console.output(msg,{color:'blue'})}
+function logBlue(msg){Console.output(msg,{color:'blue'})}
 function logVert(msg){return logGreen(msg)}
 function logYellow(msg){Console.output(msg,{color:'yellow'})}
 function logJaune(msg){return logYellow(msg)}

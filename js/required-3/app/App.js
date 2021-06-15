@@ -6,9 +6,27 @@
 class App {
 
 static async init(){
+	const ret = await Ajax.send('INTests/runner.rb')
+	console.log("retour de INTests/runner.rb", ret)
+	if ( ret.run_intests ) {
+		await this.prepareInTests()
+	}
 	await UI.init()
 	await Montrello.init.call(Montrello)
+	if ( ret.run_intests ) {
+		await INTests.run_test(ret.intest_name)
+		ret.has_next_intest && document.location.reload()
+	}
 }
+
+/**
+ * Préparation des tests INTests
+ * On charge le module
+ */
+static async prepareInTests(){
+	await loadJS('INTests/INTests.js')
+}
+
 
 static get name(){return 'Montrello'}
 

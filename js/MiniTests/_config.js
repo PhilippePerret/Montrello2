@@ -30,11 +30,11 @@ MiniTest.config = {
 
     /**
      * Si true, on remet l'état initial à la fin des tests. Sinon, on
-     * garde l'état de fin de test.
-     * 
+     * garde l'état de fin de test et il faudra remettre les données
+     * initiales à la main.
      */
   , retreive_init_state_at_end: false
-  
+
     /**
       * La méthode App.resetBeforeTest() doit être définie
       * OBSOLÈTE (maintenant, l'application est rechargée avant
