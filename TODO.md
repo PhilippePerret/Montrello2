@@ -1,15 +1,25 @@
 # Todo liste
 
+* [BUG] À la création d'ue liste d'après un modèle, comme si toutes les tâches ne se créaient pas.
+  Après la création de la duplication il faudrait la vérifier (vérifier si )
+  Essayer avec la liste de fabrication d'un livre
+* [BUG] Les cartes s'affichent n'importe où dans le dashboard
 * [BUG] Quand on définit deux massets (dossier par exemple), le second ne s'enregistre pas
 * [BUG] Quand on détruit un tableau, il faut mettre le premier en tableau courant
 * [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
 * [BUG] Quand on transforme une checklist en modèle, il faut opacifier son bouton modèle et faire apparaitre la cloche indiquant que c'est un modèle
+
+MODÈLES 
+  * Les associer à leur tableau (toujours)
 
 TABLEAU DE BORD
   * on peut l'ouvrir par défaut au lancement de l'application
   * affiche sous forme de lumière l'état général
   * affiche (masqué) les préférences (configuration)
 
+* Un type d'archive (voir si le nom est bon) qui serait des programmations dans le futur :
+  - la carte/fiche s'archive, mais quand vient la date "du" définie, on la ressort pour l'afficher.
+    Il faut l'accompagner d'un message, peut-être dans le tableau de bord
 * "indicateur" (lumières rondes) récapilant l'état général du tableau. SI premier est tableau de bord, on les affiche toutes
   On pourrait mettre sous cet indicateur une minijauge (genre 32px max) qui indiquerait le niveau de développement.
 

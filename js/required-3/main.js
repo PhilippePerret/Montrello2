@@ -17,12 +17,11 @@ $(document).ready(function(){
   /**
    * Si on veut lancer les tests plutôt que l'application, on décommente la ligne
    * suivante et on commente les deux lignes d'après.
+   * Et il faut régler les tests à jouer dans ./js/MiniTests/_config.js
    */
-  // .then(MiniTest.run.bind(MiniTest))
-  .then(App.init.bind(App))
-  .then(ret => {
-    Dashboard.toggle()
-  })
+  .then(MiniTest.run.bind(MiniTest))
+  // .then(App.init.bind(App))
+  // .then(ret => {Dashboard.toggle()}) // plutôt dans les préférences
   .catch(console.error)
   
 

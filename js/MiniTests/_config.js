@@ -1,8 +1,9 @@
 'use strict'
 
 MiniTest.tests_list = [
+ 'modele_checklist' // plus bas aussi avec une virgule
   // 'minitest'
-  'listes'
+  // 'listes'
 // , 'premier_tableau'
 // , 'CheckList_test'
 // , 'modele_checklist'
@@ -28,8 +29,16 @@ MiniTest.config = {
   , debug_level: 0
 
     /**
+     * Si true, on remet l'état initial à la fin des tests. Sinon, on
+     * garde l'état de fin de test.
+     * 
+     */
+  , retreive_init_state_at_end: false
+  
+    /**
       * La méthode App.resetBeforeTest() doit être définie
-      * 
+      * OBSOLÈTE (maintenant, l'application est rechargée avant
+      * chaque test)
       */
   , reset_before_each_test: true
 

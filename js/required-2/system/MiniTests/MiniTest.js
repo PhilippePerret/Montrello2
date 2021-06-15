@@ -172,8 +172,7 @@ static endSuite(){
 
   this.displayReport()
 
-  console.warn("Enregistrer aussi les résultats du test avec after_suite.rb")
-  Ajax.send('MiniTest/after_suite.rb', {tests: store.getData()})
+  Ajax.send('MiniTest/after_suite.rb', {data_tests: store.getData(), ini_state: this.config.retreive_init_state_at_end})
   .then(this.displayMessages.bind(this))
   /**
    * Ne pas réinitialiser l'application, sinon tous les messages

@@ -8,12 +8,13 @@
 class Dashboard {
 
 static toggle(button, ev){
-  this.current || (this.current = new this())
   const closeIt = this.current.isOpened
   this.current[closeIt?'hide':'show']()
   Tableau[`${closeIt?'show':'hide'}Current`]()
   return ev && stopEvent(ev)
 }
+
+static get current(){ return this._current || (this._current = new this()) }
 
 
 show(){
@@ -99,7 +100,7 @@ get runningContainer(){
 }
 
 getDom(dom_id){
-  return this[`_${dom_id}`] || (this[`_${dom_id}`] = DGet(`#db_${dom_id}`, this.obj))
+  return this[`_${dom_id}`] || (this[`_${dom_id}`] = DGet(`#db_${dom_id} content`, this.obj))
 }
 
 get obj(){return this._obj || (this._obj = DGet('dashboard#main'))}

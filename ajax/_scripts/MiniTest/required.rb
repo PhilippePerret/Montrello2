@@ -1,8 +1,10 @@
 # frozen_string_litteral
 
-
 DATA_MONTRELLO_PATH = File.join(APP_FOLDER,'data','montrello')
 
-BACKUP_PATH = File.join(APP_FOLDER,'data','MiniTest','montrello.backup')
+MINITEST_FOLDER = File.join(APP_FOLDER,'data','MiniTest')
 
-MONTRELLO_FOLDER_GEL = File.join(APP_FOLDER,'data','MiniTest','gels')
+BACKUP_PATH = File.join(MINITEST_FOLDER,'montrello.backup')
+
+MONTRELLO_FOLDER_GEL = File.join(MINITEST_FOLDER,'gels')
+

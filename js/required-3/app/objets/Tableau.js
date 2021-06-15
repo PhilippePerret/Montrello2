@@ -21,6 +21,7 @@ static showCurrent(){this.current.show()}
  * 
  */
 static set current(t){
+	t instanceof Tableau || raise("Il faut une instance Tableau pour définir le tableau courant (set tableau::current")
 	Dashboard.current.hide() // toujours
 	if ( this._current ) this._current.hide()
 	Montrello.setConfig({current_pannel_id: t.id})
@@ -96,6 +97,7 @@ afterSet(hdata){
 }
 
 prepare(){
+	// stack()
 	this.spanName.innerHTML = this.titre
 	this.spanName.owner = this
 	this.obj || this.build_and_observe()
