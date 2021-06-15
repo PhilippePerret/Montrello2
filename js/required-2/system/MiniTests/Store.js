@@ -38,7 +38,7 @@ getData(){
  * Ajouter le test +test+ aux succès, failures ou pendings ({MiniTest})
  * 
  */
-addSuccess(test){ this.add('success', test.name) }
+addSuccess(test){this.add('success',  test.titre) }
 addFailure(test){this.add('failures', test.failureFullMessage)}
 addPending(test){this.add('pendings', test.pendingFullMessage)}
 

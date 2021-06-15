@@ -6,7 +6,8 @@ class << self
 # L'instance INTests du test courant
 def get_current_test
   puts "File.exist?(suivi_path) est #{File.exist?(suivi_path).inspect}"
-  if not File.exist?(suivi_path)
+  @is_start_tests = not(File.exist?(suivi_path))
+  if @is_start_tests
     # <=  Le fichier 'suivi' n'existe pas
     #  => C'est le début du test, il faut mettre dans ce fichier 
     #     tous les tests à jouer
@@ -36,6 +37,13 @@ end
 # 
 def next_test?
   @has_next_test
+end
+
+# 
+# Retourne TRUE si c'est le début des tests
+# 
+def start?
+  @is_start_tests
 end
 
 def suivi_path

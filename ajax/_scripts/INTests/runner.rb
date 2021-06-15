@@ -22,5 +22,6 @@ Ajax << {
   intest_name: INTESTS_ON ? current_test.name : nil, 
   intest_path: INTESTS_ON ? current_test.path_js : nil, 
   run_intests: CONFIG[:run],
+  start: INTests.start?, # true si c'est le début
   has_next_intest: INTests.next_test?
 }
