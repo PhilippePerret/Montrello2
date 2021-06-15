@@ -71,7 +71,36 @@ constructor(name){
  */
 async run(){
   const my = this
-  let resultat = await this.fonction()
+  let res_appel_fonction, resultat, raison ;
+  try {
+    let res_appel_fonction = await this.fonction().catch(ret => {
+        // console.log("Je passe dans le catch du fonction.call avec", ret)
+        /**
+         * On passe ici avec les méthodes expect, par exemple, quand
+         * un throw est invoqué dans la fonction du test.
+         * 
+         * On passe aussi quand c'est un pending, le message est
+         * alors préfixé par "PENDING:"
+         */
+        if ( 'string' == typeof(ret) && ret.substring(0,8) === 'PENDING:'){
+          raison = ret.substring(8, ret.length).trim()
+          resultat = 'pending'
+        }
+        else {
+          resultat = ret
+        }
+    })
+  } catch(erreur) {
+    log("Je passe dans le catch du run avec " + err, 2)
+    raison = err
+    resultat = false
+  }
+  /**
+   * Le résultat estimé est soi celui retourné par la fonction du 
+   * test, soit celui défini par un throw (avec les méthodes expect
+   * par exemple)
+   */
+  resultat = resultat || res_appel_fonction
   if ( resultat === true ) {
     my.writeMessageSynthese(true)
     store.addSuccess(this)

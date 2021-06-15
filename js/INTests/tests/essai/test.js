@@ -11,7 +11,5 @@
 
 INTests.define("Mon test juste pour l'essai", async function(){
 
-  await wait(3, "Trois grosses secondes pour un premier essai failure.")
-
-  return "Ceci est l'erreur retournée"
+  return 4 + 4 == 8
 })

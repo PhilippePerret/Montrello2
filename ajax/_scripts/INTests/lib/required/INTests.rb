@@ -47,7 +47,7 @@ def start?
 end
 
 def suivi_path
-  @suivi_path ||= File.join(INTESTS_FOLDER_DATA,'suivi')
+  @suivi_path ||= File.join(INTESTS_FOLDER_JS,'suivi')
 end
 
 end #/<< self
@@ -66,18 +66,22 @@ end
 # dossier en dossier de données Montrello
 # 
 def activate
-  gel = File.join(INTESTS_FOLDER_DATA,'gels',config[:gel])
   FileUtils.rm_rf(DATA_MONTRELLO_PATH)
-  FileUtils.cp_r(gel,DATA_MONTRELLO_PATH)
+  FileUtils.cp_r(gel_path,DATA_MONTRELLO_PATH)
 end
 
 def config
   @config ||= YAML.load_file(File.join(folder,'config.yaml'))
 end
 
+def gel_path
+  @gel_path ||= File.join(INTESTS_FOLDER_JS,'gels',config[:gel])
+end
+
 def path_js
   @path_js ||= File.join(folder,"#{name}.js")
 end
+
 def folder
   @folder ||= File.join(INTESTS_FOLDER_JS,'tests',name)
 end

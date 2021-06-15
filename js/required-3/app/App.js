@@ -33,6 +33,7 @@ static async init(){
  */
 static async prepareInTests(start){
 	await loadJS('INTests/INTests.js')
+	await loadJS('INTests/INTests_helpers.js')
 	if (start) {
 		await INTests.prepare()
 	}
