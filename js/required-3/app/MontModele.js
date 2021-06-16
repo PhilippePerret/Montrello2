@@ -115,16 +115,17 @@ onChooseItem(montModele){
  * 
  */
 async duplicateFor(montmodele, carte){
+  const verbose = false
   const referent = montmodele.parent
-  console.log("Le référent (et ses données) : ", referent, referent.data)
+  verbose && console.log("Le référent (et ses données) : ", referent, referent.data)
   const data = Object.assign({}, referent.data)
-  console.log("Data au départ", JSON.stringify(data))
+  verbose && console.log("Data au départ", JSON.stringify(data))
   // Un nouvel identifiant pour la nouvelle Checklist
   data.id = Montrello.getNewId(data.ty)
-  console.log("Identifiant pour la nouvelle checklist", data.id)
+  verbose && console.log("Identifiant pour la nouvelle checklist", data.id)
   data.ti = `Checklist pour la carte “${carte.titre}”`
   data.ow = carte.ref
-  console.log("Propriétaire (ow) pour la nouvelle checklist", data.ow, carte)
+  verbose && console.log("Propriétaire (ow) pour la nouvelle checklist", data.ow, carte)
   /**
    * Traitement des enfants
    * 
@@ -145,21 +146,21 @@ async duplicateFor(montmodele, carte){
   }
   // Il faut maintenant créer des instances des enfants (CheckListTask)
   const oldCho = [...data.cho]
-  console.log("Identifiants des enfants actuels (tâches)", oldCho)
+  verbose && console.log("Identifiants des enfants actuels (tâches)", oldCho)
   const dataChildClasse = CheckListTask
   data.cho = []
   var child, newChild;
   var newChildren = [] // pour simplifier l'ajout plus bas
   oldCho.forEach(child_id => {
     child = dataChildClasse.get(child_id)
-    console.log("Enfant à dupliquer", child);
+    verbose && console.log("Enfant à dupliquer", child);
     newChild = child.duplicateWith({ow:`${data.ty}-${data.id}`})
-    console.log("Duplicata de l'enfant, non enregistré : ", newChild)
+    verbose && console.log("Duplicata de l'enfant, non enregistré : ", newChild)
     newChildren.push(newChild)
     data.cho.push(newChild.id)
   })
 
-  console.log("Résultat provisoire :", {
+  verbose && console.log("Résultat provisoire :", {
     newChildren: newChildren,
     'data.cho': data.cho
   })
@@ -169,11 +170,9 @@ async duplicateFor(montmodele, carte){
   //  2. toutes ses tâches
   const dataChildren = []
   newChildren.forEach(child => dataChildren.push(child.data))
-  console.log("Données children à enregistrer :", dataChildren)
-  await Ajax.send('save_all.rb', {all: dataChildren})
-  /*/ Pour un retour
-  .then(ret => {console.log("Retour de l'enregistrement de toutes les tâches",ret)})
-  //*/
+  verbose && console.log("Données children à enregistrer :", dataChildren)
+  var retour_save_all = await Ajax.send('save_all.rb', {all: dataChildren})
+  verbose && console.log("Retour de l'enregistrement de toutes les tâches :",ret)
 
   // Task ont pu être enregistrées, on les ajoute aux items de classe
   newChildren.forEach(child => CheckListTask.addItem(child))

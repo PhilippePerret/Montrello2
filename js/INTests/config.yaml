@@ -1,5 +1,5 @@
 ---
-:run: true # mettre à true pour jouer les tests
+:run: false # mettre à true pour jouer les tests ci-dessous (sinon, à false)
 :tests_on:
   - checklist_from_modele
 :tests_off:
