@@ -4,7 +4,7 @@
  * 
  */
 
-/*
+//*
 MiniTest.add("On peut créer un modèle de liste à partir d'une checklist", async function(){
   
   // On part d'un dégel où il existe déjà un modèle de liste
@@ -57,32 +57,5 @@ MiniTest.add("On peut créer un modèle de liste à partir d'une checklist", asy
   this.suivi("Le modèle de check-list est bien enregistré dans un fichier")
   return true
   
-})
-//*/
-
-
-
-//*/
-MiniTest.add("On peut créer une checklist à partir d'un modèle", async function(){
-
-
-  log("Je vais dégeler", 0)
-  await degel('encours')
-  log("J'ai dégelé", 0)
-
-
-  this.suivi("On met le tableau courant aux éditions Icare (#4)")
-  Tableau.current = await Tableau.get(4)
-
-  // this.suivi("On édite la carte du Parc (#23)")
-  // const carteParc = DGet('carte#ca-23')
-  // carteParc.click()
-
-  // await wait(4, "J'attends pour voir si la carte a été éditée.")
-
-
-  // console.log("Je sors")
-
-  return true  
 })
 //*/

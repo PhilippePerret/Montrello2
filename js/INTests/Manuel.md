@@ -64,3 +64,46 @@ INTests.define("Mon test d'action", async function(){
 })
 ~~~
 
+
+
+## Les gels
+
+Les gels sont des états des données de l’application.
+
+Ils sont situés dans le dossier `js/INTests/gels`.
+
+Chaque gel est un dossier :
+
+* qui DOIT contenir le dossier `montrello` avec les données telles qu’elles doivent être.
+* qui PEUT contenir un fichier `helpers.js` qui définit des méthodes utiles pour le dossier en question.
+* qui PEUT contenir un fichier `expectations.js` qui définit les méthodes d’expectation propres au dossier en question.
+
+Dans le programme lorsque le fichier `helpers.js` existe, les paramètres remontent `has_helpers: true`. Lorsque le fichier des expectations existe, les paramètres remontent `has_expectations: true`.
+
+### Helpes de gels
+
+Le fichier `helpers.js` à l’intérieur du dossier du gel peut définir des constants, des méthodes, etc.
+
+Ce qu’il faut comprendre, c’est que ce fichier sera chargé avant les données elles-mêmes. Donc, par exemple, si on met dans le fichier :
+
+~~~javascript
+// dans dossier-gel/helpers.js
+
+'use strict'
+
+const MonDiv = DGet('div#mon-div') // <== N'EXISTE PAS ENCORE
+~~~
+
+Il faut donc utiliser la tournure suivant pour les propriétés :
+
+~~~javascript
+// dossier-gel/helpers.js
+'use strict'
+
+Object.defineProperties(window, {
+  MonDiv:{
+    get(){return DGet('div#mon-div')}
+  }
+})
+~~~
+

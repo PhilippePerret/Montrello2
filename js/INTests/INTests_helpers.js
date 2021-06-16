@@ -8,8 +8,8 @@ async function intests_action(msg, delay = 2){
 
 class INTestsAction {
 
-get current(){return this._current}
-set current(v){
+static get current(){return this._current}
+static set current(v){
   if ( this._current ){ 
     log("L'INTestsAction courant existe", -1) // toujours affiché
     this._current.remove()

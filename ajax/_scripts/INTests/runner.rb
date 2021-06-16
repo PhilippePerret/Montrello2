@@ -20,8 +20,11 @@ end
 
 Ajax << {
   intest_name: INTESTS_ON ? current_test.name : nil, 
-  intest_path: INTESTS_ON ? current_test.path_js : nil, 
+  intest_path: INTESTS_ON ? current_test.path_js : nil,
   run_intests: CONFIG[:run],
   start: INTests.start?, # true si c'est le début
-  has_next_intest: INTests.next_test?
+  has_next_intest: INTests.next_test?,
+  gel_name: current_test.gel_name,
+  has_helpers: current_test.has_gel_helpers?,
+  has_expectations: current_test.has_gel_expectations?
 }

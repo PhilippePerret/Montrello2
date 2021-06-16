@@ -6,37 +6,36 @@
 class App {
 
 static async init(){
-	const ret = await Ajax.send('INTests/runner.rb')
-	console.log("retour de INTests/runner.rb", ret)
-	if ( ret.run_intests ) {
-		await this.prepareInTests(ret.start)
+
+	// Début première partie pour la gestion des INTests
+
+	const intests_params = await Ajax.send('INTests/runner.rb')
+
+	this.intests_running = !!intests_params.run_intests
+
+	if ( intests_params.run_intests ) {
+
+		await loadJS('INTests/INTests.js')
+		await INTests.restart(intests_params)
+
 	}
+
+	// Fin première partie pour la gestion des INTests
+	
 	await UI.init()
 	await Montrello.init.call(Montrello)
-	if ( ret.run_intests ) {
-		await INTests.run_test(ret.intest_name)
-		if (ret.has_next_intest) { 
-			document.location.reload()
-		} else {
+	
 
-			// *** FIN DES TESTS ***
+	// Début seconde partie pour la gestion des INTests
 
-			INTests.report()
+	if ( intests_params.run_intests ) {
 
-		}
+		await INTests.run_test_and_suite()
+
 	}
-}
 
-/**
- * Préparation des tests INTests
- * On charge le module
- */
-static async prepareInTests(start){
-	await loadJS('INTests/INTests.js')
-	await loadJS('INTests/INTests_helpers.js')
-	if (start) {
-		await INTests.prepare()
-	}
+	// Fin seconde partie pour la gestion des INTests
+
 }
 
 
@@ -60,6 +59,7 @@ static isReady(nombre_secondes) {
 }
 static testIfIsReady(ok, ko){
 	if ( this._isUpAndRunning ) {
+		this.intests_running || log("Application prête", 1)
 		ok()
 	} else {
 		if ( new Date() > this.readyTimeout ) {

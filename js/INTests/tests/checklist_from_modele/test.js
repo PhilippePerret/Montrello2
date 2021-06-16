@@ -8,21 +8,17 @@ INTests.define("Création d'une checklist à partir d'un modèle", async functio
 
 
   await intests_action("J'ouvre le carte du Parc")
-  const carteParc = DGet('carte#ca-23')
   carteParc.click()
 
   // Le formulaire de la carte doit exister
-  expect(page).has('carte_form#carteform-23').else("La carte du parc devrait exister.")
-  const carteForm = DGet('carte_form#carteform-23')
+  expect(page).hasFormCartParc().else(null) 
 
   await intests_action("J'ouvre le menu des checklists modèle")
-  const modelesCL = DGet('liste_actions.for-objets menu.modeles-checklists', carteForm)
-  modelesCL.click()
+  modelesCLinParcForm.click()
   
   await intests_action("Je choisis le modèle pour les livres")
-  expect(page).has('li.m-cl-2-name').else("Le modèle de checklist pour la fabrication des livres devrait exister.")
-  const itemCL = DGet('li.m-cl-2-name', modelesCL)
-  itemCL.click()
+  expect(page).has_modele_checklist_pour_fabrication_livre().else(null)
+  itemCL_FabricationLivre.click()
 
   await intests_action("J'attends quelques secondes pour que tout soit enregistré.", 2)
 

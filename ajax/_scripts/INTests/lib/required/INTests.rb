@@ -18,7 +18,7 @@ def get_current_test
   # On prend le prochain test
   # 
   tests = File.read(suivi_path).split("\n")
-  puts "tests au départ : #{tests.inspect}"
+  # puts "tests au départ : #{tests.inspect}"
   test_current_name = tests.pop.freeze  # la liste a été enregistrée à l'envers
   # 
   # On ré-enregistre la liste, sauf s'il n'y a plus de tests
@@ -45,6 +45,8 @@ end
 def start?
   @is_start_tests
 end
+
+
 
 def suivi_path
   @suivi_path ||= File.join(INTESTS_FOLDER_JS,'suivi')
@@ -75,13 +77,34 @@ def config
 end
 
 def gel_path
-  @gel_path ||= File.join(INTESTS_FOLDER_JS,'gels',config[:gel])
+  @gel_path ||= File.join(gel_folder,'montrello')
 end
 
 def path_js
   @path_js ||= File.join(folder,"#{name}.js")
 end
 
+def has_gel_helpers?
+  File.exist?(gel_helpers)
+end
+def gel_helpers
+  @gel_helpers ||= File.join(gel_folder, 'helpers.js')
+end
+
+def has_gel_expectations?
+  File.exist?(gel_expectations)
+end
+def gel_expectations
+  @gel_expectations ||= File.join(gel_folder,'expectations.js')
+end
+
+def gel_folder
+  @gel_folder ||= File.join(INTESTS_FOLDER_JS,'gels', gel_name)
+end
+
+def gel_name
+  @gel_name ||= config[:gel]
+end
 def folder
   @folder ||= File.join(INTESTS_FOLDER_JS,'tests',name)
 end

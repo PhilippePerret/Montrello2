@@ -109,7 +109,6 @@ static init(){
 	.then(ret => {
 		PanelInfos.init() // panneau des informations (nombre de…)
 		App._isUpAndRunning = true
-		log("Application prête", 1)
 	})
 	.catch(erreur)
 }

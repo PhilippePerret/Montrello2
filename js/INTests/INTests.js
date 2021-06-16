@@ -1,23 +1,76 @@
 'use strict'
 class INTests {
 
+
+/**
+ * Méthode appelée à chaque rechargement de l'application
+ * Donc :
+ *  - quand on commence une suite de tests (params.start est true)
+ *  - quand on poursuit une suite de tests (params.start est false)
+ *  - quand on finit la suite de tests ()
+ * 
+ */
+static async restart(params){
+  await loadJS('INTests/INTests_helpers.js')
+  this.current_test   = new this(params.intest_name)
+  if (params.has_helpers) { await this.loadGelHelpers(params.gel_name) }
+  if (params.has_expectations) { await this.loadGelExpectations(params.gel_name) }
+  this.has_next_test  = params.has_next_intest
+  if (params.start) { await this.onStart() }
+}
+
+/**
+ * Chargement des helpers et des expectations propres au gel du test
+ * si ces fichiers existent.
+ * 
+ */
+static async loadGelHelpers(gel_name){
+  await loadJS(`INTests/gels/${gel_name}/helpers.js`)
+}
+static async loadGelExpectations(gel_name){
+  await loadJS(`INTests/gels/${gel_name}/expectations.js`)
+}
+
 /**
  * Méthode appelée au tout début des tests pour préparer les
  * choses et notamment la fenêtre qui reçoit les messages
  * 
  */
-static prepare(){
+static onStart(){
   store.clear()
   store.startAt = new Date().getTime()
 }
 
 /**
- * Pour jouer le test courant
+ * Pour jouer le test courant et passer à la suite
+ * ou s'arrêter
  * 
  */
-static async run_test(test_name) {
-  // console.log("-> INTests.run_test(%s)", test_name)
-  this.current_test = new this(test_name)
+static async run_test_and_suite(){
+  await this.run_current_test()
+  
+  if ( this.has_next_test ) {
+    
+    document.location.reload()
+  
+  } else {
+
+      // *** FIN DES TESTS ***
+
+      this.report()
+  }
+
+}
+/**
+ * Charger et jouer le test courant
+ * --------------------------------
+ * 
+ * Noter que c'est avec la fonction load que sera chargé le titre et
+ * la fonction qui contient le test. Avant l'appel de cette méthode, 
+ * seul le nom (et donc l'emplacement) du test est défini.
+ * 
+ */
+static async run_current_test() {
   await this.current_test.load()
   await this.current_test.run()
 }
@@ -37,7 +90,7 @@ static define(test_titre, test_function){
  */
 static async report(){
   store.endAt = new Date().getTime()
-  console.clear()
+  // console.clear()
   await wait(1)
   let success_count  = store.success.length
     , failures_count = store.failures.length

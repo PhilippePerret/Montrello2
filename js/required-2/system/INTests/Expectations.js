@@ -180,6 +180,11 @@ hashContains(hash, hexpe){
 
 }//Class Expectation
 
+
+
+
+
+
 class ACase {
 constructor(resultat, expected, actual, motif, message_failure_default){
   this.resultat = resultat
