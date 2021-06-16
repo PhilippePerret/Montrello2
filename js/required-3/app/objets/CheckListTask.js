@@ -36,7 +36,7 @@ constructor(data){
 /**
  * @async
  * 
- * Produit une copie de la tâche (en l'enregistrant, mais sans
+ * Produit une copie de la tâche (sans l'enregistrer et sans
  * la construire -- c'est le propriétaire qui le fera)
  * Note : on ne peut pas la construire car le propriétaire n'existe
  * peut-être pas encore.
@@ -46,16 +46,14 @@ constructor(data){
  * @return L'instance de la tâche produite
  * 
  */
-async duplicateWith(hdata){
+duplicateWith(hdata){
 	var newData = Object.assign({}, this.data)
 	Object.assign(newData, hdata)
 	Object.assign(newData, {
 			id: Montrello.getNewId('tk')
 		, on: false
 	})
-	const newTask = new CheckListTask(newData)
-	await newTask.save()
-	return newTask
+	return new CheckListTask(newData)
 }
 
 // *** Propriétés ***

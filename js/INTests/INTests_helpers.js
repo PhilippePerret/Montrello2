@@ -10,10 +10,7 @@ class INTestsAction {
 
 static get current(){return this._current}
 static set current(v){
-  if ( this._current ){ 
-    log("L'INTestsAction courant existe", -1) // toujours affiché
-    this._current.remove()
-  }
+  this._current && this._current.remove()
   this._current = v
 }
 

@@ -108,27 +108,33 @@ onChooseItem(montModele){
 /**
  * Méthode permettant de faire un duplicata de +montmodele+
  * 
- * Note : chaque classe de modèle définit son propre modèle
+ * Note
+ *  Chaque classe de modèle définit son propre modèle. Ici, il s'agit
+ *  du modèle de Checklist.
+ * 
  * 
  */
 async duplicateFor(montmodele, carte){
   const referent = montmodele.parent
-  // console.log("Le référent (et ses données) : ", referent, referent.data)
+  console.log("Le référent (et ses données) : ", referent, referent.data)
   const data = Object.assign({}, referent.data)
-  // console.log("Data au départ", JSON.stringify(data))
+  console.log("Data au départ", JSON.stringify(data))
+  // Un nouvel identifiant pour la nouvelle Checklist
   data.id = Montrello.getNewId(data.ty)
+  console.log("Identifiant pour la nouvelle checklist", data.id)
   data.ti = `Checklist pour la carte “${carte.titre}”`
   data.ow = carte.ref
+  console.log("Propriétaire (ow) pour la nouvelle checklist", data.ow, carte)
   /**
    * Traitement des enfants
    * 
    * Noter que la liste ordonnées 'data.cho' n'existe pas toujours
    * et/ou qu'elle peut être incomplète si des enfants ont été ajou-
    * tés après un classement. Il faut donc toujours tester les deux
-   * données.
+   * données et produire une donnée .cho qui contient tous les 
+   * enfants.
    */
   if ( data.cho == null || data.cho.length != referent.children.length ) {
-    // console.log("Le nombre d'enfants ne correspond pas")
     data.cho || (data.cho = []);
     referent.children.forEach(child => {
       if ( data.cho.indexOf(child.id) < 0 ) {
@@ -139,28 +145,38 @@ async duplicateFor(montmodele, carte){
   }
   // Il faut maintenant créer des instances des enfants (CheckListTask)
   const oldCho = [...data.cho]
-  const dataClasse = Montrello.type2dataClass(data.ty)
+  console.log("Identifiants des enfants actuels (tâches)", oldCho)
+  const dataChildClasse = CheckListTask
   data.cho = []
-  let promises = [] // pour mettre les promesses
   var child, newChild;
   var newChildren = [] // pour simplifier l'ajout plus bas
-  oldCho.forEach(async child_id => {
-    return new Promise(async (ok,ko) => {
-      child = dataClasse.childClass.get(child_id)
-      // console.log("Enfant à dupliquer", child);
-      newChild = await child.duplicateWith({ow:`${data.ty}-${data.id}`})
-      newChildren.push(newChild)
-      // console.log("Enfant duplicata:", newChild);
-      data.cho.push(newChild.id)
-      ok()
-    })
+  oldCho.forEach(child_id => {
+    child = dataChildClasse.get(child_id)
+    console.log("Enfant à dupliquer", child);
+    newChild = child.duplicateWith({ow:`${data.ty}-${data.id}`})
+    console.log("Duplicata de l'enfant, non enregistré : ", newChild)
+    newChildren.push(newChild)
+    data.cho.push(newChild.id)
   })
 
-  // Pour créer toutes les tâches
-  await Promise.all(promises)
+  console.log("Résultat provisoire :", {
+    newChildren: newChildren,
+    'data.cho': data.cho
+  })
 
-  // Ici data.cho est bien renseigné
-  // console.log("Data ajustée", data)
+  // On crée tous les fichiers pour les tâches
+  // Note : la checklist est enregistrée plus bas
+  //  2. toutes ses tâches
+  const dataChildren = []
+  newChildren.forEach(child => dataChildren.push(child.data))
+  console.log("Données children à enregistrer :", dataChildren)
+  await Ajax.send('save_all.rb', {all: dataChildren})
+  /*/ Pour un retour
+  .then(ret => {console.log("Retour de l'enregistrement de toutes les tâches",ret)})
+  //*/
+
+  // Task ont pu être enregistrées, on les ajoute aux items de classe
+  newChildren.forEach(child => CheckListTask.addItem(child))
 
   // On instancie la checklist
   const newInstance = new CheckList(data)

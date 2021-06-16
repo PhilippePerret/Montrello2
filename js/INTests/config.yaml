@@ -1,8 +1,8 @@
 ---
 :run: true # mettre à true pour jouer les tests
 :tests_on:
-  - essai
   - checklist_from_modele
 :tests_off:
+  - essai
   - creer_tableau
   - modele_de_checklist
