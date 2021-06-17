@@ -23,7 +23,7 @@ static get dimType(){ return 'ma' }
 	* +btn+ Le bouton qui a déclenché la méthode (pour la position)
 	*/
 static create(mtype, owner, btn){
-	// console.log("Je dois créer un masset de mtype %s pour", mtype, owner)
+	console.log("Je dois créer un masset de mtype %s pour", mtype, owner)
 	const masset = new Masset({ty:'ma', mty: mtype, ow:owner.ref})
 	masset.edit(btn)
 	this.addItem(masset)

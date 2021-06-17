@@ -76,6 +76,10 @@ def config
   @config ||= YAML.load_file(File.join(folder,'config.yaml'))
 end
 
+def reload_config
+  @config = nil
+end
+
 def gel_path
   @gel_path ||= File.join(gel_folder,'montrello')
 end

@@ -11,6 +11,9 @@
 =end
 require_relative 'lib/required'
 
+CONFIG = YAML.load_file(CONFIG_PATH)
+INTESTS_ON = CONFIG[:run] === true
+
 current_test = INTests.get_current_test
 
 if INTESTS_ON
@@ -18,7 +21,7 @@ if INTESTS_ON
   current_test.activate
 end
 
-Ajax << {
+data_intests = {
   intest_name: INTESTS_ON ? current_test.name : nil, 
   intest_path: INTESTS_ON ? current_test.path_js : nil,
   run_intests: CONFIG[:run],
@@ -28,3 +31,7 @@ Ajax << {
   has_helpers: current_test.has_gel_helpers?,
   has_expectations: current_test.has_gel_expectations?
 }
+
+puts "data_intests : #{data_intests.inspect}"
+
+Ajax << data_intests

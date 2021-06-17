@@ -4,6 +4,4 @@ require 'yaml'
 require_relative 'required/constants'
 require_relative 'required/INTests'
 
-config_path = File.join(INTESTS_FOLDER_JS, 'config.yaml')
-CONFIG = YAML.load_file(config_path)
-INTESTS_ON = CONFIG[:run] === true
+CONFIG_PATH = File.join(INTESTS_FOLDER_JS, 'config.yaml')

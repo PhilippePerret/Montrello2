@@ -1,6 +1,7 @@
 'use strict'
 class INTests {
 
+statit
 
 /**
  * Méthode appelée à chaque rechargement de l'application
@@ -12,11 +13,19 @@ class INTests {
  */
 static async restart(params){
   await loadJS('INTests/INTests_helpers.js')
+  await loadJS('INTests/config.js')
+  await this.loadAllRequired()
   this.current_test   = new this(params.intest_name)
   if (params.has_helpers) { await this.loadGelHelpers(params.gel_name) }
   if (params.has_expectations) { await this.loadGelExpectations(params.gel_name) }
   this.has_next_test  = params.has_next_intest
   if (params.start) { await this.onStart() }
+}
+
+static async loadAllRequired(){
+  await this.extensions_list.forEach(async relpath => {
+    await loadJS(`INTests/lib/extensions/${relpath}.js`)
+  })
 }
 
 /**
@@ -127,7 +136,7 @@ async run(){
   let res_appel_fonction, resultat, raison ;
   try {
     let res_appel_fonction = await this.fonction().catch(ret => {
-        // console.log("Je passe dans le catch du fonction.call avec", ret)
+        console.log("Je passe dans le catch du fonction.call avec", ret)
         /**
          * On passe ici avec les méthodes expect, par exemple, quand
          * un throw est invoqué dans la fonction du test.
@@ -144,8 +153,8 @@ async run(){
         }
     })
   } catch(erreur) {
-    log("Je passe dans le catch du run avec " + err, 2)
-    raison = err
+    log("Je passe dans le catch du try avec " + erreur, 2)
+    raison = erreur
     resultat = false
   }
   /**

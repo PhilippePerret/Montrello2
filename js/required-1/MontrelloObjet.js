@@ -458,11 +458,39 @@ copy(button, ev){
  */
 
 /**
+ * @return TRUE si l'objet possède des massets
+ * 
+ */
+hasMassets(){
+  return this.data.objs && this.data.objs.ma
+}
+
+/**
+ * @return la liste des IDentifiants des Massets
+ * 
+ */
+get massetIds(){
+  if ( this.hasMassets() ) { return this.data.objs.ma } 
+    else { return [] }
+}
+
+/**
  * Exécute la fonction +fonction+ sur tous les Masset de l'objet
  * 
  */
 forEachMasset(fonction){
   this.massets.massets.forEach(fonction)
+}
+
+/**
+ * Exécute la fonction +fonction+ sur chaque masset en récoltant le
+ * résultat, qui est retourné comme une liste.
+ * 
+ */
+collectForEachMasset(fonction){
+  var l = []
+  this.massets.massets.forEach(masset => l.push(fonction(masset)))
+  return l
 }
 
 /**

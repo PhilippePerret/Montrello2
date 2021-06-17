@@ -1,8 +1,9 @@
 ---
-:run: false # mettre à true pour jouer les tests ci-dessous (sinon, à false)
+:run: true # mettre à true pour jouer les tests ci-dessous (sinon, à false)
 :tests_on:
-  - checklist_from_modele
+  - masset_creation
 :tests_off:
+  - checklist_from_modele
   - essai
   - creer_tableau
   - modele_de_checklist

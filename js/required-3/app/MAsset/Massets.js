@@ -11,10 +11,8 @@ constructor(owner){
 }
 
 get massets(){
-	if ( this.owner.data.objs && this.owner.data.objs.ma ) {
-		var l = []
-		this.owner.data.objs.ma.forEach(maid => l.push(Masset.get(maid)))
-		return l
+	if ( this.owner.hasMassets() ) {
+		return this.owner.massetIds.forEach(maid => Masset.get(maid))
 	} else {
 		return []
 	}
