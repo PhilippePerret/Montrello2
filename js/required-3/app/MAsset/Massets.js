@@ -12,7 +12,9 @@ constructor(owner){
 
 get massets(){
 	if ( this.owner.hasMassets() ) {
-		return this.owner.massetIds.forEach(maid => Masset.get(maid))
+		var l = []
+		this.owner.massetIds.forEach(maid => l.push(Masset.get(maid)))
+		return l
 	} else {
 		return []
 	}

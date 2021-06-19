@@ -13,7 +13,6 @@ INTests.define("Création de plusieurs massets", async function(){
   ocarte1.click()
 
   await intests_action("Je clique le bouton pour ajouter un fichier joint")
-  console.log(carte1.form)
   carte1.form.click_bouton_add_fichier_joint()
 
   await intests_action("J'ajoute le path du fichier.")

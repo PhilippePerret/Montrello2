@@ -1,5 +1,5 @@
 ---
-:run: true # mettre à true pour jouer les tests ci-dessous (sinon, à false)
+:run: false # mettre à true pour jouer les tests ci-dessous (sinon, à false)
 :tests_on:
   - masset_creation
 :tests_off:

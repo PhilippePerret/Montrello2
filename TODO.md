@@ -5,6 +5,16 @@
 * [BUG] Le mini-éditeur doit être refermé s'il est ouvert quand l'objet édité est détruit
 * [BUG] Quand on transforme une checklist en modèle, il faut opacifier son bouton modèle et faire apparaitre la cloche indiquant que c'est un modèle
 
+* Une SUPER FONCTIONNALITÉ
+  Un paramètre "Active If" qui déterminerait quand une carte deviendrait active. Le paramètre principale pourrait bien sûr être la date de début, mais on pourrait imaginer n'importe quoi, même du code qui, à partir du moment où il retournerait TRUE, serait considéré comme une activation.
+  Donc il faudrait déterminer la nature du test :
+    - la valeur d'une propriété montrello
+    - le résultat d'un code ruby à exécuter (ou autre langage)
+    - le résultat d'un fichier exécuté (dans n'importe quel langage)
+    - une date quelconque fournie
+    - des conditions diverses comme plusieurs tâches exécutées ou un certain nombre de choses (par exemple un certain nombre de cartes dans une liste)
+    - autre ?
+
 MODÈLES 
   * Les associer à leur tableau (toujours)
 
