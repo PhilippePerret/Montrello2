@@ -5,6 +5,33 @@
 	*/
 class App {
 
+static get COMMAND_CONSOLES(){return {
+		backup: 	{name: 'Production d’un backup officiel des données', method:'official_backup', owner: App}
+	, debackup: {name:'Retour aux données du dernier backup officiel des données', method:'retrieve_official_backup', owner: App}
+}}
+/**
+ * Méthode pour exécuter une commande console connue
+ */
+static exec_console_command(command){
+	let dcommande = this.COMMAND_CONSOLES[command]
+	console.log("[App] Data de la commande", dcommande)
+	dcommande.owner[dcommande.method].call(dcommande.owner)
+}
+
+static official_backup(){
+	console.log("Je dois produire un backup officiel des données.")
+	Ajax.send('exec_command.rb', {command: 'official_backup'}).then(ret=>message(ret.message))
+}
+
+/**
+ * Pour revenir au dernier backup des données
+ * 
+ */
+static retrieve_official_backup(){
+	console.log("Je dois revenir au dernier backup officiel des données.")
+	Ajax.send('exec_command.rb', {command: 'retrieve_official_backup'}).then(ret=>message(ret.message))	
+}
+
 static async init(){
 
 	// Début première partie pour la gestion des INTests

@@ -76,9 +76,17 @@ static onKeypress(ev){
 
 static evaluate(){
   const code = this.console.value
+  var res ;
   try {
     console.log("Évaluation de '%s'", code)
-    var res = eval(code)
+    /**
+     * Est-ce une commande que l'application connait ?
+     */
+    if ( App.COMMAND_CONSOLES && undefined != App.COMMAND_CONSOLES[code] ) {
+      res = App.exec_console_command(code)
+    } else {
+      res = eval(code)
+    }
     console.log("Résultat de l'évaluation :", res)
   } catch (err) {
     console.error(err)

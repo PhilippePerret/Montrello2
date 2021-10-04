@@ -83,3 +83,27 @@ Associer un fichier à une carte permet de l'ouvrir en cliquant simplement sur u
 ### Associer une commande à une carte
 
 On peut associer du code bash ou le chemin d'accès à un fichier de commande quelconque (dans son programme de choix) qui sera exécuté lorsque le bouton correspondant sera activé dans la carte. Cela offre donc toutes les perspectives possibles jusqu'au plus compliquées et complètes.
+
+---
+
+<a id="annexe"></a>
+
+## Annexe
+
+<a id="backups-officiels"></a>
+
+### Backups officiels des données
+
+#### Produire un backup officiel des données
+
+Pour produire un backup officiel des données, c'est-à-dire une copie de dossier `data/montrello`, il suffit de jouer `backup` dans la console.
+
+#### Revenir à un backup officiel des données
+
+Pour revenir au dernier backup officiel, on doit jouer :
+
+```
+debackup
+```
+
+… en console.
